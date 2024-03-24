@@ -26,7 +26,10 @@ class ReleveService
         $listeRelevesGroupes['hum'] = ['nom' => 'Humidité', 'unite' => '%', 'donnees' => []];
         $listeRelevesGroupes['co2'] = ['nom' => 'Qualité de l\'air', 'unite' => 'ppm', 'donnees' => []];
 
+        $nomAcceptes = ['temp', 'hum', 'co2'];
+
         foreach ($array as $releve) {
+            if (in_array($releve['nom'], $nomAcceptes)) {
 
             $releveJson = [];
 
@@ -34,6 +37,7 @@ class ReleveService
             $releveJson['valeur'] = $releve['valeur'];
 
             $listeRelevesGroupes[$releve['nom']]['donnees'][] = $releveJson;
+            }
         }
 
         return $listeRelevesGroupes;
