@@ -22,14 +22,18 @@ class ReleveService
     private static function conversionVersRelevesGroupes(array $array): array
     {
         $listeRelevesGroupes = [];
+        $listeRelevesGroupes['temp'] = ['nom' => 'Température', 'unite' => '°C', 'donnees' => []];
+        $listeRelevesGroupes['hum'] = ['nom' => 'Humidité', 'unite' => '%', 'donnees' => []];
+        $listeRelevesGroupes['co2'] = ['nom' => 'Qualité de l\'air', 'unite' => 'ppm', 'donnees' => []];
 
         foreach ($array as $releve) {
+
             $releveJson = [];
 
             $releveJson['date'] = $releve['dateCapture'];
             $releveJson['valeur'] = $releve['valeur'];
 
-            $listeRelevesGroupes[$releve['nom']][] = $releveJson;
+            $listeRelevesGroupes[$releve['nom']]['donnees'][] = $releveJson;
         }
 
         return $listeRelevesGroupes;
@@ -48,7 +52,7 @@ class ReleveService
             ]
         ]);
 
-        $dateDebut = new \DateTime('-65 days');
+        $dateDebut = new \DateTime('-5 days');
         $dateFin = new DateTime('+1 days');
 
         // Envoi de la requête HTTP
