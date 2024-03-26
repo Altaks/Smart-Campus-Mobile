@@ -134,11 +134,6 @@ class AppFixtures extends Fixture
         $recommandation5->setMin(30);
         $manager->persist($recommandation5);
 
-        $recommandation6 = new Recommandation();
-        $recommandation6->setTexte('Fermer les fenêtres');
-        $recommandation6->setType('co2');
-        $recommandation6->setMin(500);
-        $manager->persist($recommandation6);
 
         $manager->flush();
     }
