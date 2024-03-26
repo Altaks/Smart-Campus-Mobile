@@ -6,7 +6,6 @@ const ListeGraphiques = ({salle}) => {
     else{
         const graphesRender = Object.entries(salle.data).map((data) => {
             const [key,valeur] = data
-            console.log(valeur)
             return <GraphiqueCard key={key} donnees={valeur.donnees} nom={valeur.nom} unite={valeur.unite} />
         })
         return (

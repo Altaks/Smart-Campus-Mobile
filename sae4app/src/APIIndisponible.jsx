@@ -7,14 +7,10 @@ const APIIndisponible = () => {
 
     async function verifierAPIIndisponible(){
         await apiDisponible().then((data) => {
-            console.log(data)
-            if(data.message === 'L\'API est disponible.'){
+            if(data.message === 'L\'API est disponible.')
                 setAPIIndisponible(false)
-            }
             else
-            {
                 setAPIIndisponible(true)
-            }
         }).catch(() => {
             setAPIIndisponible(true)
         })
@@ -38,7 +34,7 @@ const APIIndisponible = () => {
             document.getElementById("apiIndisponible").classList.remove("top-0")
             document.getElementById("apiIndisponible").classList.add("-top-[100vh]", "transition-all", "duration-1000")
         }
-    }, [APIIndisponible]);
+    }, [APIIndisponible])
 
     return (
         <div id={"apiIndisponible"} className={"absolute bg-white flex items-center flex-col w-full h-full -top-[100vh]"}>
