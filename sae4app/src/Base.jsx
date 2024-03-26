@@ -1,4 +1,5 @@
 import {Outlet} from "react-router-dom";
+import APIIndisponible from "./APIIndisponible.jsx";
 
 const Base = () => {
     return (
@@ -6,6 +7,7 @@ const Base = () => {
             <main className={"flex flex-col items-center overflow-hidden transition-all"}>
                 <Outlet/>
             </main>
+            <APIIndisponible/>
         </>
     )
 }
