@@ -7,12 +7,15 @@ const SelectionSalle = ({handleChoixSalle,id}) => {
 
 
     useEffect(() => {
-        getSalles().then((data) => setSalles(data))
-    }, []);
+        getSalles().then((data) => {
+            setSalles(data)
+        })
+    }, [])
 
-    const renderChoixSalle = salles.map((salle) => {
+    const renderChoixSalle = salles.length >= 1 ? salles.map((salle) => {
       return <option key={salle.id} value={salle.id}>{salle.nom}</option>
-    })
+    }) : <></>
+
 
     return (
         <>

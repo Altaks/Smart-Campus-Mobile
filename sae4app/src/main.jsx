@@ -3,8 +3,14 @@ import ReactDOM from 'react-dom/client'
 import './index.css'
 import {createBrowserRouter, RouterProvider} from "react-router-dom"
 import Base from "./Base.jsx"
-import ListeRecommandationsGenerales from "./ListeRecommandationsGenerales.jsx"
+import ListeConseilsGeneraux from "./ListeConseilsGeneraux.jsx"
 import Accueil from "./Accueil.jsx"
+
+const changerTitre = (localisation) => {
+  document.title = localisation + " | Smart Campus"
+}
+
+export {changerTitre}
 
 const router = createBrowserRouter([{
   path: "/",
@@ -15,8 +21,8 @@ const router = createBrowserRouter([{
       element: <Accueil />,
     },
     {
-      path: "/recommandations",
-      element: <ListeRecommandationsGenerales />,
+      path: "/conseils",
+      element: <ListeConseilsGeneraux />,
     }
   ]
 }])

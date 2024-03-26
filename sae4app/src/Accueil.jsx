@@ -5,7 +5,8 @@ import logo from "./assets/logo_univ_lr.png"
 import leftArrow from "./assets/bx-left-arrow.png"
 import rightArrow from "./assets/bx-right-arrow.png"
 import {getSalle} from "./APIService.js"
-import ListeRecommandationsSalle from "./ListeRecommandationsSalle.jsx";
+import ListeRecommandationsSalle from "./ListeRecommandationsSalle.jsx"
+import {changerTitre} from "./main.jsx";
 
 const animationLogoAndTitreEtGraphique = () => {
     document.getElementById("logo").classList.add("translate-x-[100vw]","transition-all", "duration-1000")
@@ -25,7 +26,6 @@ const animationLogoAndTitreEtGraphique = () => {
 const animationAffichageFleches = (salle) => {
     if(salle)
     {
-
         const SallePrecedenteRender = document.getElementById("SallePrecedente")
         if(salle.idSallePrecedente) {
             SallePrecedenteRender.classList.remove("-translate-x-[100vw]")
@@ -84,6 +84,8 @@ const Accueil = () => {
     const [id, setId] = useState(undefined)
     const [salle, setSalle] = useState(undefined)
     const [derniereDonnees, setDerniereDonnees] = useState([null, null, null]) // pour l'affichage des recommandations
+
+    changerTitre("Accueil")
 
     useEffect(() => {
         if(id !== undefined)
