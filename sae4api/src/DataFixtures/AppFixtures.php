@@ -5,6 +5,7 @@ namespace App\DataFixtures;
 use App\Entity\Salle;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
+use App\Entity\Recommandation;
 
 class AppFixtures extends Fixture
 {
@@ -102,6 +103,42 @@ class AppFixtures extends Fixture
         $salleC005->setNom('C005');
         $salleC005->setBaseDeDonnees('sae34bdm2eq3');
         $manager->persist($salleC005);
+
+        $recommandation = new Recommandation();
+        $recommandation->setTexte('Fermer les fenêtres');
+        $recommandation->setType('temp');
+        $recommandation->setMin(18);
+        $manager->persist($recommandation);
+
+        $recommandation2 = new Recommandation();
+        $recommandation2->setTexte('Ouvrir les fenêtres');
+        $recommandation2->setType('temp');
+        $recommandation2->setMax(24);
+        $manager->persist($recommandation2);
+
+        $recommandation3 = new Recommandation();
+        $recommandation3->setTexte('Aérer la salle');
+        $recommandation3->setType('co2');
+        $recommandation3->setMax(800);
+        $manager->persist($recommandation3);
+
+        $recommandation4 = new Recommandation();
+        $recommandation4->setTexte('Aérer la salle');
+        $recommandation4->setType('hum');
+        $recommandation4->setMax(50);
+        $manager->persist($recommandation4);
+
+        $recommandation5 = new Recommandation();
+        $recommandation5->setTexte('Fermer les fenêtres');
+        $recommandation5->setType('hum');
+        $recommandation5->setMin(30);
+        $manager->persist($recommandation5);
+
+        $recommandation6 = new Recommandation();
+        $recommandation6->setTexte('Fermer les fenêtres');
+        $recommandation6->setType('co2');
+        $recommandation6->setMin(500);
+        $manager->persist($recommandation6);
 
         $manager->flush();
     }

@@ -7,7 +7,7 @@ use App\Repository\RecommandationRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: RecommandationRepository::class)]
-#[ApiResource]
+// #[ApiResource]
 class Recommandation
 {
     #[ORM\Id]
