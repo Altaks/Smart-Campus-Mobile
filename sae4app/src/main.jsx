@@ -1,10 +1,34 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import App from './App.jsx'
 import './index.css'
+import {createBrowserRouter, RouterProvider} from "react-router-dom"
+import Base from "./Base.jsx"
+import ListeRecommandationsGenerales from "./ListeRecommandationsGenerales.jsx"
+import Accueil from "./Accueil.jsx"
+
+const changerTitre = (localisation) => {
+  document.title = localisation + " | Smart Campus"
+}
+
+export {changerTitre}
+
+const router = createBrowserRouter([{
+  path: "/",
+  element: <Base />,
+  children: [
+    {
+      path: "/",
+      element: <Accueil />,
+    },
+    {
+      path: "/recommandations",
+      element: <ListeRecommandationsGenerales />,
+    }
+  ]
+}])
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <App />
+    <RouterProvider router={router} />
   </React.StrictMode>,
 )
