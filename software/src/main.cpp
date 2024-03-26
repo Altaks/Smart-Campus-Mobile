@@ -22,12 +22,17 @@
 
 #include "LED/led.h"
 
+#include "Boutons/boutons.h"
+
 Donnees * donnees;
 
 void setup() {
 
     Serial.begin(9600);
     while(!Serial);
+
+    //Boutons
+    initBoutons();
 
     // LED
     initLED();
@@ -46,9 +51,9 @@ void setup() {
     creerPointAcces(nomAP,motDePasseAP);
 
     //Initialise le serveur web et le serveur DNS
-    // setupServeurWeb();
-    // setupServeurDNS();
-    // activerServeurDNS();
+    //  setupServeurWeb();
+    //  setupServeurDNS();
+    //  activerServeurDNS();
 
     delay(100);
 
@@ -96,6 +101,8 @@ void setup() {
         delay(10000);
     }
     while(!estConnecte(nomReseau));
+
+
     
     // Initialise l'heure (peut prendre quelques secondes avant de se connecter au serveur ntp)
     initHeure();
@@ -125,7 +132,7 @@ void setup() {
     donnees->humidite = new float(-1);
     donnees->temperature = new float(-1);
     donnees->co2 = new unsigned int(0);
-
+    
     // Initialise les capteurs
     initTaskTempEtHum(donnees);
     initTaskQualAir(donnees);
@@ -135,7 +142,8 @@ void setup() {
     if (affiche) {initTacheAffichage(donnees);}
 
     // Initialise la tâche de la LED
-    bool led = initTaskLED(donnees);
+    xTaskHandle taskLedHandle = initTaskLED(donnees);
+    setLedTaskHandle(taskLedHandle);
 
     // Initialise l'envoi des données
     bool envoie = initEnvois(donnees);

@@ -11,7 +11,7 @@ void initLED();
 /**
  * Permet d'intialiser la tâche de clignotement de la LED
 */
-bool initTaskLED(Donnees *);
+TaskHandle_t initTaskLED(Donnees *);
 
 /**
  * Tâche qui va produire le clignotement de la LED avec une couleur correspondante aux erreurs

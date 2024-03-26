@@ -31,7 +31,7 @@ void initLED() {
     led->show();
 }
 
-bool initTaskLED(Donnees * donnees) {
+xTaskHandle initTaskLED(Donnees * donnees) {
     xTaskHandle ledTaskHandle;
     xTaskCreate( // Création de la tâche
       taskLED,
@@ -42,7 +42,7 @@ bool initTaskLED(Donnees * donnees) {
         &ledTaskHandle
     );
 
-    return ledTaskHandle != NULL;
+    return ledTaskHandle;
 }
 
 void taskLED(void *PvParameters) {
