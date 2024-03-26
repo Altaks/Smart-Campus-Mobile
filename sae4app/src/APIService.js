@@ -23,3 +23,15 @@ const getSalle = (id) => {
 }
 
 export { getSalle }
+
+const getRecommandations = () => {
+    return new Promise((resolve, reject) => {
+        fetch(`${uri}/recommandations`)
+            .then(response => response.json())
+            .then(data => resolve(data))
+            .catch(error => reject(error))
+        }
+    )
+}
+
+export { getRecommandations }

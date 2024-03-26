@@ -3,7 +3,6 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'r
 
 const GraphiqueCard = ({donnees, nom, unite}) => {
 
-    console.log(donnees, nom, unite)
     if (donnees.length === 0)
         return (
             <div id={"div"} className={"border-2 w-5/6 rounded mt-5 p-2"}>
