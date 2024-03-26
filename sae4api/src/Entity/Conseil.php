@@ -20,7 +20,7 @@ class Conseil
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 300)]
+    #[ORM\Column(length: 500)]
     private ?string $texte = null;
 
     #[ORM\Column(length: 4)]
