@@ -1,5 +1,6 @@
 import {Outlet} from "react-router-dom";
 import {HandHelping, Home} from "lucide-react";
+import APIIndisponible from "./APIIndisponible.jsx";
 
 const Base = () => {
 
@@ -22,6 +23,7 @@ const Base = () => {
             <main className={"flex flex-col items-center overflow-hidden transition-all"}>
                 <Outlet/>
             </main>
+            <APIIndisponible/>
         </>
     )
 }

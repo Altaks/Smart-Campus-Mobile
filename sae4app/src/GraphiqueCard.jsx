@@ -3,7 +3,6 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'r
 
 const GraphiqueCard = ({donnees, nom, unite}) => {
 
-    console.log(donnees, nom, unite)
     if (donnees.length === 0)
         return (
             <div id={"div"} className={"border-2 w-5/6 rounded mt-5 p-2"}>
@@ -15,8 +14,8 @@ const GraphiqueCard = ({donnees, nom, unite}) => {
     const height = window.innerHeight * 0.2;
     const width = window.innerWidth * 0.8;
 
-    const dateDernièreCaputre = new Date(Date.parse(donnees[donnees.length - 1]['date']))
-    const valeurDernièreCapture = donnees[donnees.length - 1]['valeur']
+    const dateDerniereCapture = new Date(Date.parse(donnees[donnees.length - 1]['date']))
+    const valeurDerniereCapture = donnees[donnees.length - 1]['valeur']
     return (
         <div id={"div"} className={"border-2 rounded mt-5 p-2"}>
             <h1>{nom} : ({unite})</h1>
@@ -35,8 +34,8 @@ const GraphiqueCard = ({donnees, nom, unite}) => {
                 <Line type="monotone" dataKey="valeur" stroke="#8884d8" strokeWidth={2}/>
             </LineChart>
             <div className={"flex justify-between"}>
-                <p>Dernière capture à {dateDernièreCaputre.getHours() + ":" + dateDernièreCaputre.getMinutes()}</p>
-                <p>{valeurDernièreCapture + unite}</p>
+                <p>Dernière capture à {dateDerniereCapture.getHours() + ":" + dateDerniereCapture.getMinutes()}</p>
+                <p>{valeurDerniereCapture + unite}</p>
             </div>
         </div>
     )

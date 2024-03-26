@@ -6,6 +6,12 @@ import Base from "./Base.jsx"
 import ListeConseilsGeneraux from "./ListeConseilsGeneraux.jsx"
 import Accueil from "./Accueil.jsx"
 
+const changerTitre = (localisation) => {
+  document.title = localisation + " | Smart Campus"
+}
+
+export {changerTitre}
+
 const router = createBrowserRouter([{
   path: "/",
   element: <Base />,

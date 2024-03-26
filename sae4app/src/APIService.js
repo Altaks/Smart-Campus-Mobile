@@ -1,4 +1,5 @@
-const uri = 'http://localhost:8000/api'
+const uriBase = 'http://localhost:8000'
+const uri = `${uriBase}/api`
 
 const getSalles = () => {
     return new Promise((resolve, reject) => {
@@ -27,7 +28,7 @@ export { getSalle }
 const getConseilsGeneraux = () => {
     return new Promise((resolve, reject) => {
         fetch(`${uri}/conseils`)
-            .then(response => response.json())
+        .then(response => response.json())
             .then(data => resolve(data))
             .catch(error => reject(error))
         }
@@ -35,3 +36,17 @@ const getConseilsGeneraux = () => {
 }
 
 export { getConseilsGeneraux }
+
+const apiDisponible = () => {
+    return new Promise((resolve, reject) => {
+        fetch(`${uriBase}/`,{
+            signal : AbortSignal.timeout(5000)
+        })
+            .then(response => response.json())
+            .then(data => resolve(data))
+            .catch(error => reject(error))
+        }
+    )
+}
+
+export { apiDisponible }
