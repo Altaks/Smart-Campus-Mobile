@@ -23,3 +23,15 @@ const getSalle = (id) => {
 }
 
 export { getSalle }
+
+const getConseilsGeneraux = () => {
+    return new Promise((resolve, reject) => {
+        fetch(`${uri}/conseils`)
+            .then(response => response.json())
+            .then(data => resolve(data))
+            .catch(error => reject(error))
+        }
+    )
+}
+
+export { getConseilsGeneraux }
