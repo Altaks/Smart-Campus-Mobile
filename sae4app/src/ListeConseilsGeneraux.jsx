@@ -18,14 +18,14 @@ const ListeConseilsGeneraux = () => {
 
     return (
         <>
-            <div className={"mt-5"}>
+            <div className={"mt-5 lg:w-1/2"}>
                 <section className={"my-5"}>
                     <h1 className={"w-full text-center text-2xl"}>Conseils Température</h1>
                     <div className={"w-full mx-auto"}>
                         {
                             conseilsTemp.map((conseil, index) => {
                                 return (
-                                    <ConseilCard recommandation={conseil} index={index}/>
+                                    <ConseilCard key={index} recommandation={conseil} index={index}/>
                                 )
                             })
                         }
@@ -37,7 +37,7 @@ const ListeConseilsGeneraux = () => {
                         {
                             conseilsCO2.map((conseil, index) => {
                                 return (
-                                    <ConseilCard recommandation={conseil} index={index}/>
+                                    <ConseilCard key={index} recommandation={conseil} index={index}/>
                                 )
                             })
                         }
@@ -49,11 +49,30 @@ const ListeConseilsGeneraux = () => {
                         {
                             conseilsHum.map((conseil, index) => {
                                 return (
-                                    <ConseilCard recommandation={conseil} index={index}/>
+                                    <ConseilCard key={index} recommandation={conseil} index={index}/>
                                 )
                             })
                         }
                     </div>
+                </section>
+                <hr/>
+                <section className={"my-5"}>
+                    Sources :
+                    <ol className={"ml-5"}>
+                        <li className={"list-disc"}>
+                            <a
+                                className={"underline text-[#126CB5]"}
+                                target={"_blank"}
+                                href="https://batiscolaire.education.gouv.fr/sites/default/files/2022-11/sobrie-te-e-nerge-tique-des-e-coles-et-e-tablissements-scolaires---novembre-2022-pdf-38441.pdf">
+                                Ministère de la culture
+                            </a>
+                        </li>
+                        <li className={"list-disc"}>
+                            <span>
+                                Conseils définis par le personnel
+                            </span>
+                        </li>
+                    </ol>
                 </section>
             </div>
         </>
