@@ -4,7 +4,6 @@ namespace App\DataFixtures;
 
 use App\Entity\Conseil;
 use App\Entity\Salle;
-use App\Entity\Recommandation;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use App\Entity\Recommandation;
