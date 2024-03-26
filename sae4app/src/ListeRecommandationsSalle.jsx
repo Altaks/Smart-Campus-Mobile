@@ -12,16 +12,16 @@ const ListeRecommandationsSalle = ({derniereDonnees}) => { // donnees = [temp, h
 
     useEffect(() => {
         getRecommandations().then((recommandations) => {
+            setHumRecommendations([])
+            setTempRecommendations([])
+            setCo2Recommendations([])
             if (derniereDonnees[0] !== null){
-                ("donnees[0] : ", derniereDonnees[0])
                 setTempRecommendations(recommandations.filter(recommandation => recommandation.type === "temp" && (recommandation.min >= derniereDonnees[0] || recommandation.max <= derniereDonnees[0])))
             }
             if (derniereDonnees[1] !== null){
-                ("donnees[1] : ", derniereDonnees[1])
                 setHumRecommendations(recommandations.filter(recommandation => recommandation.type === "hum" && (recommandation.min >= derniereDonnees[1] || recommandation.max <= derniereDonnees[1])))
             }
             if (derniereDonnees[2] !== null){
-                ("donnees[2] : ", derniereDonnees[2])
                 setCo2Recommendations(recommandations.filter(recommandation => recommandation.type === "co2" && (recommandation.min >= derniereDonnees[2] || recommandation.max <= derniereDonnees[2])))
             }
         })

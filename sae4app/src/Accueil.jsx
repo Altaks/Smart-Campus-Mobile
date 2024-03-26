@@ -51,7 +51,8 @@ const animationAffichageFleches = (salle) => {
  */
 const getDernieresDonnees = (salle) => {
     if (salle === undefined) return [null, null, null]
-    const donnees = salle.data
+    const curDonnees = salle.data
+    if (curDonnees === undefined) return [null, null, null]
 
     let curTemp = null
     let curHum = null
@@ -60,19 +61,19 @@ const getDernieresDonnees = (salle) => {
     // const curTimestamp = new Date().getTime() // possible de filtrer les recommandations en fonction du temps depuis la dernière capture
     // const maxTime = 10  * 60 * 1000 // 10 minutes
 
-    if (donnees.temp !== undefined && donnees.temp.donnees.length > 0) {
+    if (curDonnees.temp !== undefined && curDonnees.temp.donnees.length > 0) {
         // if (! curTimestamp - new Date(donnees.temp.donnees[donnees.temp.donnees.length - 1].date).getTime() > maxTime) {
-            curTemp = donnees.temp.donnees[donnees.temp.donnees.length - 1].valeur
+            curTemp = curDonnees.temp.donnees[curDonnees.temp.donnees.length - 1].valeur
         // }
     }
-    if (donnees.hum !== undefined && donnees.hum.donnees.length > 0) {
+    if (curDonnees.hum !== undefined && curDonnees.hum.donnees.length > 0) {
         // if (! curTimestamp - new Date(donnees.hum.donnees[donnees.hum.donnees.length - 1].date).getTime() > maxTime){
-            curHum = donnees.hum.donnees[donnees.hum.donnees.length - 1].valeur
+            curHum = curDonnees.hum.donnees[curDonnees.hum.donnees.length - 1].valeur
         // }
     }
-    if (donnees.co2 !== undefined && donnees.co2.donnees.length > 0) {
+    if (curDonnees.co2 !== undefined && curDonnees.co2.donnees.length > 0) {
         // if (! curTimestamp - new Date(donnees.co2.donnees[donnees.co2.donnees.length - 1].date).getTime() > maxTime){
-            curCO2 = donnees.co2.donnees[donnees.co2.donnees.length - 1].valeur
+            curCO2 = curDonnees.co2.donnees[curDonnees.co2.donnees.length - 1].valeur
         // }
     }
 
@@ -83,7 +84,7 @@ const getDernieresDonnees = (salle) => {
 const Accueil = () => {
     const [id, setId] = useState(undefined)
     const [salle, setSalle] = useState(undefined)
-    const [derniereDonnees, setDerniereDonnees] = useState([null, null, null]) // pour l'affichage des recommandations
+    const [curDerniereDonnees, setDerniereDonnees] = useState([null, null, null]) // pour l'affichage des recommandations
 
     changerTitre("Accueil")
 
@@ -91,6 +92,7 @@ const Accueil = () => {
         if(id !== undefined)
             getSalle(id).then((data) => {
                 setSalle(data[0])
+                setDerniereDonnees([null, null, null])
                 setDerniereDonnees(getDernieresDonnees(data[0]))
             })
 
@@ -113,7 +115,7 @@ const Accueil = () => {
                 <img id={"ProchaineSalle"} src={rightArrow} className={"w-8 translate-x-[100vw] transition-all duration-1000"} alt={"Prochaine salle"} onClick={() => setId(salle.idProchaineSalle)}/>
             </div>
             <div id={"listeGraphique"} className={"translate-x-[100vw] m-auto"}>
-                <ListeRecommandationsSalle derniereDonnees={derniereDonnees}/>
+                <ListeRecommandationsSalle derniereDonnees={curDerniereDonnees}/>
                 <ListeGraphiques salle={salle}/>
             </div>
         </>
