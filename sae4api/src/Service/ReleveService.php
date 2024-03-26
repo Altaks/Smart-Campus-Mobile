@@ -56,7 +56,7 @@ class ReleveService
             ]
         ]);
 
-        $dateDebut = new \DateTime('-5 days');
+        $dateDebut = new \DateTime('-1 days');
         $dateFin = new DateTime('+1 days');
 
         // Envoi de la requête HTTP
