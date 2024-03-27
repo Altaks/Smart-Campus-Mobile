@@ -1,10 +1,5 @@
 #include "qualAir.h"
 
-#include "Arduino.h"
-#include <EEPROM.h>
-
-#include <Wire.h>
-#include <Adafruit_SGP30.h>
 
 Adafruit_SGP30 sgp;
 
@@ -51,7 +46,8 @@ void taskQualAir(void *pvParameters) {
   }
 }
 
-void initTaskQualAir(Donnees *donnees) {
+xTaskHandle initTaskQualAir(Donnees *donnees) {
+  xTaskHandle qualAirTaskHandle;
   if( sgp.begin()) {
     xTaskCreate(
       taskQualAir,
@@ -59,7 +55,8 @@ void initTaskQualAir(Donnees *donnees) {
       10000,
       donnees,
       9,
-      NULL
+      &qualAirTaskHandle
     );
   }
+  return qualAirTaskHandle;
 }
