@@ -13,7 +13,7 @@
  * Créer une tâche qui envoie les données toutes les 5 minutes
  * @return true si l'initialisation s'est bien passée, false sinon
 */
-bool initEnvois(Donnees *donnees);
+xTaskHandle initEnvois(Donnees *donnees);
 
 /**
  * Fonction permettant d'envoyer les données

@@ -38,7 +38,7 @@ bool initAffichage()
     return true;
 }
 
-bool initTacheAffichage(Donnees *donnees)
+xTaskHandle initTacheAffichage(Donnees *donnees)
 {
     xTaskHandle affichageTaskHandle;
     xTaskCreate( //création de la tâche
@@ -50,7 +50,7 @@ bool initTacheAffichage(Donnees *donnees)
         &affichageTaskHandle
     );
 
-    return affichageTaskHandle != nullptr;
+    return affichageTaskHandle;
 }
 
 void afficher(PAGE &page, Donnees *releves){

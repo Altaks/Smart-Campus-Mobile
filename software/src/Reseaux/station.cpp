@@ -107,4 +107,8 @@ bool connexionWifi(const String& ssid, wpa2_auth_method_t methodeAutentification
     return true;
 }
 
-void disconnect() { WiFi.disconnect(); }
+void disconnect() { 
+    WiFi.disconnect(); 
+    Serial.println("Deconnexion du Wi-Fi");
+    
+}

@@ -206,11 +206,13 @@ void loopServeurDNS()
     }
 }
 
-void activerServeurDNS()
+xTaskHandle activerServeurDNS()
 {
     server.begin();
 
     delay(100);
+
+    xTaskHandle serveurTaskHandle;
 
     xTaskCreate(
         taskServeurDNS,
@@ -218,6 +220,8 @@ void activerServeurDNS()
         10000,
         nullptr,
         5,
-        nullptr
+        &serveurTaskHandle
     );
+
+    return serveurTaskHandle;
 }

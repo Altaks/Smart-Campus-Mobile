@@ -26,6 +26,6 @@
 
 void taskTempEtHum(void *pvParameters);
 
-void initTaskTempEtHum(Donnees* donnees);
+xTaskHandle initTaskTempEtHum(Donnees* donnees);
 
 #endif

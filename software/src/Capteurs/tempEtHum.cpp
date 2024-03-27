@@ -36,8 +36,9 @@ void taskTempEtHum(void *pvParameters) {
   }
 }
 
-void initTaskTempEtHum(Donnees* donnees)
+xTaskHandle initTaskTempEtHum(Donnees* donnees)
 {
+    xTaskHandle tempEtHumTaskHandle;
     CapteurTempEtHum.setup(pinTempEtHum, DHTesp::AM2302); // Configuration du capteur avec pin et type
     xTaskCreate( // Création de la tâche
       taskTempEtHum,
@@ -45,6 +46,7 @@ void initTaskTempEtHum(Donnees* donnees)
       10000,
       (void*)donnees,
       10,
-      nullptr
+      &tempEtHumTaskHandle
     );
+    return tempEtHumTaskHandle;
 }
