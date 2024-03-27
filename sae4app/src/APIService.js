@@ -39,9 +39,21 @@ export { getConseilsGeneraux }
 
 const apiDisponible = () => {
     return new Promise((resolve, reject) => {
-        fetch(`${uriBase}/`,{
-            signal : AbortSignal.timeout(5000)
-        })
+            fetch(`${uriBase}/`,{
+                signal : AbortSignal.timeout(5000)
+            })
+                .then(response => response.json())
+                .then(data => resolve(data))
+                .catch(error => reject(error))
+        }
+    )
+}
+
+
+export { apiDisponible }
+const getRecommandations = () => {
+    return new Promise((resolve, reject) => {
+        fetch(`${uri}/recommandations`)
             .then(response => response.json())
             .then(data => resolve(data))
             .catch(error => reject(error))
@@ -49,4 +61,6 @@ const apiDisponible = () => {
     )
 }
 
-export { apiDisponible }
+
+export { getRecommandations }
+

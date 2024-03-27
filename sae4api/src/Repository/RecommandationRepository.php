@@ -21,6 +21,49 @@ class RecommandationRepository extends ServiceEntityRepository
         parent::__construct($registry, Recommandation::class);
     }
 
+    public function getBySituationType(string $type, float $value): array
+    {
+        if ($type != 'temp' && $type != 'co2' && $type != 'hum') {
+            return [];
+        }
+
+        // SELECT * FROM recommandation WHERE type = :type AND :value <= min OR :value >= max
+        $queryMin = $this->createQueryBuilder('r')
+            ->where('r.type = :type')
+            ->andWhere(':value <= r.min')
+            ->setParameter('type', $type)
+            ->setParameter('value', $value)
+            ->getQuery();
+
+        $queryMax = $this->createQueryBuilder('r')
+            ->where('r.type = :type')
+            ->andWhere(':value >= r.max')
+            ->setParameter('type', $type)
+            ->setParameter('value', $value)
+            ->getQuery();
+
+        return array_merge($queryMin->getResult(), $queryMax->getResult());
+    }
+
+    public function getBySituation(?float $temp, ?int $co2, ?float $hum): array
+    {
+        $temps = null;
+        $co2s = null;
+        $hums = null;
+
+        if ($temp != null){
+            $temps = $this->getBySituationType('temp', $temp);
+        }
+        if ($co2 != null){
+            $co2s = $this->getBySituationType('co2', $co2);
+        }
+        if ($hum != null){
+            $hums = $this->getBySituationType('hum', $hum);
+        }
+
+        return ['temp' => $temps, 'co2' => $co2s, 'hum' => $hums];
+    }
+
 //    /**
 //     * @return Recommandation[] Returns an array of Recommandation objects
 //     */
