@@ -1,7 +1,8 @@
 import PropTypes from "prop-types"
 import {useEffect, useState} from "react";
 import Recommendation from "./Recommendation.jsx";
-import {getRecommandations} from "../../../Services/ApiPlatform/GetRecommandations.js";
+import {getRecommandations} from "../../../Services/ApiPlatform/GetRecommandations.js"
+import trierRecommandationsPourAffichage from "../../../Utilitaires/TriRecommandations.js";
 
 const ListeRecommandations = ({derniereDonnees}) => { // donnees = [temp, hum, co2]
 
@@ -11,21 +12,8 @@ const ListeRecommandations = ({derniereDonnees}) => { // donnees = [temp, hum, c
 
 
     useEffect(() => {
-        getRecommandations().then((recommandations) => {
-            setHumRecommendations([])
-            setTempRecommendations([])
-            setCo2Recommendations([])
-            if (derniereDonnees[0] !== null){
-                setTempRecommendations(recommandations.filter(recommandation => recommandation.type === "temp" && (recommandation.min >= derniereDonnees[0] || recommandation.max <= derniereDonnees[0])))
-            }
-            if (derniereDonnees[1] !== null){
-                setHumRecommendations(recommandations.filter(recommandation => recommandation.type === "hum" && (recommandation.min >= derniereDonnees[1] || recommandation.max <= derniereDonnees[1])))
-            }
-            if (derniereDonnees[2] !== null){
-                setCo2Recommendations(recommandations.filter(recommandation => recommandation.type === "co2" && (recommandation.min >= derniereDonnees[2] || recommandation.max <= derniereDonnees[2])))
-            }
-        })
-    } , [derniereDonnees])
+        getRecommandations(trierRecommandationsPourAffichage, derniereDonnees[0], derniereDonnees[1], derniereDonnees[2], setTempRecommendations, setHumRecommendations, setCo2Recommendations).then()
+    }, [derniereDonnees])
 
     return (
         <div className={"flex flex-col"}>
