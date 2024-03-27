@@ -13,7 +13,7 @@ function trierRecommandationsPourAffichage(recommandations, curTemp, curHum, cur
                 recommandation.max = Infinity
             }
 
-            if (recommandation.type === "temp"){
+            if (recommandation.type === "temp" && curTemp !== null){
                 if (recommandation.min >= curTemp){
                     tempRecommendations.push(recommandation)
                 }
@@ -21,7 +21,7 @@ function trierRecommandationsPourAffichage(recommandations, curTemp, curHum, cur
                     tempRecommendations.push(recommandation)
                 }
             }
-            else if (recommandation.type === "hum"){
+            else if (recommandation.type === "hum" && curHum !== null){
                 if (recommandation.min >= curHum){
                     humRecommendations.push(recommandation)
                 }
@@ -29,7 +29,7 @@ function trierRecommandationsPourAffichage(recommandations, curTemp, curHum, cur
                     humRecommendations.push(recommandation)
                 }
             }
-            else if (recommandation.type === "co2") {
+            else if (recommandation.type === "co2" && curCo2 !== null) {
                 if (recommandation.min >= curCo2) {
                     co2Recommendations.push(recommandation)
                 } else if (recommandation.max <= curCo2) {
