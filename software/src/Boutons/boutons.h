@@ -10,4 +10,22 @@ void IRAM_ATTR ISR_bouton_2();
 
 void initBoutons();
 
-void setLedTaskHandle(xTaskHandle handle);
+void changementMode(void *pvParameters);
+
+void modeConfiguration();
+
+void modeMesure();
+
+void setLedTaskHandle(xTaskHandle taskHandle);
+
+void setTempEtHumTaskHandle(xTaskHandle taskHandle);
+
+void setQualAirTaskHandle(xTaskHandle taskHandle);
+
+void setEnvoisTaskHandle(xTaskHandle taskHandle);
+
+void setAffichageTaskHandle(xTaskHandle taskHandle);
+
+void setListeReseauTaskHandle(xTaskHandle taskHandle);
+
+void setServeurTaskHandle(xTaskHandle taskHandle);
