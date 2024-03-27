@@ -3,7 +3,7 @@ import {AirVent, ChevronLeft, ChevronRight, Droplets, ThermometerSnowflake, Ther
 
 const acceptedTypes = ["temp", "hum", "co2"]
 
-const Recommendation = ({index, type, texte, min, max, unite}) => {
+const Recommandation = ({type, texte, min, max, unite}) => {
 
     const isValid = (type, min, max) => {
         return !(min != null && max != null) && acceptedTypes.includes(type);
@@ -16,7 +16,7 @@ const Recommendation = ({index, type, texte, min, max, unite}) => {
         switch (type) {
             case "temp":
                     return (
-                        <div className={`flex p-4 ${(index % 2 === 0) ? "flex-row" : "flex-row-reverse"} border-2 rounded-lg my-3 mx-auto`}>
+                        <div className={`flex p-4 flex-row border-2 rounded-lg my-3 mx-auto`}>
                             <div className="text-md w-1/4 mr-5 flex flex-col justify-center">
                                 <div>
                                     {
@@ -52,7 +52,7 @@ const Recommendation = ({index, type, texte, min, max, unite}) => {
                     )
             case "hum":
                 return (
-                    <div className={`flex p-4 ${(index % 2 === 0) ? "flex-row" : "flex-row-reverse"} border-2 rounded-lg my-3 mx-auto`}>
+                    <div className={`flex p-4 flex-row border-2 rounded-lg my-3 mx-auto`}>
                         <div className="text-md w-1/4 mr-5 flex flex-col justify-center">
                             <div>
                                 {
@@ -90,7 +90,7 @@ const Recommendation = ({index, type, texte, min, max, unite}) => {
                 )
             case "co2":
                 return (
-                    <div className={`flex p-4 ${(index % 2 === 0) ? "flex-row" : "flex-row-reverse"} border-2 rounded-lg my-3 mx-auto`}>
+                    <div className={`flex p-4 flex-row border-2 rounded-lg my-3 mx-auto`}>
                         <div className="text-md w-1/4 mr-5 flex flex-col justify-center">
                             <div>
                                 {
@@ -134,13 +134,12 @@ const Recommendation = ({index, type, texte, min, max, unite}) => {
 
 }
 
-Recommendation.propTypes = {
+Recommandation.propTypes = {
     type: PropTypes.string.isRequired,
     texte: PropTypes.string.isRequired,
     min: PropTypes.number,
     max: PropTypes.number,
-    index: PropTypes.number.isRequired,
     unite: PropTypes.string.isRequired
 }
 
-export default Recommendation
+export default Recommandation

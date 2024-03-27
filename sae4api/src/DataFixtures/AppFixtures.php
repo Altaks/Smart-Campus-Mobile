@@ -184,15 +184,13 @@ class AppFixtures extends Fixture
         $manager->persist($recommandation3);
 
         $recommandation6 = new Recommandation();
-        $recommandation6->setTexte("Ouvrir les fenêtres et les portes pour faire circuler l'air dans la salle si 
-        possible et ne pas rester trop longtemps dans la salle");
+        $recommandation6->setTexte("Ne pas rester trop longtemps dans la salle");
         $recommandation6->setType('co2');
         $recommandation6->setMax(1500);
         $manager->persist($recommandation6);
 
         $recommandation7 = new Recommandation();
-        $recommandation7->setTexte("Evacuer la salle et ouvrir les fenêtres et les portes pour faire circuler 
-        l'air dans la salle");
+        $recommandation7->setTexte("Evacuer la salle");
         $recommandation7->setType('co2');
         $recommandation7->setMax(2000);
         $manager->persist($recommandation7);
