@@ -173,7 +173,7 @@ class AppFixtures extends Fixture
         $manager->persist($conseil2);
 
         $conseil2 = new Conseil();
-        $conseil2->setTexte("En période d'inoccupation faible (entre 24 et 48h) , il est recommandé de maintenir une température maximale de à 16°C dans les salles de cours. Éteignez le chauffage s'ils sont allumés, laissez les portes ouvertes si possible pour faire circuler l'air dans le bâtiment.");
+        $conseil2->setTexte("En période d'inoccupation faible (entre 24 et 48h) , il est recommandé de maintenir une température maximale de 16°C dans les salles de cours. Éteignez le chauffage s'ils sont allumés, laissez les portes ouvertes si possible pour faire circuler l'air dans le bâtiment.");
         $conseil2->setType("temp");
         $conseil2->setMax(16.0);
         $manager->persist($conseil2);
