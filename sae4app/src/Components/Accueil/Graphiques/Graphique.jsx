@@ -5,8 +5,8 @@ const Graphique = ({donnees, nom, unite}) => {
 
     if (donnees.length === 0)
         return (
-            <div id={"div"} className={"border-2 w-5/6 rounded mt-5 p-2"}>
-                <h1>{nom} : ({unite})</h1>
+            <div id={"div"} className={"border-2 w-max-5/6 rounded mt-5 p-2"}>
+                <h1 className={"w-full"}>{nom} : ({unite})</h1>
                 <p>Pas de données</p>
             </div>
         )

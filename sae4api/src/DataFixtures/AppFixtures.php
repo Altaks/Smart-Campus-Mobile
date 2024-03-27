@@ -4,6 +4,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Conseil;
 use App\Entity\Salle;
+use App\Entity\SystemeAcquisition;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use App\Entity\Recommandation;
@@ -14,95 +15,149 @@ class AppFixtures extends Fixture
     {
         $salleD205 = new Salle();
         $salleD205->setNom('D205');
-        $salleD205->setBaseDeDonnees('sae34bdk1eq1');
+        $ESP001 = new SystemeAcquisition();
+        $ESP001->setBaseDeDonnees('sae34bdk1eq1');
+        $salleD205->addSystemesAcquisition($ESP001);
+        $manager->persist($ESP001);
         $manager->persist($salleD205);
 
         $salleD206 = new Salle();
         $salleD206->setNom('D206');
-        $salleD206->setBaseDeDonnees('sae34bdk1eq2');
+        $ESP002 = new SystemeAcquisition();
+        $ESP002->setBaseDeDonnees('sae34bdk1eq2');
+        $salleD206->addSystemesAcquisition($ESP002);
+        $manager->persist($ESP002);
         $manager->persist($salleD206);
 
 
         $salleD207 = new Salle();
         $salleD207->setNom('D207');
-        $salleD207->setBaseDeDonnees('sae34bdk1eq3');
+        $ESP003 = new SystemeAcquisition();
+        $ESP003->setBaseDeDonnees('sae34bdk1eq3');
+        $salleD207->addSystemesAcquisition($ESP003);
+        $manager->persist($ESP003);
         $manager->persist($salleD207);
 
 
         $salleD204 = new Salle();
         $salleD204->setNom('D204');
-        $salleD204->setBaseDeDonnees('sae34bdk2eq1');
+        $ESP004 = new SystemeAcquisition();
+        $ESP004->setBaseDeDonnees('sae34bdk2eq1');
+        $salleD204->addSystemesAcquisition($ESP004);
+        $manager->persist($ESP004);
         $manager->persist($salleD204);
 
 
         $salleD203 = new Salle();
         $salleD203->setNom('D203');
-        $salleD203->setBaseDeDonnees('sae34bdk2eq2');
+        $ESP005 = new SystemeAcquisition();
+        $ESP005->setBaseDeDonnees('sae34bdk2eq2');
+        $salleD203->addSystemesAcquisition($ESP005);
+        $manager->persist($ESP005);
         $manager->persist($salleD203);
 
         $salleD303 = new Salle();
         $salleD303->setNom('D303');
-        $salleD303->setBaseDeDonnees('sae34bdk2eq3');
+        $ESP006 = new SystemeAcquisition();
+        $ESP006->setBaseDeDonnees('sae34bdk2eq3');
+        $salleD303->addSystemesAcquisition($ESP006);
+        $manager->persist($ESP006);
         $manager->persist($salleD303);
 
         $salleD304 = new Salle();
         $salleD304->setNom('D304');
-        $salleD304->setBaseDeDonnees('sae34bdl1eq1');
+        $ESP007 = new SystemeAcquisition();
+        $ESP007->setBaseDeDonnees('sae34bdl1eq1');
+        $salleD304->addSystemesAcquisition($ESP007);
+        $manager->persist($ESP007);
         $manager->persist($salleD304);
 
         $salleC101 = new Salle();
         $salleC101->setNom('C101');
-        $salleC101->setBaseDeDonnees('sae34bdl1eq2');
+        $ESP008 = new SystemeAcquisition();
+        $ESP008->setBaseDeDonnees('sae34bdl1eq2');
+        $salleC101->addSystemesAcquisition($ESP008);
+        $manager->persist($ESP008);
         $manager->persist($salleC101);
 
         $salleD109 = new Salle();
         $salleD109->setNom('D109');
-        $salleD109->setBaseDeDonnees('sae34bdl1eq3');
+        $ESP009 = new SystemeAcquisition();
+        $ESP009->setBaseDeDonnees('sae34bdl1eq3');
+        $salleD109->addSystemesAcquisition($ESP009);
+        $manager->persist($ESP009);
         $manager->persist($salleD109);
 
         $salleSecretariat = new Salle();
         $salleSecretariat->setNom('Secretariat');
-        $salleSecretariat->setBaseDeDonnees('sae34bdl2eq1');
+        $ESP010 = new SystemeAcquisition();
+        $ESP010->setBaseDeDonnees('sae34bdl2eq1');
+        $salleSecretariat->addSystemesAcquisition($ESP010);
+        $manager->persist($ESP010);
         $manager->persist($salleSecretariat);
 
         $salleD001 = new Salle();
         $salleD001->setNom('D001');
-        $salleD001->setBaseDeDonnees('sae34bdl2eq2');
+        $ESP011 = new SystemeAcquisition();
+        $ESP011->setBaseDeDonnees('sae34bdl2eq2');
+        $salleD001->addSystemesAcquisition($ESP011);
+        $manager->persist($ESP011);
         $manager->persist($salleD001);
 
         $salleD002 = new Salle();
         $salleD002->setNom('D002');
-        $salleD002->setBaseDeDonnees('sae34bdl2eq3');
+        $ESP012 = new SystemeAcquisition();
+        $ESP012->setBaseDeDonnees('sae34bdl2eq3');
+        $salleD002->addSystemesAcquisition($ESP012);
+        $manager->persist($ESP012);
         $manager->persist($salleD002);
 
         $salleD004 = new Salle();
         $salleD004->setNom('D004');
-        $salleD004->setBaseDeDonnees('sae34bdm1eq1');
+        $ESP013 = new SystemeAcquisition();
+        $ESP013->setBaseDeDonnees('sae34bdm1eq1');
+        $salleD004->addSystemesAcquisition($ESP013);
+        $manager->persist($ESP013);
         $manager->persist($salleD004);
 
         $salleC004 = new Salle();
         $salleC004->setNom('C004');
-        $salleC004->setBaseDeDonnees('sae34bdm1eq2');
+        $ESP014 = new SystemeAcquisition();
+        $ESP014->setBaseDeDonnees('sae34bdm1eq2');
+        $salleC004->addSystemesAcquisition($ESP014);
+        $manager->persist($ESP014);
         $manager->persist($salleC004);
 
         $salleC007 = new Salle();
         $salleC007->setNom('C007');
-        $salleC007->setBaseDeDonnees('sae34bdm1eq3');
+        $ESP015 = new SystemeAcquisition();
+        $ESP015->setBaseDeDonnees('sae34bdm1eq3');
+        $salleC007->addSystemesAcquisition($ESP015);
+        $manager->persist($ESP015);
         $manager->persist($salleC007);
 
         $salleD201 = new Salle();
         $salleD201->setNom('D201');
-        $salleD201->setBaseDeDonnees('sae34bdm2eq1');
+        $ESP016 = new SystemeAcquisition();
+        $ESP016->setBaseDeDonnees('sae34bdm2eq1');
+        $salleD201->addSystemesAcquisition($ESP016);
+        $manager->persist($ESP016);
         $manager->persist($salleD201);
 
         $salleD307 = new Salle();
         $salleD307->setNom('D307');
-        $salleD307->setBaseDeDonnees('sae34bdm2eq2');
+        $ESP017 = new SystemeAcquisition();
+        $ESP017->setBaseDeDonnees('sae34bdm2eq2');
+        $salleD307->addSystemesAcquisition($ESP017);
+        $manager->persist($ESP017);
         $manager->persist($salleD307);
 
         $salleC005 = new Salle();
         $salleC005->setNom('C005');
-        $salleC005->setBaseDeDonnees('sae34bdm2eq3');
+        $ESP018 = new SystemeAcquisition();
+        $ESP018->setBaseDeDonnees('sae34bdm2eq3');
+        $salleC005->addSystemesAcquisition($ESP018);
+        $manager->persist($ESP018);
         $manager->persist($salleC005);
 
         // recommendations pour les salles
