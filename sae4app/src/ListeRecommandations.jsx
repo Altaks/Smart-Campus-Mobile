@@ -1,9 +1,9 @@
 import PropTypes from "prop-types"
 import {useEffect, useState} from "react";
-import RecommendationSalle from "./RecommendationSalle.jsx";
+import Recommendation from "./Recommendation.jsx";
 import {getRecommandations} from "./APIService.js";
 
-const ListeRecommandationsSalle = ({derniereDonnees}) => { // donnees = [temp, hum, co2]
+const ListeRecommandations = ({derniereDonnees}) => { // donnees = [temp, hum, co2]
 
     const [tempRecommendations, setTempRecommendations] = useState([])
     const [humRecommendations, setHumRecommendations] = useState([])
@@ -31,25 +31,25 @@ const ListeRecommandationsSalle = ({derniereDonnees}) => { // donnees = [temp, h
         <div className={"flex flex-col"}>
             <div>
                 {tempRecommendations.map((recommandation, index) => {
-                    return <RecommendationSalle key={index} index={index} type={"temp"} texte={recommandation.texte} min={recommandation.min} max={recommandation.max} unite={"°C"}/>
+                    return <Recommendation key={index} index={index} type={"temp"} texte={recommandation.texte} min={recommandation.min} max={recommandation.max} unite={"°C"}/>
                 })}
             </div>
             <div>
                 {humRecommendations.map((recommandation, index) => {
-                    return <RecommendationSalle key={index} index={index} type={"hum"} texte={recommandation.texte} min={recommandation.min} max={recommandation.max} unite={"%"}/>
+                    return <Recommendation key={index} index={index} type={"hum"} texte={recommandation.texte} min={recommandation.min} max={recommandation.max} unite={"%"}/>
                 })}
             </div>
             <div>
                 {co2Recommendations.map((recommandation, index) => {
-                    return <RecommendationSalle key={index} index={index} type={"co2"} texte={recommandation.texte} min={recommandation.min} max={recommandation.max} unite={"ppm"}/>
+                    return <Recommendation key={index} index={index} type={"co2"} texte={recommandation.texte} min={recommandation.min} max={recommandation.max} unite={"ppm"}/>
                 })}
             </div>
         </div>
     )
 }
 
-ListeRecommandationsSalle.propTypes = {
+ListeRecommandations.propTypes = {
     derniereDonnees: PropTypes.array.isRequired
 }
 
-export default ListeRecommandationsSalle
+export default ListeRecommandations

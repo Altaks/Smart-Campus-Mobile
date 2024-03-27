@@ -3,7 +3,7 @@ import {AirVent, ChevronLeft, ChevronRight, Droplets, ThermometerSnowflake, Ther
 
 const acceptedTypes = ["temp", "hum", "co2"]
 
-const RecommendationSalle = ({index, type, texte, min, max, unite}) => {
+const Recommendation = ({index, type, texte, min, max, unite}) => {
 
     const isValid = (type, min, max) => {
         return !(min != null && max != null) && acceptedTypes.includes(type);
@@ -134,7 +134,7 @@ const RecommendationSalle = ({index, type, texte, min, max, unite}) => {
 
 }
 
-RecommendationSalle.propTypes = {
+Recommendation.propTypes = {
     type: PropTypes.string.isRequired,
     texte: PropTypes.string.isRequired,
     min: PropTypes.number,
@@ -143,4 +143,4 @@ RecommendationSalle.propTypes = {
     unite: PropTypes.string.isRequired
 }
 
-export default RecommendationSalle
+export default Recommendation

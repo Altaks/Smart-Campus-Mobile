@@ -5,7 +5,7 @@ import logo from "./assets/logo_univ_lr.png"
 import leftArrow from "./assets/bx-left-arrow.png"
 import rightArrow from "./assets/bx-right-arrow.png"
 import {getSalle} from "./APIService.js"
-import ListeRecommandationsSalle from "./ListeRecommandationsSalle.jsx"
+import ListeRecommandations from "./ListeRecommandations.jsx"
 import {changerTitre} from "./main.jsx";
 
 const animationLogoAndTitreEtGraphique = () => {
@@ -115,7 +115,7 @@ const Accueil = () => {
                 <img id={"ProchaineSalle"} src={rightArrow} className={"w-8 translate-x-[100vw] transition-all duration-1000"} alt={"Prochaine salle"} onClick={() => setId(salle.idProchaineSalle)}/>
             </div>
             <div id={"listeGraphique"} className={"translate-x-[100vw] m-auto"}>
-                <ListeRecommandationsSalle derniereDonnees={curDerniereDonnees}/>
+                <ListeRecommandations derniereDonnees={curDerniereDonnees}/>
                 <ListeGraphiques salle={salle}/>
             </div>
         </>
