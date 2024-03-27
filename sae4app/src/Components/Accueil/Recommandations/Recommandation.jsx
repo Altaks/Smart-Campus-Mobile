@@ -3,127 +3,86 @@ import {AirVent, ChevronLeft, ChevronRight, Droplets, ThermometerSnowflake, Ther
 
 const acceptedTypes = ["temp", "hum", "co2"]
 
-const Recommandation = ({type, texte, min, max, unite}) => {
+const Recommandation = ({id, type, texte, min, max, unite}) => {
 
     const isValid = (type, min, max) => {
         return !(min != null && max != null) && acceptedTypes.includes(type);
     }
 
+    const incone = () => {
+        switch (type) {
+            case "temp":
+                return min ? <ThermometerSnowflake color={"#18b5cb"} className={"mx-auto"}/> : <ThermometerSun color={"#ba2c48"} className={"mx-auto"}/>
+            case "hum":
+                return min ? <Droplets color={"#18b5cb"} className={"mx-auto"}/> : <Droplets color={"#ba2c48"} className={"mx-auto"}/>
+            case "co2":
+                return <AirVent color={"#ba2c48"} className={"mx-auto"}/>
+        }
+    }
+
+    const color = () => {
+        switch (type) {
+            case "temp":
+                return min ? "#18b5cb" : "#ba2c48"
+            case "hum":
+                return min ? "#18b5cb" : "#ba2c48"
+            case "co2":
+                return "#ba2c48"
+        }
+    }
+
+    const prob = () => {
+        switch (type) {
+            case "temp":
+                return min ? "trop basse" : "trop élevée"
+            case "hum":
+                return min ? "trop basse" : "trop élevée"
+            case "co2":
+                return "mauvaise"
+        }
+    }
+
+    const stype = () => {
+        switch (type) {
+            case "temp":
+                return "température"
+            case "hum":
+                return "humidité"
+            case "co2":
+                return "qualité de l'air"
+        }
+    }
+
+    const chevron = () => {
+        return min ? <ChevronLeft color={color()}/> : <ChevronRight color={color()}/>
+    }
+
+    const probText = () => {
+        return min ? <span className={`text-[${color()}]`}>{min}{unite}</span> :
+            <span className={`text-[${color()}]`}>{max}{unite}</span>
+    }
+
     const render = () => {
         if (!isValid(type, min, max)) return <></>
 
-
-        switch (type) {
-            case "temp":
-                    return (
-                        <div className={`flex p-4 flex-row border-2 rounded-lg my-3 mx-auto`}>
-                            <div className="text-md w-1/4 mr-5 flex flex-col justify-center">
-                                <div>
-                                    {
-                                        min ? (
-                                            <ThermometerSnowflake color={"#18b5cb"} className={"mx-auto"}/>
-                                        ) : (
-                                            <ThermometerSun color={"#ba2c48"} className={"mx-auto"}/>
-                                        )
-                                    }
-                                </div>
-                                <div className={"w-full text-center mt-2 flex flex-row justify-center"}>
-                                    {
-                                        min ? <ChevronLeft color={"#18b5cb"}/> :
-                                            <ChevronRight color={"#ba2c48"}/>
-                                    }
-                                    {
-                                        min ?
-                                            <span className={"text-[#18b5cb]"}>{min}{unite}</span>
-                                            :
-                                            <span className={"text-[#ba2c48]"}>{max}{unite}</span>
-                                    }
-                                </div>
-                            </div>
-                            <div className="text-md w-3/4 mx-3">La température est trop {
-                                    min ?
-                                        <span className={"text-[#18b5cb]"}>basse</span>
-                                        :
-                                        <span className={"text-[#ba2c48]"}>élevée</span>
-                                }
-                                <p>{texte}</p>
-                            </div>
-                        </div>
-                    )
-            case "hum":
-                return (
-                    <div className={`flex p-4 flex-row border-2 rounded-lg my-3 mx-auto`}>
-                        <div className="text-md w-1/4 mr-5 flex flex-col justify-center">
-                            <div>
-                                {
-                                    min ? (
-                                        <Droplets color={"#18b5cb"} className={"mx-auto"}/>
-                                    ) : (
-                                        <Droplets color={"#ba2c48"} className={"mx-auto"}/>
-                                    )
-                                }
-                            </div>
-
-                            <div className={"w-full text-center mt-2 flex flex-row justify-center"}>
-                                {
-                                    min ? <ChevronLeft color={"#18b5cb"}/> :
-                                        <ChevronRight color={"#ba2c48"}/>
-                                }
-                                {
-                                    min ?
-                                        <span className={"text-[#18b5cb]"}>{min}{unite}</span>
-                                        :
-                                        <span className={"text-[#ba2c48]"}>{max}{unite}</span>
-                                }
-                            </div>
-                        </div>
-                        <div>
-                            <h5>L&apos;humidité est trop {
-                                min ?
-                                    <span className={"text-[#18b5cb]"}>basse</span>
-                                    :
-                                    <span className={"text-[#ba2c48]"}>élevée</span>
-                            }</h5>
-                            <p>{texte}</p>
-                        </div>
+        return (
+            <div className={`flex py-4 flex-row border-2 rounded-lg my-3 mx-auto mt-0`}>
+                <div className="text-md w-1/4 mr-2 flex flex-col justify-center">
+                    <div>
+                        {incone()}
                     </div>
-                )
-            case "co2":
-                return (
-                    <div className={`flex p-4 flex-row border-2 rounded-lg my-3 mx-auto`}>
-                        <div className="text-md w-1/4 mr-5 flex flex-col justify-center">
-                            <div>
-                                {
-                                    min ? (
-                                        <AirVent color={"#ba2c48"} className={"mx-auto"}/>
-                                    ) : (
-                                        <AirVent color={"#ba2c48"} className={"mx-auto"}/>
-                                    )
-                                }
-                            </div>
-
-                            <div className={"w-full text-center mt-2 flex flex-row justify-center"}>
-                                {
-                                    min ? <ChevronLeft color={"#ba2c48"}/>
-                                        :
-                                        <ChevronRight color={"#ba2c48"}/>
-                                }
-                                {
-                                    min ?
-                                        <span className={"text-[#ba2c48]"}>{min}{unite}</span>
-                                        :
-                                        <span className={"text-[#ba2c48]"}>{max}{unite}</span>
-                                }
-                            </div>
-                        </div>
-                        <div>
-                            <h5>La qualité de l&apos;air est <span className={"text-[#ba2c48]"}>mauvaise</span></h5>
-                            <p>{texte}</p>
-                        </div>
+                    <div className={"w-full text-center mt-2 flex flex-row justify-center"}>
+                        {chevron()}
+                        {probText()}
                     </div>
-                )
-        }
+                </div>
+                <div className="text-md w-3/4 ">La {stype()} est <span className={`text-[${color()}]`}>{prob()}</span>
+                    <p>{texte}</p>
+                </div>
+            </div>
+        )
     }
+
 
 
     return (
@@ -135,6 +94,7 @@ const Recommandation = ({type, texte, min, max, unite}) => {
 }
 
 Recommandation.propTypes = {
+    id: PropTypes.number.isRequired,
     type: PropTypes.string.isRequired,
     texte: PropTypes.string.isRequired,
     min: PropTypes.number,

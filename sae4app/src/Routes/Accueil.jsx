@@ -4,9 +4,11 @@ import {useState} from "react"
 import logo from "../assets/logo_univ_lr.png"
 import getCapturesIntervalle from "../Services/ApiCapture/GetCapturesIntervalle.js"
 import ListeRecommandations from "../Components/Accueil/Recommandations/ListeRecommandations.jsx"
+import BandeauDerniereDonnees from "../Components/Accueil/BandeauDerniereDonnees.jsx"
 import {changerTitre} from "../main.jsx"
 import formalisationDonnees from "../Utilitaires/FormalisationDonnees.js"
 import moment from "moment"
+
 const animationLogoAndTitreEtGraphique = () => {
     document.getElementById("logo").classList.add("translate-x-[100vw]", "transition-all", "duration-1000")
     const titreRender = document.getElementById("titre")
@@ -89,6 +91,7 @@ const Accueil = () => {
                 <SelectionSalle handleChoixSalle={handleChoixSalle} baseDeDonnees={baseDeDonnees}/>
             </div>
             <div id={"listeGraphique"} className={"translate-x-[100vw] m-auto"}>
+                <BandeauDerniereDonnees derniereDonnees={getDernieresDonnees(salle)} isDisplaied={id}/>
                 <ListeRecommandations derniereDonnees={curDerniereDonnees}/>
                 <ListeGraphiques donnes={donnes}/>
             </div>
