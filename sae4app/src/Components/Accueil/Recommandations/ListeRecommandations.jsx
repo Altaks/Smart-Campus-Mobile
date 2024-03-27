@@ -1,7 +1,7 @@
 import PropTypes from "prop-types"
 import {useEffect, useState} from "react";
 import Recommendation from "./Recommendation.jsx";
-import {getRecommandations} from "./APIService.js";
+import {getRecommandations} from "../../../Services/ApiPlatform/GetRecommandations.js";
 
 const ListeRecommandations = ({derniereDonnees}) => { // donnees = [temp, hum, co2]
 

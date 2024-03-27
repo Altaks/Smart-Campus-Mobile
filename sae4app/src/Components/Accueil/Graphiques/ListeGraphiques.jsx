@@ -1,12 +1,12 @@
 import PropTypes from "prop-types"
-import GraphiqueCard from "./GraphiqueCard.jsx"
+import Graphique from "./Graphique.jsx"
 const ListeGraphiques = ({salle}) => {
 
     if(salle === undefined) return <></>
     else{
         const graphesRender = Object.entries(salle.data).map((data) => {
             const [key,valeur] = data
-            return <GraphiqueCard key={key} donnees={valeur.donnees} nom={valeur.nom} unite={valeur.unite} />
+            return <Graphique key={key} donnees={valeur.donnees} nom={valeur.nom} unite={valeur.unite} />
         })
         return (
             <>{graphesRender}</>

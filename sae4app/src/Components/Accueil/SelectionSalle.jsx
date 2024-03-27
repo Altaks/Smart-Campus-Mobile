@@ -1,4 +1,4 @@
-import {getSalles} from "./APIService.js"
+import {getSalles} from "../../Services/ApiPlatform/GetSalles.js"
 import {useEffect, useState} from "react"
 import PropTypes from "prop-types"
 

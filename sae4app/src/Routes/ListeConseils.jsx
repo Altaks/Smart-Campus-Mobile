@@ -1,13 +1,13 @@
 import {useEffect, useState} from "react";
-import {getConseilsGeneraux} from "./APIService.js";
-import ConseilCard from "./ConseilCard.jsx";
+import {getConseils} from "../Services/ApiPlatform/GetConseils.js";
+import Conseil from "../Components/ListeConseils/Conseil.jsx";
 
-const ListeConseilsGeneraux = () => {
+const ListeConseils = () => {
 
     let [conseils, setConseils] = useState([]);
 
     useEffect(() => {
-        getConseilsGeneraux().then((data) => setConseils(data));
+        getConseils().then((data) => setConseils(data));
     }, []);
 
     if(conseils.length === 0) return (<div>Chargement des conseils ...</div>);
@@ -25,7 +25,7 @@ const ListeConseilsGeneraux = () => {
                         {
                             conseilsTemp.map((conseil, index) => {
                                 return (
-                                    <ConseilCard key={index} recommandation={conseil} index={index}/>
+                                    <Conseil key={index} recommandation={conseil} index={index}/>
                                 )
                             })
                         }
@@ -37,7 +37,7 @@ const ListeConseilsGeneraux = () => {
                         {
                             conseilsCO2.map((conseil, index) => {
                                 return (
-                                    <ConseilCard key={index} recommandation={conseil} index={index}/>
+                                    <Conseil key={index} recommandation={conseil} index={index}/>
                                 )
                             })
                         }
@@ -49,7 +49,7 @@ const ListeConseilsGeneraux = () => {
                         {
                             conseilsHum.map((conseil, index) => {
                                 return (
-                                    <ConseilCard key={index} recommandation={conseil} index={index}/>
+                                    <Conseil key={index} recommandation={conseil} index={index}/>
                                 )
                             })
                         }
@@ -79,4 +79,4 @@ const ListeConseilsGeneraux = () => {
     )
 }
 
-export default ListeConseilsGeneraux
+export default ListeConseils

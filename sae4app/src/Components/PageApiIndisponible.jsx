@@ -1,8 +1,7 @@
-import logo from "./assets/logo_univ_lr.png"
+import logo from "../assets/logo_univ_lr.png"
 import {useEffect, useState} from "react"
-import {apiDisponible} from "./APIService.js"
-
-const APIIndisponible = () => {
+import {apiDisponible} from "../Services/ApiPlatform/ApiDisponible.js"
+const PageApiIndisponible = () => {
     const [APIIndisponible, setAPIIndisponible] = useState(false)
 
     async function verifierAPIIndisponible(){
@@ -45,4 +44,4 @@ const APIIndisponible = () => {
     )
 }
 
-export default APIIndisponible
+export default PageApiIndisponible

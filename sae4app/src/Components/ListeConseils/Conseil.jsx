@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import {AirVent, ChevronLeft, ChevronRight, Droplets, ThermometerSnowflake, ThermometerSun} from "lucide-react";
 
-const ConseilCard = ({ recommandation, index}) => {
+const Conseil = ({ recommandation, index}) => {
 
     switch (recommandation.type) {
         case "temp": {
@@ -86,9 +86,9 @@ const ConseilCard = ({ recommandation, index}) => {
     }
 }
 
-ConseilCard.propTypes = {
+Conseil.propTypes = {
     recommandation: PropTypes.object.isRequired,
     index: PropTypes.number.isRequired
 }
 
-export default ConseilCard;
+export default Conseil;
