@@ -3,11 +3,18 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Tests\Fixtures\Metadata\Get;
 use App\Repository\RecommandationRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints\Collection;
 
 #[ORM\Entity(repositoryClass: RecommandationRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    operations: [
+        new GetCollection()
+    ]
+)]
 class Recommandation
 {
     #[ORM\Id]

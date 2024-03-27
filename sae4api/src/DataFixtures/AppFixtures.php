@@ -4,9 +4,9 @@ namespace App\DataFixtures;
 
 use App\Entity\Conseil;
 use App\Entity\Salle;
-use App\Entity\Recommandation;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
+use App\Entity\Recommandation;
 
 class AppFixtures extends Fixture
 {
@@ -104,6 +104,57 @@ class AppFixtures extends Fixture
         $salleC005->setNom('C005');
         $salleC005->setBaseDeDonnees('sae34bdm2eq3');
         $manager->persist($salleC005);
+
+        // recommendations pour les salles
+
+        $recommandation = new Recommandation();
+        $recommandation->setTexte("Il est recommandé de fermer les fenêtres si elle sont ouvertes
+        et d'allumer le chauffage si ils sont éteints");
+        $recommandation->setType('temp');
+        $recommandation->setMin(17);
+        $manager->persist($recommandation);
+
+        $recommandation2 = new Recommandation();
+        $recommandation2->setTexte("Il est recommandé d'ouvrir les fenêtres si elle sont fermées
+        et d'éteindre le chauffage s'il est allumé");
+        $recommandation2->setType('temp');
+        $recommandation2->setMax(21);
+        $manager->persist($recommandation2);
+
+        $recommandation3 = new Recommandation();
+        $recommandation3->setTexte("Ouvrir les fenêtres et les portes pour faire circuler l'air dans la salle si 
+        possible");
+        $recommandation3->setType('co2');
+        $recommandation3->setMax(1000);
+        $manager->persist($recommandation3);
+
+        $recommandation6 = new Recommandation();
+        $recommandation6->setTexte("Ouvrir les fenêtres et les portes pour faire circuler l'air dans la salle si 
+        possible et ne pas rester trop longtemps dans la salle");
+        $recommandation6->setType('co2');
+        $recommandation6->setMax(1500);
+        $manager->persist($recommandation6);
+
+        $recommandation7 = new Recommandation();
+        $recommandation7->setTexte("Evacuer la salle et ouvrir les fenêtres et les portes pour faire circuler 
+        l'air dans la salle");
+        $recommandation7->setType('co2');
+        $recommandation7->setMax(2000);
+        $manager->persist($recommandation7);
+
+        $recommandation4 = new Recommandation();
+        $recommandation4->setTexte("Ouvrir les fenêtres s'il ne pleut pas dehors sinon fermer les fenêtres  
+        et ouvrir les portes");
+        $recommandation4->setType('hum');
+        $recommandation4->setMax(50);
+        $manager->persist($recommandation4);
+
+        $recommandation5 = new Recommandation();
+        $recommandation5->setTexte("S'il pleut dehors, ouvrir les fenêtres légèrement
+        sinon ouvrir complètement les fenetres et ouvrir les portes");
+        $recommandation5->setType('hum');
+        $recommandation5->setMin(30);
+        $manager->persist($recommandation5);
 
         // Recommandations du gouvernement pour les établissements scolaires quant à la sobriété énergétique
 
