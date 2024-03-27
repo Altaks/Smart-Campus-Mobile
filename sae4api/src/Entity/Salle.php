@@ -15,6 +15,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ApiResource(
     description: 'Salle au sein de l\'établissement',
     operations: [
+        new Get(),
         new GetCollection()
     ],
     normalizationContext: ['groups' => 'salle:read']

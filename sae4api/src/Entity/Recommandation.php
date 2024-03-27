@@ -12,6 +12,7 @@ use Symfony\Component\Validator\Constraints\Collection;
 #[ORM\Entity(repositoryClass: RecommandationRepository::class)]
 #[ApiResource(
     operations: [
+        new Get(),
         new GetCollection()
     ]
 )]
