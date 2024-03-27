@@ -22,12 +22,17 @@
 
 #include "LED/led.h"
 
+#include "Boutons/boutons.h"
+
 Donnees * donnees;
 
 void setup() {
 
     Serial.begin(9600);
     while(!Serial);
+
+    //Boutons
+    initBoutons();
 
     // LED
     initLED();
@@ -43,12 +48,12 @@ void setup() {
 
     // Initialisation reseau en mode STATION et POINT D'ACCES
     initReseauStationEtPointAcces();
-    creerPointAcces(nomAP,motDePasseAP);
 
     //Initialise le serveur web et le serveur DNS
-    // setupServeurWeb();
-    // setupServeurDNS();
-    // activerServeurDNS();
+    setupServeurWeb();
+    setupServeurDNS();
+    xTaskHandle serveurTaskHandle = activerServeurDNS();
+    setServeurTaskHandle(serveurTaskHandle);
 
     delay(100);
 
@@ -96,6 +101,8 @@ void setup() {
         delay(10000);
     }
     while(!estConnecte(nomReseau));
+
+
     
     // Initialise l'heure (peut prendre quelques secondes avant de se connecter au serveur ntp)
     initHeure();
@@ -125,20 +132,26 @@ void setup() {
     donnees->humidite = new float(-1);
     donnees->temperature = new float(-1);
     donnees->co2 = new unsigned int(0);
-
+    
     // Initialise les capteurs
-    initTaskTempEtHum(donnees);
-    initTaskQualAir(donnees);
-    initPresence();
+    xTaskHandle tempEtHumTaskHandle = initTaskTempEtHum(donnees);
+    setTempEtHumTaskHandle(tempEtHumTaskHandle);
+
+    xTaskHandle qualAirTaskHandle = initTaskQualAir(donnees);
+    setQualAirTaskHandle(qualAirTaskHandle);
+    //initPresence();
 
     // Active l'affichage carrousel  
-    if (affiche) {initTacheAffichage(donnees);}
+    xTaskHandle affichageTaskHandle = initTacheAffichage(donnees);
+    setAffichageTaskHandle(affichageTaskHandle);
 
     // Initialise la tâche de la LED
-    bool led = initTaskLED(donnees);
+    xTaskHandle ledTaskHandle = initTaskLED(donnees);
+    setLedTaskHandle(ledTaskHandle);
 
     // Initialise l'envoi des données
-    bool envoie = initEnvois(donnees);
+    xTaskHandle envoisTaskhandle = initEnvois(donnees);
+    setEnvoisTaskHandle(envoisTaskhandle);
 
 }
 

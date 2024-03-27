@@ -14,6 +14,6 @@ void setupServeurDNS();
 /**
  * Active le serveur DNS
  */
-void activerServeurDNS();
+xTaskHandle activerServeurDNS();
 
 #endif

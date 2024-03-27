@@ -16,7 +16,7 @@ bool initAffichage();
  * Initialise la tâche d'affichage
  * @return true si l'initialisation s'est bien passée
 */
-bool initTacheAffichage(Donnees *);
+xTaskHandle initTacheAffichage(Donnees *);
 
 /**
  * @brief Tâche d'affichage

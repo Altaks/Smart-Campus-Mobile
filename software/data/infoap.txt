@@ -1,2 +1,2 @@
 nom_ap:SA_Inconnu
-mot_de_passe:ConFig-Sa_325
+mot_de_passe:

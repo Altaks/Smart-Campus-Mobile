@@ -35,7 +35,7 @@
     }
 }
 
-bool initEnvois(Donnees * donnees){
+xTaskHandle initEnvois(Donnees * donnees){
 
     xTaskHandle envoisTaskHandle;
 
@@ -48,11 +48,7 @@ bool initEnvois(Donnees * donnees){
       &envoisTaskHandle
     );
 
-    if(envoisTaskHandle == nullptr){
-        return false;
-    }
-
-    return true;
+    return envoisTaskHandle;
 }
 
 int envoyer(Donnees *donnees){
