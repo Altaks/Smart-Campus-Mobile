@@ -7,6 +7,7 @@ import rightArrow from "../assets/bx-right-arrow.png"
 import {getSalle} from "../Services/ApiPlatform/GetSalle.js"
 import ListeRecommandations from "../Components/Accueil/Recommandations/ListeRecommandations.jsx"
 import {changerTitre} from "../main.jsx";
+import BandeauDerniereDonnees from "../Components/Accueil/BandeauDerniereDonnees.jsx";
 
 const animationLogoAndTitreEtGraphique = () => {
     document.getElementById("logo").classList.add("translate-x-[100vw]","transition-all", "duration-1000")
@@ -115,6 +116,7 @@ const Accueil = () => {
                 <img id={"ProchaineSalle"} src={rightArrow} className={"w-8 translate-x-[100vw] transition-all duration-1000"} alt={"Prochaine salle"} onClick={() => setId(salle.idProchaineSalle)}/>
             </div>
             <div id={"listeGraphique"} className={"translate-x-[100vw] m-auto"}>
+                <BandeauDerniereDonnees derniereDonnees={getDernieresDonnees(salle)} isDisplaied={id}/>
                 <ListeRecommandations derniereDonnees={curDerniereDonnees}/>
                 <ListeGraphiques salle={salle}/>
             </div>

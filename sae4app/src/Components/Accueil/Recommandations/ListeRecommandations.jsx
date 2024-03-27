@@ -6,31 +6,46 @@ import trierRecommandationsPourAffichage from "../../../Utilitaires/TriRecommand
 
 const ListeRecommandations = ({derniereDonnees}) => { // donnees = [temp, hum, co2]
 
-    const [tempRecommendations, setTempRecommendations] = useState([])
-    const [humRecommendations, setHumRecommendations] = useState([])
-    const [co2Recommendations, setCo2Recommendations] = useState([])
+    const [tempRecommendation, setTempRecommendation] = useState(null)
+    const [humRecommendation, setHumRecommendation] = useState(null)
+    const [co2Recommendation, setCo2Recommendation] = useState(null)
 
 
     useEffect(() => {
-        getRecommandations(trierRecommandationsPourAffichage, derniereDonnees[0], derniereDonnees[1], derniereDonnees[2], setTempRecommendations, setHumRecommendations, setCo2Recommendations).then()
+        getRecommandations(trierRecommandationsPourAffichage, derniereDonnees[0], derniereDonnees[1], derniereDonnees[2], setTempRecommendation, setHumRecommendation, setCo2Recommendation).then()
     }, [derniereDonnees])
+
+    const afficherRecommandation = (recommandation) => {
+        if (recommandation === null) return <></>
+        let unite = "";
+
+        switch (recommandation.type){
+            case "temp":
+                unite = "°C"
+                break
+            case "hum":
+                unite = "%"
+                break
+            case "co2":
+                unite = "ppm"
+                break
+        }
+
+        return (<Recommandation unite={unite} id={recommandation.id} texte={recommandation.texte} type={recommandation.type} min={recommandation.min} max={recommandation.max}/> )
+
+    }
+
 
     return (
         <div className={"flex flex-col"}>
             <div>
-                {tempRecommendations.map((recommandation, index) => {
-                    return <Recommandation key={index} type={"temp"} texte={recommandation.texte} min={recommandation.min} max={recommandation.max} unite={"°C"}/>
-                })}
+                {afficherRecommandation(tempRecommendation)}
             </div>
             <div>
-                {humRecommendations.map((recommandation, index) => {
-                    return <Recommandation key={index} type={"hum"} texte={recommandation.texte} min={recommandation.min} max={recommandation.max} unite={"%"}/>
-                })}
+                {afficherRecommandation(humRecommendation)}
             </div>
             <div>
-                {co2Recommendations.map((recommandation, index) => {
-                    return <Recommandation key={index} type={"co2"} texte={recommandation.texte} min={recommandation.min} max={recommandation.max} unite={"ppm"}/>
-                })}
+                {afficherRecommandation(co2Recommendation)}
             </div>
         </div>
     )

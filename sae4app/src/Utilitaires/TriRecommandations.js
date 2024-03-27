@@ -1,8 +1,6 @@
 
 function trierRecommandationsPourAffichage(recommandations, curTemp, curHum, curCo2) {
-    let tempRecommendations = []
-    let humRecommendations = []
-    let co2Recommendations = []
+    let recommandationsAAfficher = [null, null, null]
 
     recommandations.forEach(recommandation => {
         if (!(recommandation.min === null && recommandation.max === null)) {
@@ -15,31 +13,55 @@ function trierRecommandationsPourAffichage(recommandations, curTemp, curHum, cur
 
             if (recommandation.type === "temp" && curTemp !== null){
                 if (recommandation.min >= curTemp){
-                    tempRecommendations.push(recommandation)
+                    if (recommandationsAAfficher[0] === null){
+                        recommandationsAAfficher[0] = recommandation
+                    } else if (recommandationsAAfficher[0].min > recommandation.min){
+                        recommandationsAAfficher[0] = recommandation
+                    }
                 }
                 else if (recommandation.max <= curTemp){
-                    tempRecommendations.push(recommandation)
+                    if (recommandationsAAfficher[0] === null){
+                        recommandationsAAfficher[0] = recommandation
+                    } else if (recommandationsAAfficher[0].max < recommandation.max){
+                        recommandationsAAfficher[0] = recommandation
+                    }
                 }
             }
             else if (recommandation.type === "hum" && curHum !== null){
                 if (recommandation.min >= curHum){
-                    humRecommendations.push(recommandation)
+                    if (recommandationsAAfficher[1] === null){
+                        recommandationsAAfficher[1] = recommandation
+                    } else if (recommandationsAAfficher[1].min > recommandation.min){
+                        recommandationsAAfficher[1] = recommandation
+                    }
                 }
                 else if (recommandation.max <= curHum){
-                    humRecommendations.push(recommandation)
+                    if (recommandationsAAfficher[1] === null){
+                        recommandationsAAfficher[1] = recommandation
+                    } else if (recommandationsAAfficher[1].max < recommandation.max){
+                        recommandationsAAfficher[1] = recommandation
+                    }
                 }
             }
             else if (recommandation.type === "co2" && curCo2 !== null) {
                 if (recommandation.min >= curCo2) {
-                    co2Recommendations.push(recommandation)
+                    if (recommandationsAAfficher[2] === null){
+                        recommandationsAAfficher[2] = recommandation
+                    } else if (recommandationsAAfficher[2].min > recommandation.min){
+                        recommandationsAAfficher[2] = recommandation
+                    }
                 } else if (recommandation.max <= curCo2) {
-                    co2Recommendations.push(recommandation)
+                    if (recommandationsAAfficher[2] === null){
+                        recommandationsAAfficher[2] = recommandation
+                    } else if (recommandationsAAfficher[2].max < recommandation.max){
+                        recommandationsAAfficher[2] = recommandation
+                    }
                 }
             }
         }
     })
 
-    return [tempRecommendations, humRecommendations, co2Recommendations]
+    return recommandationsAAfficher
 }
 
 export default trierRecommandationsPourAffichage
