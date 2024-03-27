@@ -1,12 +1,12 @@
-import SelectionSalle from "./SelectionSalle.jsx"
-import ListeGraphiques from "./ListeGraphiques.jsx"
+import SelectionSalle from "../Components/Accueil/SelectionSalle.jsx"
+import ListeGraphiques from "../Components/Accueil/Graphiques/ListeGraphiques.jsx"
 import {useEffect, useState} from "react"
-import logo from "./assets/logo_univ_lr.png"
-import leftArrow from "./assets/bx-left-arrow.png"
-import rightArrow from "./assets/bx-right-arrow.png"
-import {getSalle} from "./APIService.js"
-import ListeRecommandations from "./ListeRecommandations.jsx"
-import {changerTitre} from "./main.jsx";
+import logo from "../assets/logo_univ_lr.png"
+import leftArrow from "../assets/bx-left-arrow.png"
+import rightArrow from "../assets/bx-right-arrow.png"
+import {getSalle} from "../Services/ApiPlatform/GetSalle.js"
+import ListeRecommandations from "../Components/Accueil/Recommandations/ListeRecommandations.jsx"
+import {changerTitre} from "../main.jsx";
 
 const animationLogoAndTitreEtGraphique = () => {
     document.getElementById("logo").classList.add("translate-x-[100vw]","transition-all", "duration-1000")

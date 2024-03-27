@@ -3,8 +3,8 @@ import ReactDOM from 'react-dom/client'
 import './index.css'
 import {createBrowserRouter, RouterProvider} from "react-router-dom"
 import Base from "./Base.jsx"
-import ListeConseilsGeneraux from "./ListeConseilsGeneraux.jsx"
-import Accueil from "./Accueil.jsx"
+import ListeConseils from "./Routes/ListeConseils.jsx"
+import Accueil from "./Routes/Accueil.jsx"
 
 const changerTitre = (localisation) => {
   document.title = localisation + " | Smart Campus"
@@ -22,7 +22,7 @@ const router = createBrowserRouter([{
     },
     {
       path: "/conseils",
-      element: <ListeConseilsGeneraux />,
+      element: <ListeConseils />,
     }
   ]
 }])

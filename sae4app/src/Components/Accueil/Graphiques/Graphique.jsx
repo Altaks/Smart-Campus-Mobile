@@ -1,7 +1,7 @@
 import PropTypes from "prop-types"
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts'
 
-const GraphiqueCard = ({donnees, nom, unite}) => {
+const Graphique = ({donnees, nom, unite}) => {
 
     if (donnees.length === 0)
         return (
@@ -40,10 +40,10 @@ const GraphiqueCard = ({donnees, nom, unite}) => {
         </div>
     )
 }
-GraphiqueCard.propTypes = {
+Graphique.propTypes = {
     donnees: PropTypes.array.isRequired,
     nom: PropTypes.string.isRequired,
     unite: PropTypes.string.isRequired
 }
 
-export default GraphiqueCard
+export default Graphique
