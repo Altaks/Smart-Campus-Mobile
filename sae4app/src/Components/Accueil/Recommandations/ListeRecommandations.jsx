@@ -1,6 +1,6 @@
 import PropTypes from "prop-types"
 import {useEffect, useState} from "react";
-import Recommendation from "./Recommendation.jsx";
+import Recommandation from "./Recommandation.jsx";
 import {getRecommandations} from "../../../Services/ApiPlatform/GetRecommandations.js"
 import trierRecommandationsPourAffichage from "../../../Utilitaires/TriRecommandations.js";
 
@@ -19,17 +19,17 @@ const ListeRecommandations = ({derniereDonnees}) => { // donnees = [temp, hum, c
         <div className={"flex flex-col"}>
             <div>
                 {tempRecommendations.map((recommandation, index) => {
-                    return <Recommendation key={index} index={index} type={"temp"} texte={recommandation.texte} min={recommandation.min} max={recommandation.max} unite={"°C"}/>
+                    return <Recommandation key={index} type={"temp"} texte={recommandation.texte} min={recommandation.min} max={recommandation.max} unite={"°C"}/>
                 })}
             </div>
             <div>
                 {humRecommendations.map((recommandation, index) => {
-                    return <Recommendation key={index} index={index} type={"hum"} texte={recommandation.texte} min={recommandation.min} max={recommandation.max} unite={"%"}/>
+                    return <Recommandation key={index} type={"hum"} texte={recommandation.texte} min={recommandation.min} max={recommandation.max} unite={"%"}/>
                 })}
             </div>
             <div>
                 {co2Recommendations.map((recommandation, index) => {
-                    return <Recommendation key={index} index={index} type={"co2"} texte={recommandation.texte} min={recommandation.min} max={recommandation.max} unite={"ppm"}/>
+                    return <Recommandation key={index} type={"co2"} texte={recommandation.texte} min={recommandation.min} max={recommandation.max} unite={"ppm"}/>
                 })}
             </div>
         </div>
