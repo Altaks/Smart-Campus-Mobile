@@ -78,7 +78,7 @@ const Recommendation = ({index, type, texte, min, max, unite}) => {
                             </div>
                         </div>
                         <div>
-                            <h5>L'humidité est trop {
+                            <h5>L&apos;humidité est trop {
                                 min ?
                                     <span className={"text-[#18b5cb]"}>basse</span>
                                     :
@@ -117,7 +117,7 @@ const Recommendation = ({index, type, texte, min, max, unite}) => {
                             </div>
                         </div>
                         <div>
-                            <h5>La qualité de l'air est <span className={"text-[#ba2c48]"}>mauvaise</span></h5>
+                            <h5>La qualité de l&apos;air est <span className={"text-[#ba2c48]"}>mauvaise</span></h5>
                             <p>{texte}</p>
                         </div>
                     </div>
