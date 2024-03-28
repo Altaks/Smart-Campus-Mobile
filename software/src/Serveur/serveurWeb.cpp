@@ -212,7 +212,10 @@ void loopServeurDNS()
 
 xTaskHandle activerServeurDNS()
 {
+    setupServeurWeb();
+    setupServeurDNS();
     server.begin();
+
 
     delay(100);
 
@@ -221,11 +224,29 @@ xTaskHandle activerServeurDNS()
     xTaskCreate(
         taskServeurDNS,
         "loopServeurWeb",
-        10000,
+        1000,
         nullptr,
         5,
         &serveurTaskHandle
     );
 
     return serveurTaskHandle;
+}
+
+void stopServeurDNS(xTaskHandle serveurTaskHandle)
+{
+
+    if (serveurTaskHandle == nullptr)
+    {
+        return;
+    }
+    // suspend the task
+    vTaskSuspend(serveurTaskHandle);
+
+    // free the memory used by the task
+    dnsServer.stop();
+    server.end();
+
+    // delete the task
+    vTaskDelete(serveurTaskHandle);
 }

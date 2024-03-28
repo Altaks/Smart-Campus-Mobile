@@ -1,9 +1,4 @@
 #include "boutons.h"
-#include "../LED/led.h"
-#include "../Fichiers/fichierSPIFFS.h"
-#include "../Reseaux/station.h"
-#include "../Reseaux/pointAcces.h"
-#include "../Affichage/affichage.h"
 
 
 struct Handle {
@@ -18,20 +13,13 @@ struct Handle {
 
 Handle handle;
 
-enum Mode {
-  CONFIGURATION=0,
-  CONFIGURATION_VERS_MESURE=1,
-  MESURE=2,
-  MESURE_VERS_CONFIGURATION=3,
-};
-
 Mode mode;
 
-
+Donnees * donneesBoutons;
 
 xTaskHandle changementModeTaskHandle;
 
-void initBoutons() {
+void initBoutons(Mode modeDebut) {
   Serial.begin(9600);
   while (!Serial);
   Serial.println("Starting TwoButtons...");
@@ -44,7 +32,7 @@ void initBoutons() {
   handle.listeReseau = NULL;
   handle.serveur = NULL;
 
-  mode = MESURE;
+  mode = modeDebut;
 
   attachInterrupt(PIN_INPUT1, ISR_bouton_1, FALLING);
   attachInterrupt(PIN_INPUT2, ISR_bouton_2, FALLING);
@@ -97,19 +85,32 @@ void modeConfiguration()
 
   if(handle.led != NULL) {
     vTaskSuspend(handle.led);
+    vTaskDelete(handle.led);
+    handle.led = NULL;
   }
 
-  if(handle.tempEtHum != NULL)
+  if(handle.tempEtHum != NULL) {
     vTaskSuspend(handle.tempEtHum);
+    vTaskDelete(handle.tempEtHum);
+    handle.tempEtHum = NULL;
+  }
 
-  if(handle.qualAir != NULL)
+  if(handle.qualAir != NULL) {
     vTaskSuspend(handle.qualAir);
+    vTaskDelete(handle.qualAir);
+    handle.qualAir = NULL;
+  }
 
-  if(handle.envois != NULL)
+  if(handle.envois != NULL) {
     vTaskSuspend(handle.envois);
+    vTaskDelete(handle.envois);
+    handle.envois = NULL;
+  }
 
   if(handle.affichage != NULL) {
     vTaskSuspend(handle.affichage);
+    vTaskDelete(handle.affichage);
+    handle.affichage = NULL;
   }
 
   if(handle.listeReseau != NULL) {
@@ -130,6 +131,8 @@ void modeConfiguration()
 
   if(handle.serveur != NULL){
     vTaskResume(handle.serveur);
+  } else {
+    setServeurTaskHandle(activerServeurDNS());
   }
 
   mode = CONFIGURATION;
@@ -139,31 +142,56 @@ void modeMesure()
 {
   Serial.println("Mode mesure: reprise des tâches");
 
+  Serial.println("Led");
   if(handle.led != NULL) {
     vTaskResume(handle.led);
+  }else{
+    initLED();
   }
 
-  if(handle.tempEtHum != NULL)
+  Serial.println("temp et hum");
+  if(handle.tempEtHum != NULL) {
     vTaskResume(handle.tempEtHum);
+  } else {
+    initTaskTempEtHum(donneesBoutons);
+  }
 
-  if(handle.qualAir != NULL)
+  Serial.println("air");
+  if(handle.qualAir != NULL) {
     vTaskResume(handle.qualAir);
+  } else {
+    initTaskQualAir(donneesBoutons);
+  }
 
-  if(handle.envois != NULL)
+  Serial.println("envois");
+  if(handle.envois != NULL) {
     vTaskResume(handle.envois);
+  } else {
+    initEnvois(donneesBoutons);
+  }
 
+  Serial.println("Affichage");
   if(handle.affichage != NULL) {
     vTaskResume(handle.affichage);
+  } else {
+    initTacheAffichage(donneesBoutons);
   }
 
+  Serial.println("ListeReseau");
   if(handle.listeReseau != NULL) {
     vTaskSuspend(handle.listeReseau);
+    vTaskDelete(handle.listeReseau);
+    handle.listeReseau = NULL;
   }
 
+  Serial.println("Reseau");
   initReseauStation();
 
+  Serial.println("Serveur");
   if(handle.serveur != NULL){
     vTaskSuspend(handle.serveur);
+    vTaskDelete(handle.serveur);
+    handle.serveur = NULL;
   }
 
   mode = MESURE;
@@ -198,4 +226,8 @@ void setListeReseauTaskHandle(xTaskHandle taskHandle) {
 
 void setServeurTaskHandle(xTaskHandle taskHandle) {
   handle.serveur = taskHandle;
-}  
+}
+
+void setDonnees(Donnees *donnees) {
+  donneesBoutons = donnees;
+}

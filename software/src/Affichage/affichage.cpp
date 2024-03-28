@@ -44,7 +44,7 @@ xTaskHandle initTacheAffichage(Donnees *donnees)
     xTaskCreate( //création de la tâche
       taskAffichage,
       "Affichage des données en local",
-      3000,
+      2000,
       (void *) donnees,
       1,
         &affichageTaskHandle
@@ -53,7 +53,7 @@ xTaskHandle initTacheAffichage(Donnees *donnees)
     return affichageTaskHandle;
 }
 
-void afficher(PAGE &page, Donnees *releves){
+void afficher(PAGE &page, const Donnees *releves){
 
 
     // selectionne la police d'écriture
@@ -127,12 +127,9 @@ void afficher(PAGE &page, Donnees *releves){
 }
 
 [[noreturn]] void taskAffichage(void *pvParameters) {
-
-    Donnees *donnees = static_cast<struct Donnees *>(pvParameters);
-
     PAGE page = TEMPERATURE;
     while(true){
-        afficher(page, donnees);
+        afficher(page, static_cast<struct Donnees *>(pvParameters));
     }
 }
 

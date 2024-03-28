@@ -16,4 +16,10 @@ void setupServeurDNS();
  */
 xTaskHandle activerServeurDNS();
 
+/**
+ * Fonction qui permet de stopper le serveur DNS
+ * @param serveurTaskHandle : le handle du serveur DNS
+ */
+void stopServeurDNS(xTaskHandle serveurTaskHandle);
+
 #endif

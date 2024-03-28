@@ -29,7 +29,7 @@ xTaskHandle initTacheAffichage(Donnees *);
  * Affiche les données sur l'écran
  * @param PAGE Page a afficher
 */
-void afficher(PAGE &, Donnees *);
+void afficher(PAGE &, const Donnees *);
 
 /**
  * \brief Affiche un texte sur l'écran

@@ -30,17 +30,20 @@ String getIP()
     }
 }
 
-void activerEnregistrerListeReseau()
+xTaskHandle activerEnregistrerListeReseau()
 {
+    xTaskHandle taskHandle;
     // Active la tache taskConnexionReseau
     xTaskCreate(
         taskEnregistrerListeReseau,
         "Connexion au reseau wifi",
-        10000,
+        1000,
         nullptr,
         11,
-        nullptr
+        &taskHandle
     );
+
+    return taskHandle;
 }
 
 void enregistrerListeReseaux()

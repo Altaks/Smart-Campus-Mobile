@@ -3,36 +3,14 @@
 
 DHTesp CapteurTempEtHum;
 
-/*
-void initTempEtHum()
-{
-    CapteurTempEtHum.setup(pinTempEtHum, DHTesp::AM2302); // Configuration du capteur avec pin et type
-}
+[[noreturn]] void taskTempEtHum(void *pvParameters) {
 
-double getTemperature()
-{
-  TempAndHumidity TempEtHum = CapteurTempEtHum.getTempAndHumidity();
-  return (isnan(TempEtHum.temperature) ?  -1 : round(TempEtHum.temperature * 10.0)/10.0);
-}
+  while(true){
+    delay(2000); // Délai avant nouvelle mesure 2s pour être sûr que l'affichage ai la nouvelle valeur
 
-double getHumidite()
-{
-  TempAndHumidity TempEtHum = CapteurTempEtHum.getTempAndHumidity();
-  return (isnan(TempEtHum.humidity) ?  -1 : round(TempEtHum.humidity * 10.0)/10.0);
-}
-*/
-
-void taskTempEtHum(void *pvParameters) {
-
-  Donnees* values = (struct Donnees*) pvParameters;
-
-  for(;;){
-    delay(2000); // Délai avant nouvelle mesure
     TempAndHumidity TempEtHum = CapteurTempEtHum.getTempAndHumidity(); // Récupère les valeurs d'humidité et de température
-    double temperature = (isnan(TempEtHum.temperature) ?  -1 : round(TempEtHum.temperature * 10.0)/10.0); // Arrondi la valeur et reste a NaN si NaN pour ne pas "arrondir" NaN
-    double humidite = (isnan(TempEtHum.humidity) ?  -1 : round(TempEtHum.humidity * 10.0)/10.0);
-    *values->temperature = temperature;
-    *values->humidite = humidite;
+    *static_cast<Donnees *>(pvParameters)->temperature = static_cast<float>(isnan(TempEtHum.temperature) ? -1 : round(TempEtHum.temperature * 10.0) / 10.0); // Arrondi la valeur et reste a NaN si NaN pour ne pas "arrondir" NaN
+    *static_cast<Donnees *>(pvParameters)->humidite = static_cast<float>(isnan(TempEtHum.humidity) ? -1 : round(TempEtHum.humidity * 10.0) / 10.0); // Arrondi la valeur et reste a NaN si NaN pour ne pas "arrondir" NaN
   }
 }
 
@@ -43,7 +21,7 @@ xTaskHandle initTaskTempEtHum(Donnees* donnees)
     xTaskCreate( // Création de la tâche
       taskTempEtHum,
       "taskTempEtHum",
-      10000,
+      1000,
       (void*)donnees,
       10,
       &tempEtHumTaskHandle

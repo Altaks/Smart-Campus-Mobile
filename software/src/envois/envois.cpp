@@ -17,7 +17,7 @@
         Serial.println("______________________________________");
         Serial.println("Debut de l'envoi des données :");
         Serial.println("______________________________________");
-        int codeRetour = envoyer((struct Donnees*) pvParameters);
+        int codeRetour = envoyer(static_cast<struct Donnees *>(pvParameters));
         if (codeRetour == 0){
             Serial.println("Donnees envoyees");
             setEnvoieState(true);
@@ -40,7 +40,7 @@ xTaskHandle initEnvois(Donnees * donnees){
     xTaskCreate( //création de la tâche
       taskEnvois,
       "Envois des donnees sur l'api",
-      8000,
+      10000,
       donnees,
       1,
       &envoisTaskHandle
@@ -160,7 +160,7 @@ int envoyer(Donnees *donnees){
         if(description == "-1") description = "";
 
         // Création de la chaine de caractère à envoyer
-        String donneesAEnvoyerStr = R"({"nom":")"+ nomsValeurs[i] +
+        const String donneesAEnvoyerStr = R"({"nom":")"+ nomsValeurs[i] +
                                     R"(","valeur":")"+ s_donnees[i] +
                                     R"(","dateCapture":")"+ date +
                                     R"(","localisation":")"+ recupererValeur("/infobd.txt", "localisation").c_str() +
@@ -182,8 +182,8 @@ int envoyer(Donnees *donnees){
 
 
         // affiche le code de reponse
-        if (http.errorToString(codeReponse) != ""){
-            Serial.println("Code de réponse : " + String(codeReponse) + " : " + http.errorToString(codeReponse));
+        if (HTTPClient::errorToString(codeReponse) != ""){
+            Serial.println("Code de réponse : " + String(codeReponse) + " : " + HTTPClient::errorToString(codeReponse));
         }
         else{
             Serial.println("Code de réponse : " + String(codeReponse));
@@ -192,7 +192,6 @@ int envoyer(Donnees *donnees){
         if (codeReponse != 201){
             codeErreur = -4;
         }
-
     }
     
     // libère les ressources
