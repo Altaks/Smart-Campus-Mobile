@@ -1,0 +1,18 @@
+import apiConfig from './config.json'
+const PostActions = (salleId, recommandationId) => {
+    return new Promise((resolve, reject) => {
+            fetch(apiConfig.uriBase + apiConfig.apiPath + apiConfig.actionsPath, {
+                method:'POST',
+                body: JSON.stringify({
+                    recommandation: apiConfig.apiPath + apiConfig.recommandationsPath + recommandationId,
+                    salle: apiConfig.apiPath + apiConfig.sallesPath + salleId
+                })
+            })
+                .then(response => response.json())
+                .then(data => resolve(data))
+                .catch(error => reject(error))
+        }
+    )
+}
+
+export { PostActions }

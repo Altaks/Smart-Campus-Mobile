@@ -59,7 +59,7 @@ const BandeauDerniereDonnees = ({derniereDonnees, isDisplaied}) => { // donnees 
 
 BandeauDerniereDonnees.propTypes = {
     derniereDonnees: PropTypes.array.isRequired,
-    isDisplaied: PropTypes.object.isRequired
+    isDisplaied: PropTypes.number
 }
 
 export default BandeauDerniereDonnees

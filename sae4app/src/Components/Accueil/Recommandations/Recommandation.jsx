@@ -3,11 +3,13 @@ import {AirVent, ChevronLeft, ChevronRight, Droplets, ThermometerSnowflake, Ther
 
 const acceptedTypes = ["temp", "hum", "co2"]
 
-const Recommandation = ({id, type, texte, min, max, unite}) => {
+const Recommandation = ({type, texte, min, max, unite}) => {
 
     const isValid = (type, min, max) => {
         return !(min != null && max != null) && acceptedTypes.includes(type);
     }
+
+
 
     const incone = () => {
         switch (type) {
@@ -94,12 +96,13 @@ const Recommandation = ({id, type, texte, min, max, unite}) => {
 }
 
 Recommandation.propTypes = {
-    id: PropTypes.number.isRequired,
-    type: PropTypes.string.isRequired,
-    texte: PropTypes.string.isRequired,
+    recommandationId: PropTypes.number,
+    type: PropTypes.string,
+    texte: PropTypes.string,
     min: PropTypes.number,
     max: PropTypes.number,
-    unite: PropTypes.string.isRequired
+    unite: PropTypes.string.isRequired,
+    salleId: PropTypes.number
 }
 
 export default Recommandation
