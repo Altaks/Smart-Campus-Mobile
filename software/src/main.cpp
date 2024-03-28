@@ -27,12 +27,18 @@
 Donnees * donnees;
 
 void setup() {
-
     Serial.begin(9600);
     while(!Serial);
 
     //Boutons
     initBoutons();
+
+    Serial.printf("Etat de la HEAP : %s\n", heap_caps_check_integrity_all(true) ? "OK" : "BAD");
+    Serial.println((String) "Mémoire PSRAM totale : " + ESP.getPsramSize());
+    Serial.println((String) "Mémoire PSRAM disponible : " + ESP.getFreePsram());
+
+    Serial.printf("Bloc mémoire le plus large %i/%i\n", heap_caps_get_largest_free_block(MALLOC_CAP_DEFAULT),
+                  heap_caps_get_free_size(MALLOC_CAP_DEFAULT));
 
     // LED
     initLED();
@@ -40,6 +46,9 @@ void setup() {
     delay(1000);
     // Initilaisation système de fichier
     initSystemeFichier();
+
+    Serial.printf("Bloc mémoire le plus large après init FS %i/%i\n", heap_caps_get_largest_free_block(MALLOC_CAP_DEFAULT),
+                  heap_caps_get_free_size(MALLOC_CAP_DEFAULT));
     
     delay(100);
     // Récupère les informations du point d'accès 
@@ -49,16 +58,26 @@ void setup() {
     // Initialisation reseau en mode STATION et POINT D'ACCES
     initReseauStationEtPointAcces();
 
+    Serial.printf("Bloc mémoire le plus large après init Réseau et Station %i/%i\n", heap_caps_get_largest_free_block(MALLOC_CAP_DEFAULT),
+                  heap_caps_get_free_size(MALLOC_CAP_DEFAULT));
+
     //Initialise le serveur web et le serveur DNS
     setupServeurWeb();
     setupServeurDNS();
     xTaskHandle serveurTaskHandle = activerServeurDNS();
     setServeurTaskHandle(serveurTaskHandle);
 
+    Serial.printf("Bloc mémoire le plus large après setup serveur web et DNS %i/%i\n", heap_caps_get_largest_free_block(MALLOC_CAP_DEFAULT),
+                  heap_caps_get_free_size(MALLOC_CAP_DEFAULT));
+
     delay(100);
 
     //Initialise l'affichage
-    bool affiche = initAffichage(); 
+    initAffichage();
+
+
+    Serial.printf("Bloc mémoire le plus large après init affichage %i/%i\n", heap_caps_get_largest_free_block(MALLOC_CAP_DEFAULT),
+                  heap_caps_get_free_size(MALLOC_CAP_DEFAULT));
     
     //Affichage du nom de l'AP et de l'adresse IP a utilisé
     displayText("Nom du Wifi : \n" + nomAP+"\nIP : "+getIP(),0,10);
@@ -103,6 +122,8 @@ void setup() {
     while(!estConnecte(nomReseau));
 
 
+    Serial.printf("Bloc mémoire le plus large après connexion WiFi %i/%i\n", heap_caps_get_largest_free_block(MALLOC_CAP_DEFAULT),
+                  heap_caps_get_free_size(MALLOC_CAP_DEFAULT));
     
     // Initialise l'heure (peut prendre quelques secondes avant de se connecter au serveur ntp)
     initHeure();
@@ -123,7 +144,7 @@ void setup() {
     afficherContenuFichier("/infoap.txt");
     afficherContenuFichier("/infobd.txt");
     afficherContenuFichier("/inforeseau.txt");
-    afficherContenuFichier("/listereseau.txt");
+    afficherContenuFichier("/listereseaux.txt");
 
     // Active l'enregistrement périodique des réseaux wifi détectés par l'ESP dans le fichier /listereseaux.txt
     // activerEnregistrerListeReseau();
@@ -132,6 +153,10 @@ void setup() {
     donnees->humidite = new float(-1);
     donnees->temperature = new float(-1);
     donnees->co2 = new unsigned int(0);
+
+
+    Serial.printf("Bloc mémoire le plus large avant init des tasks %i/%i\n", heap_caps_get_largest_free_block(MALLOC_CAP_DEFAULT),
+                  heap_caps_get_free_size(MALLOC_CAP_DEFAULT));
     
     // Initialise les capteurs
     xTaskHandle tempEtHumTaskHandle = initTaskTempEtHum(donnees);
@@ -152,6 +177,10 @@ void setup() {
     // Initialise l'envoi des données
     xTaskHandle envoisTaskhandle = initEnvois(donnees);
     setEnvoisTaskHandle(envoisTaskhandle);
+
+
+    Serial.printf("Bloc mémoire le plus large après init des tasks %i/%i\n", heap_caps_get_largest_free_block(MALLOC_CAP_DEFAULT),
+                  heap_caps_get_free_size(MALLOC_CAP_DEFAULT));
 
 }
 

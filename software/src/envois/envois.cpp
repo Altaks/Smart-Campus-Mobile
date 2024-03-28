@@ -12,14 +12,12 @@
 
 [[noreturn]] void taskEnvois(void *pvParameters){
 
-    Donnees * donnees = (struct Donnees*) pvParameters;
-
     while(true){
         vTaskDelay(pdMS_TO_TICKS(30 * 1000));
         Serial.println("______________________________________");
         Serial.println("Debut de l'envoi des données :");
         Serial.println("______________________________________");
-        int codeRetour = envoyer(donnees);
+        int codeRetour = envoyer((struct Donnees*) pvParameters);
         if (codeRetour == 0){
             Serial.println("Donnees envoyees");
             setEnvoieState(true);
@@ -52,6 +50,8 @@ xTaskHandle initEnvois(Donnees * donnees){
 }
 
 int envoyer(Donnees *donnees){
+
+    Serial.printf("Mémoire disponible début fct envoi : %i | %i\n", esp_get_free_internal_heap_size(), esp_get_free_heap_size());
     
     Serial.println("Vérification de la connexion au réseau");
     // verification de la connexion au réseau
@@ -82,8 +82,12 @@ int envoyer(Donnees *donnees){
 
     Serial.println("Création du client");
 
+    Serial.printf("Mémoire disponible avant création client HTTP : %i | %i\n", esp_get_free_internal_heap_size(), esp_get_free_heap_size());
+
     // création du client http pour envoyer les données
     HTTPClient http;
+
+    Serial.printf("Mémoire disponible après création client : %i | %i\n", esp_get_free_internal_heap_size(), esp_get_free_heap_size());
 
 
     // requete POST basée sur l'exemple de l'api suivant :
@@ -113,21 +117,24 @@ int envoyer(Donnees *donnees){
 
     Serial.println("Connexion au serveur d'API");
 
+    Serial.printf("Mémoire disponible avant connexion à l'API : %i | %i\n", esp_get_free_internal_heap_size(), esp_get_free_heap_size());
+
     // configure la connexion au serveur d'api (changer l'url si besoin)
     http.begin("https://sae34.k8s.iut-larochelle.fr/api/captures");
-    
+
+    Serial.printf("Mémoire disponible après connexion à l'API : %i | %i\n", esp_get_free_internal_heap_size(), esp_get_free_heap_size());
+
+
     Serial.println("Création du header de la requête");
 
-    String nomSA = recupererValeur("/infobd.txt","nom_sa").c_str();
-    String nomBd = recupererValeur("/infobd.txt","nom_bd").c_str();
-    String nomUtilisateur = recupererValeur("/infobd.txt","nom_utilisateur").c_str();
-    String motDePasse = recupererValeur("/infobd.txt","mot_de_passe").c_str();
-    
+    String nomSA          = recupererValeur("/infobd.txt","nom_sa");
+    String nomBd          = recupererValeur("/infobd.txt","nom_bd");
+    String nomUtilisateur = recupererValeur("/infobd.txt","nom_utilisateur");
+    String motDePasse     = recupererValeur("/infobd.txt","mot_de_passe");
 
-    if(nomBd.isEmpty() || nomUtilisateur.isEmpty() || motDePasse.isEmpty() || nomSA.isEmpty()){
+    if(nomSA.isEmpty() || nomUtilisateur.isEmpty() || motDePasse.isEmpty() || nomSA.isEmpty()){
         return -2;
     }
-    
 
     // configure le header de la requete
     http.addHeader("accept", "application/ld+json");
@@ -149,12 +156,16 @@ int envoyer(Donnees *donnees){
             Serial.printf("Erreur lors de la récupération des données.\nRécupération des données de %s\n", nomsValeurs[i].c_str());
         }
 
+        String description = recupererValeur("/infobd.txt", "description");
+        if(description == "-1") description = "";
+
         // Création de la chaine de caractère à envoyer
         String donneesAEnvoyerStr = R"({"nom":")"+ nomsValeurs[i] +
                                     R"(","valeur":")"+ s_donnees[i] +
                                     R"(","dateCapture":")"+ date +
                                     R"(","localisation":")"+ recupererValeur("/infobd.txt", "localisation").c_str() +
-                                    R"(","description":"","nomsa":")"+ recupererValeur("/infobd.txt", "nom_sa").c_str() +
+                                    R"(","description":")"+ description.c_str() +
+                                    R"(","nomsa":")"+ recupererValeur("/infobd.txt", "nom_sa").c_str() +
                                     "\"}";
 
         Serial.printf("Envoi des données de %s\n", nomsValeurs[i].c_str());
@@ -163,10 +174,12 @@ int envoyer(Donnees *donnees){
         // Serial.println(donneesAEnvoyerStr);
 
         // Décommenter pour voir la mémoire libre sur l'esp
-        Serial.println("Mémoire RAM restante : " + String(ESP.getFreeHeap()) + "o");
+        Serial.printf("Mémoire disponible avant envoi : %i | %i\n", esp_get_free_internal_heap_size(), esp_get_free_heap_size());
 
         // Envoie des données
         int codeReponse = http.POST(donneesAEnvoyerStr);
+        Serial.printf("Mémoire disponible après envoi : %i | %i\n", esp_get_free_internal_heap_size(), esp_get_free_heap_size());
+
 
         // affiche le code de reponse
         if (http.errorToString(codeReponse) != ""){

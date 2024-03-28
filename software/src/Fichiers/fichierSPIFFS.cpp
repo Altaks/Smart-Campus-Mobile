@@ -18,9 +18,13 @@ void afficherContenuFichier(const String& nomFichier)
     }
 
     Serial.println("Contenu du fichier "+nomFichier+" : ");
+    bool estReseaux = nomFichier.equals("/inforeseau.txt");
+
     while(file.available())
     {
-        Serial.write(file.read());
+        String current = file.readStringUntil('\n');
+        if(estReseaux && strstr(current.c_str(), "mot_de_passe:") != nullptr) continue;
+        Serial.println(current);
     }
     Serial.println("\n");
     file.close();

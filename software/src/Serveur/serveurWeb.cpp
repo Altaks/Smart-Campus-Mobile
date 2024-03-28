@@ -51,6 +51,7 @@ void setupServeurWeb()
         String nom_bd = "";
         String nom_utilisateur = "";
         String mot_de_passe = "";
+        String description = "";
         for(int i=0;i<request->params() ;i++){
             AsyncWebParameter* p = request->getParam(i);
             if(p->name() == "nom_sa"){
@@ -58,7 +59,9 @@ void setupServeurWeb()
             }
             else if(p->name() == "localisation"){
                 localisation = p->value();
-            } 
+            } else if(p->name() == "description"){
+                description = p->value();
+            }
             else if(p->name() == "nom_bd"){
                 nom_bd = p->value();
             } 
@@ -71,6 +74,7 @@ void setupServeurWeb()
         }
         Serial.println("nom_sa: " + nom_sa);
         Serial.println("localisation: " + localisation);
+        Serial.println("description: " + description);
         Serial.println("nom_bd: " + nom_bd);
         Serial.println("nom_utilisateur: " + nom_utilisateur);
         Serial.println("mot_de_passe: " + mot_de_passe);
@@ -78,6 +82,7 @@ void setupServeurWeb()
         ecrireFichier("/infobd.txt",
             "nom_sa:"+nom_sa+
             "\nlocalisation:"+localisation+
+            "\ndescription:"+description+
             "\nnom_bd:"+nom_bd+
             "\nnom_utilisateur:"+nom_utilisateur+
             "\nmot_de_passe:"+mot_de_passe);
@@ -128,7 +133,6 @@ void setupServeurWeb()
         Serial.println("type_eap: " + type_eap);
         Serial.println("nom_utilisateur: " + nom_utilisateur);
         Serial.println("identifiant: " + identifiant);
-        Serial.println("mot_de_passe: " + mot_de_passe);
 
         ecrireFichier("/inforeseau.txt",
             "nom_reseau:"+nom_reseau+
