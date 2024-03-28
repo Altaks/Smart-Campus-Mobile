@@ -17,9 +17,7 @@ const ListeRecommandations = ({derniereDonnees, salleId}) => { // donnees = [tem
         if(salleId !== undefined)
             getActions().then(
                 actions => {
-                    console.log(actions)
                     const actionsTriees = trierActions(actions, salleId)
-                    console.log(actionsTriees)
                     getRecommandations(trierRecommandationsPourAffichage, derniereDonnees[0], derniereDonnees[1], derniereDonnees[2], actionsTriees).then(recommandations => {
                         setTempRecommendation(recommandations[0])
                         setHumRecommendation(recommandations[1])

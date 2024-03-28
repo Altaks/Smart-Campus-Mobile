@@ -1,9 +1,7 @@
 
 function trierRecommandationsPourAffichage(recommandations, curTemp, curHum, curCo2, actions) {
     let recommandationsAAfficher =[{}, {}, {}]
-    console.log(actions)
     const recommandationIdEffecutees = actions.map(action => {return (action.recommandation.id)})
-    console.log(recommandationIdEffecutees, recommandations)
     recommandations.forEach(recommandation => {
         if(!recommandationIdEffecutees.includes(recommandation.id)) {
             if (!(recommandation.min === undefined && recommandation.max === undefined)) {
