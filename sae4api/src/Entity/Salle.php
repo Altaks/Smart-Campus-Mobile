@@ -25,7 +25,7 @@ class Salle
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['salle:read'])]
+    #[Groups(['salle:read', 'action:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 15)]
