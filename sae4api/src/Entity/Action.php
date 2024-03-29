@@ -13,6 +13,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ActionRepository::class)]
 #[ApiResource(
+    paginationEnabled: false,
     operations: [
         new GetCollection(),
         new Post()
