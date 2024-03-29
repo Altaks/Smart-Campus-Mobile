@@ -91,7 +91,7 @@ const Accueil = () => {
                 <SelectionSalle handleChoixSalle={handleChoixSalle} baseDeDonnees={baseDeDonnees}/>
             </div>
             <div id={"listeGraphique"} className={"translate-x-[100vw] m-auto"}>
-                <BandeauDerniereDonnees derniereDonnees={getDernieresDonnees(salle)} isDisplaied={id}/>
+                <BandeauDerniereDonnees derniereDonnees={curDerniereDonnees} isDisplaied={curDerniereDonnees}/>
                 <ListeRecommandations derniereDonnees={curDerniereDonnees}/>
                 <ListeGraphiques donnes={donnes}/>
             </div>
