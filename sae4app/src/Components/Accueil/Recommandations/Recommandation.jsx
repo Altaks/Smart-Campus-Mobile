@@ -75,65 +75,32 @@ const Recommandation = ({recommandationId, type, texte, min, max, unite, salleId
 
     let creerAction
 
-    const postAction = () => {
-        creerAction = true
-
-        document.getElementById("post" + recommandationId).classList.remove("translate-y-[12px]")
-        document.getElementById("timer" + recommandationId).classList.replace("opacity-0", "opacity-100")
-        document.getElementById("cross" + recommandationId).classList.replace("opacity-0", "opacity-100")
-        document.getElementById("cross" + recommandationId).classList.add("-translate-y-12")
-        document.getElementById("check" + recommandationId).classList.replace("opacity-100", "opacity-0")
-        document.getElementById("check" + recommandationId).classList.add("-translate-y-12")
-
+    const actionTimer = (secondesRestantes) => {
+        secondesRestantes--
         setTimeout(() => {
-            document.getElementById("timer" + recommandationId).textContent = "4"
-            if(creerAction==false) {
+            if(!creerAction) {
                 reverseActionAnimation()
                 return
             }
-            setTimeout(() => {
-                document.getElementById("timer" + recommandationId).textContent = "3"
-                if(creerAction==false) {
-                    reverseActionAnimation()
-                    return
-                }
-                setTimeout(() => {
-                    document.getElementById("timer" + recommandationId).textContent = "2"
-                    if(creerAction==false) {
-                        reverseActionAnimation()
-                        return
-                    }
-                    setTimeout(() => {
-                        document.getElementById("timer" + recommandationId).textContent = "1"
-                        if(creerAction==false) {
-                            reverseActionAnimation()
-                            return
-                        }
-                        setTimeout(() => {
-                            document.getElementById("timer" + recommandationId).textContent = "0"
-                            if(creerAction==false) {
-                                reverseActionAnimation()
-                                return
-                            }
-                            PostActions(salleId, recommandationId).then(r => {
-                                    if(r.status === undefined) {
-                                        document.getElementById(recommandationId).classList.add("-translate-x-[100vw]")
-                                        setTimeout(() => {
-                                            document.getElementById(recommandationId).classList.remove("max-h-52",  "border-2", "mb-3", "py-4")
-                                            document.getElementById(recommandationId).classList.add("max-h-0")
-                                        },1000)
-                                    }
-                                }
-                            )
-                        }, 1000)
-                    }, 1000)
-                }, 1000)
-            }, 1000)
-        }, 1000)
-    }
+            document.getElementById("timer" + recommandationId).textContent = secondesRestantes.toString()
 
-    const cancelPost = () => {
-        creerAction = false
+            if(secondesRestantes===0) {
+                PostActions(salleId, recommandationId).then(r => {
+                        if (r.status === undefined) {
+                            document.getElementById(recommandationId).classList.add("-translate-x-[100vw]")
+                            setTimeout(() => {
+                                document.getElementById(recommandationId).classList.remove("max-h-52", "border-2", "mb-3", "py-4")
+                                document.getElementById(recommandationId).classList.add("max-h-0")
+                            }, 1000)
+                        }
+                    }
+                )
+            }
+            else
+            {
+                actionTimer(secondesRestantes)
+            }
+        }, 1000)
     }
 
     const reverseActionAnimation = () => {
@@ -146,6 +113,23 @@ const Recommandation = ({recommandationId, type, texte, min, max, unite, salleId
         setTimeout(() => {
             document.getElementById("timer" + recommandationId).textContent = "5"
         },1000)
+    }
+
+    const postAction = () => {
+        creerAction = true
+
+        document.getElementById("post" + recommandationId).classList.remove("translate-y-[12px]")
+        document.getElementById("timer" + recommandationId).classList.replace("opacity-0", "opacity-100")
+        document.getElementById("cross" + recommandationId).classList.replace("opacity-0", "opacity-100")
+        document.getElementById("cross" + recommandationId).classList.add("-translate-y-12")
+        document.getElementById("check" + recommandationId).classList.replace("opacity-100", "opacity-0")
+        document.getElementById("check" + recommandationId).classList.add("-translate-y-12")
+
+        actionTimer(5)
+    }
+
+    const cancelPost = () => {
+        creerAction = false
     }
 
     const render = () => {
