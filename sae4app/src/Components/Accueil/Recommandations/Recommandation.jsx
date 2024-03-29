@@ -118,7 +118,7 @@ const Recommandation = ({recommandationId, type, texte, min, max, unite, salleId
     const postAction = () => {
         creerAction = true
 
-        document.getElementById("post" + recommandationId).classList.remove("translate-y-[12px]")
+        document.getElementById("post" + recommandationId).classList.remove("translate-y-[14px]")
         document.getElementById("timer" + recommandationId).classList.replace("opacity-0", "opacity-100")
         document.getElementById("cross" + recommandationId).classList.replace("opacity-0", "opacity-100")
         document.getElementById("cross" + recommandationId).classList.add("-translate-y-12")
@@ -149,12 +149,12 @@ const Recommandation = ({recommandationId, type, texte, min, max, unite, salleId
                 <div className="text-md w-3/4 text-justify">La {stype()} est <span className={`text-[${color()}]`}>{prob()}</span>
                     <p>{texte}</p>
                 </div>
-                <div id={"post" + recommandationId} className={"flex flex-col items-center text-center mr-2 ml-5 duration-500 transition-all translate-y-[12px]"}>
+                <div id={"post" + recommandationId} className={"flex flex-col items-center text-center mr-2 ml-5 duration-500 transition-all translate-y-[14px]"}>
                     <div className={"max-h-12"}>
                         <SquareCheck id={"check" + recommandationId} color={'#22c55e'} size={48} className={'opacity-100 duration-500 transition-all'} onClick={postAction}/>
                         <SquareX id={"cross" + recommandationId} color={'#dc2626'} size={48} className={'opacity-0 duration-500 transition-all'} onClick={cancelPost}/>
                     </div>
-                    <p id={"timer" + recommandationId} className={" transition-all duration-500 opacity-0"}>5</p>
+                    <p id={"timer" + recommandationId} className={"transition-all duration-500 opacity-0 text-lg font-bold text-red-600"}>5</p>
                 </div>
             </div>
         )
