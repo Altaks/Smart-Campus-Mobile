@@ -1,5 +1,7 @@
 nom_sa:
 localisation:
+description:
 nom_bd:
 nom_utilisateur:
 mot_de_passe:
+url_api:

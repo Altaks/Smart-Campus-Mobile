@@ -109,6 +109,7 @@ void setup() {
     if (nomReseauWifi.isEmpty() || !connexionWifi())
     {
         Serial.println("Mode configuration");
+        enregistrerListeReseaux();
         initBoutons(CONFIGURATION);
 
         delay(100);

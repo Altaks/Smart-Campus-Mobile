@@ -138,8 +138,11 @@ int envoyer(Donnees *donnees){
     Serial.println("Connexion au serveur d'API");
 
     // configure la connexion au serveur d'api (changer l'url si besoin)
+    String urlAPI = recupererValeur("/infobd.txt", "url_api");
+    Serial.printf("URL de l'API : %s [%i]\n", urlAPI.c_str(), strlen(urlAPI.c_str()));
+
     etatEnvois = true;
-    http.begin("https://sae34.k8s.iut-larochelle.fr/api/captures");
+    http.begin(urlAPI);
 
     Serial.println("Création du header de la requête");
 
@@ -151,6 +154,11 @@ int envoyer(Donnees *donnees){
     if(nomSA.isEmpty() || nomUtilisateur.isEmpty() || motDePasse.isEmpty() || nomSA.isEmpty()){
         return -2;
     }
+
+    Serial.printf("Nom SA : '%s'\n", nomSA.c_str());
+    Serial.printf("Nom BD : '%s'\n", nomBd.c_str());
+    Serial.printf("Nom Utilisateur : '%s'\n", nomUtilisateur.c_str());
+    Serial.printf("Nom Mot de passe : '%s'\n", motDePasse.c_str());
 
     // configure le header de la requete
     http.addHeader("accept", "application/ld+json");
@@ -184,6 +192,8 @@ int envoyer(Donnees *donnees){
                                     R"(","nomsa":")"+ recupererValeur("/infobd.txt", "nom_sa").c_str() +
                                     "\"}";
 
+        Serial.printf("%s\n", donneesAEnvoyerStr.c_str());
+
         Serial.printf("Envoi des données de %s\n", nomsValeurs[i].c_str());
 
         // Décommenter pour avoir la donnée envoyée à l'api
@@ -209,6 +219,8 @@ int envoyer(Donnees *donnees){
             codeErreur = -4;
         }
     }
+
+    // howjoc-dyjhId-hiwre0
     
     // libère les ressources
     http.end();

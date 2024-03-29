@@ -55,10 +55,14 @@ void setupServeurWeb()
         String nom_utilisateur = "";
         String mot_de_passe = "";
         String description = "";
+        String urlAPI = "";
         for(int i=0;i<request->params() ;i++){
             AsyncWebParameter* p = request->getParam(i);
             if(p->name() == "nom_sa"){
                 nom_sa = p->value();
+            }
+            else if(p->name() == "url_api"){
+                urlAPI = p->value();
             }
             else if(p->name() == "localisation"){
                 localisation = p->value();
@@ -81,6 +85,7 @@ void setupServeurWeb()
         Serial.println("nom_bd: " + nom_bd);
         Serial.println("nom_utilisateur: " + nom_utilisateur);
         Serial.println("mot_de_passe: " + mot_de_passe);
+        Serial.println("url_api: " + urlAPI);
 
         ecrireFichier("/infobd.txt",
             "nom_sa:"+nom_sa+
@@ -88,7 +93,8 @@ void setupServeurWeb()
             "\ndescription:"+description+
             "\nnom_bd:"+nom_bd+
             "\nnom_utilisateur:"+nom_utilisateur+
-            "\nmot_de_passe:"+mot_de_passe);
+            "\nmot_de_passe:"+mot_de_passe+
+            "\nurl_api:"+urlAPI);
 
         request->redirect("http://"+getIP()+"/");  
     });
@@ -118,7 +124,7 @@ void setupServeurWeb()
             AsyncWebParameter* p = request->getParam(i);
             if(p->name() == "nom_reseau"){
                 nom_reseau = p->value();
-            } 
+            }
             else if(p->name() == "type_eap"){
                 type_eap = p->value();
             } 
