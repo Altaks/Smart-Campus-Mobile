@@ -5,10 +5,14 @@
 
 #include "station.h"
 
+#include <Boutons/boutons.h>
+
 #include "typeDef.h"
 #include "Fichiers/fichierSPIFFS.h"
 #include "Heure/heureLocal.h"
 #include "LED/led.h"
+
+bool etatStation = false;
 
 void initReseauStation()
 {
@@ -23,11 +27,14 @@ String getIP()
     return (WiFi.getMode() == WIFI_STA)? WiFi.localIP().toString():WiFi.softAPIP().toString();
 }
 
-[[noreturn]] void taskEnregistrerListeReseau(__attribute__((unused)) void * parameter){
-    while(true){
+void taskEnregistrerListeReseau(__attribute__((unused)) void * parameter){
+    etatStation = true;
+    while(getMode()==CONFIGURATION){
         vTaskDelay(10 * 1000);
         enregistrerListeReseaux();
     }
+    etatStation = false;
+    vTaskDelete(nullptr);
 }
 
 xTaskHandle activerEnregistrerListeReseau()
@@ -113,5 +120,9 @@ bool connexionWifi(const String& ssid, wpa2_auth_method_t methodeAutentification
 void disconnect() { 
     WiFi.disconnect(); 
     Serial.println("Deconnexion du Wi-Fi");
-    
+}
+
+bool tacheListeReseauEnCours()
+{
+    return etatStation;
 }

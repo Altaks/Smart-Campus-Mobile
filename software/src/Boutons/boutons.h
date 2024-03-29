@@ -1,3 +1,6 @@
+#ifndef BOUTONS_H
+#define BOUTONS_H
+
 #include "OneButton.h"
 #include "../typeDef.h"
 #include "../LED/led.h"
@@ -48,3 +51,7 @@ void setListeReseauTaskHandle(xTaskHandle taskHandle);
 void setServeurTaskHandle(xTaskHandle taskHandle);
 
 void setDonnees(Donnees *donnees);
+
+Mode getMode();
+
+#endif

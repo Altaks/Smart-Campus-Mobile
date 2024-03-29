@@ -28,4 +28,6 @@ void setEnvoieState(bool envoie);
 */
 void setLEDColor(int r, int g, int b);
 
+bool tacheLedEnCours();
+
 #endif //LED_H

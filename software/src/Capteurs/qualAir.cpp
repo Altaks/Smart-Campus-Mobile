@@ -1,25 +1,31 @@
 #include "qualAir.h"
 
+#include <Boutons/boutons.h>
 
-Adafruit_SGP30 sgp;
 
+Adafruit_SGP30 * sgp;
+bool etatAir = false;
 
-[[noreturn]] void taskQualAir(void *pvParameters) {
-
-  while (true) {
+void taskQualAir(void *pvParameters) {
+  etatAir = true;
+  while (getMode() == MESURE) {
     delay(2000);
-    if (sgp.IAQmeasure()) {
-      *static_cast<Donnees *>(pvParameters)->co2 = sgp.eCO2;
+    if (sgp->IAQmeasure()) {
+      *static_cast<Donnees *>(pvParameters)->co2 = sgp->eCO2;
     }
     else {
       *static_cast<Donnees *>(pvParameters)->co2 = 0;
     }
   }
+  delete sgp;
+  etatAir = false;
+  vTaskDelete(nullptr);
 }
 
 xTaskHandle initTaskQualAir(Donnees *donnees) {
   xTaskHandle qualAirTaskHandle;
-  if( sgp.begin()) {
+  sgp = new Adafruit_SGP30();
+  if( sgp->begin()) {
     xTaskCreate(
       taskQualAir,
       "taskQualAir",
@@ -30,4 +36,8 @@ xTaskHandle initTaskQualAir(Donnees *donnees) {
     );
   }
   return qualAirTaskHandle;
+}
+
+bool tacheQualAirEnCours() {
+    return etatAir;
 }

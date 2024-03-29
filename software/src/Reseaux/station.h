@@ -45,4 +45,6 @@ bool connexionWifi(const String& ssid, wpa2_auth_method_t methodeAutentification
 
 void disconnect();
 
+bool tacheListeReseauEnCours();
+
 #endif //SOFTWARE_STATION_H

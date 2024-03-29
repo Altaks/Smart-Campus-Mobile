@@ -1,3 +1,5 @@
+#ifndef PRESENCE_H
+#define PRESENCE_H
 #include "Arduino.h"
 
 /**
@@ -11,3 +13,5 @@ void initPresence();
  * @return true si une personne est détecté | false sinon
 */
 bool getPresence();
+
+#endif //PRESENCE_H

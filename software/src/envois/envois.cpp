@@ -1,5 +1,7 @@
 #include "envois.h"
 
+#include <Boutons/boutons.h>
+
 #include "WiFi.h"
 
 #include "Fichiers/fichierSPIFFS.h"
@@ -8,16 +10,30 @@
 #include "Capteurs/qualAir.h"
 #include "LED/led.h"
 
+bool etatEnvois = false;
+bool tacheEnCours = false;
+
+
 // Décommenter/Commenter les Serial.println pour voir/ne pas voir les informations de debug en usb
 
-[[noreturn]] void taskEnvois(void *pvParameters){
+void taskEnvois(void *pvParameters){
+    tacheEnCours = true;
 
-    while(true){
+    while(getMode() == MESURE){
+        unsigned short i = 0; // wait 30 secondes
+        while(getMode() == MESURE && i < 30){
+            vTaskDelay(pdMS_TO_TICKS(1000));
+            i++;
+        }
+        if (getMode() != MESURE){
+            Serial.println("Sortie de la tâche d'envoi avant envoi des données");
+            break;
+        }
         vTaskDelay(pdMS_TO_TICKS(30 * 1000));
         Serial.println("______________________________________");
         Serial.println("Debut de l'envoi des données :");
         Serial.println("______________________________________");
-        int codeRetour = envoyer(static_cast<struct Donnees *>(pvParameters));
+        int codeRetour = envoyer(static_cast<Donnees *>(pvParameters));
         if (codeRetour == 0){
             Serial.println("Donnees envoyees");
             setEnvoieState(true);
@@ -28,9 +44,15 @@
             setEnvoieState(false);
         }
         Serial.println("______________________________________");
-        // 5 minutes - 2 secondes pour laisser le temps à la tâche de récupérer la date (d'après mes tests, la récupération de la date prend 2 secondes de plus que le délai de 5 minutes)
-        vTaskDelay(pdMS_TO_TICKS(4 * 60 * 1000 + 28 * 1000));
+
+        i = 0; // left 4min and 28s
+        while(getMode() == MESURE && i < 4 * 60 + 28){
+            vTaskDelay(pdMS_TO_TICKS(2000));
+            i+=2;
+        }
     }
+    tacheEnCours = false;
+    vTaskDelete(nullptr);
 }
 
 xTaskHandle initEnvois(Donnees * donnees){
@@ -42,7 +64,7 @@ xTaskHandle initEnvois(Donnees * donnees){
       "Envois des donnees sur l'api",
       10000,
       donnees,
-      1,
+      2,
       &envoisTaskHandle
     );
 
@@ -50,8 +72,6 @@ xTaskHandle initEnvois(Donnees * donnees){
 }
 
 int envoyer(Donnees *donnees){
-
-    Serial.printf("Mémoire disponible début fct envoi : %i | %i\n", esp_get_free_internal_heap_size(), esp_get_free_heap_size());
     
     Serial.println("Vérification de la connexion au réseau");
     // verification de la connexion au réseau
@@ -117,13 +137,9 @@ int envoyer(Donnees *donnees){
 
     Serial.println("Connexion au serveur d'API");
 
-    Serial.printf("Mémoire disponible avant connexion à l'API : %i | %i\n", esp_get_free_internal_heap_size(), esp_get_free_heap_size());
-
     // configure la connexion au serveur d'api (changer l'url si besoin)
+    etatEnvois = true;
     http.begin("https://sae34.k8s.iut-larochelle.fr/api/captures");
-
-    Serial.printf("Mémoire disponible après connexion à l'API : %i | %i\n", esp_get_free_internal_heap_size(), esp_get_free_heap_size());
-
 
     Serial.println("Création du header de la requête");
 
@@ -151,7 +167,7 @@ int envoyer(Donnees *donnees){
 
         Serial.printf("Récupération des données de %s\n", nomsValeurs[i].c_str());
 
-        while(strlen(s_donnees[i]) == 1 && i < 4){
+        while(strlen(s_donnees[i]) == 1 && i < 3){
             i++;
             Serial.printf("Erreur lors de la récupération des données.\nRécupération des données de %s\n", nomsValeurs[i].c_str());
         }
@@ -196,6 +212,7 @@ int envoyer(Donnees *donnees){
     
     // libère les ressources
     http.end();
+    etatEnvois = false;
 
     return codeErreur;
 }
@@ -215,4 +232,12 @@ String erreurToString(int code){
     default:
         return "Erreur inconnue";
     }
+}
+
+bool envoieEnCours(){
+    return etatEnvois;
+}
+
+bool tacheEnvoisEnCours(){
+    return tacheEnCours;
 }

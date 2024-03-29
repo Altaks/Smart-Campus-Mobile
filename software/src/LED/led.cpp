@@ -1,4 +1,7 @@
 #include "led.h"
+
+#include <Boutons/boutons.h>
+
 #include "Capteurs/presence.h"
 #include "Capteurs/tempEtHum.h"
 #include "Capteurs/qualAir.h"
@@ -10,24 +13,27 @@ Adafruit_NeoPixel * led;
 
 bool tempError, humError, co2Error, envoieError;
 
-const int RED[3] = {255,0,0};
-const int ORANGE[3] = {255,50,0};
-const int YELLOW[3] = {255,255,0};
-const int GREEN[3] = {0,255,0};
-const int BLUE[3] = {0,0,255};
-const int PURPLE[3] = {60,0,255};
-const int PINK[3] = {187,38,73};
-const int WHITE[3] = {255,255,255};
-const int OFF[3] = {0,0,0};
+namespace LED {
+    const int RED[3] = {255,0,0};
+    const int ORANGE[3] = {255,50,0};
+    const int YELLOW[3] = {255,255,0};
+    const int GREEN[3] = {0,255,0};
+    const int BLUE[3] = {0,0,255};
+    const int PURPLE[3] = {60,0,255};
+    const int PINK[3] = {187,38,73};
+    const int WHITE[3] = {255,255,255};
+    const int OFF[3] = {0,0,0};
+}
 
 bool envoieState = true;
+bool etatLed = false;
 
 void initLED() {    
     // Single NeoPixel
     led = new Adafruit_NeoPixel(1, PIN, NEO_GRB + NEO_KHZ800);
     led->begin(); // INITIALIZE NeoPixel (REQUIRED)
     led->setBrightness(5);
-    led->setPixelColor(0, led->Color(WHITE[0],WHITE[1],WHITE[2]));
+    led->setPixelColor(0, led->Color(LED::WHITE[0],LED::WHITE[1],LED::WHITE[2]));
     led->show();
 }
 
@@ -38,7 +44,7 @@ xTaskHandle initTaskLED(Donnees * donnees) {
       "Gestion des LEDs",
       5000,
       donnees,
-      1,
+      3,
         &ledTaskHandle
     );
 
@@ -47,14 +53,15 @@ xTaskHandle initTaskLED(Donnees * donnees) {
 
 void taskLED(void *PvParameters) {
 
+    etatLed = true;
     Donnees * donnees = static_cast<Donnees *>(PvParameters);
 
-    while(true){
+    while(getMode() == MESURE){
         if(*donnees->temperature == -1) {
-            led->setPixelColor(0, led->Color(RED[0],RED[1],RED[2]));
+            led->setPixelColor(0, led->Color(LED::RED[0],LED::RED[1],LED::RED[2]));
             led->show();
             delay(250); 
-            led->setPixelColor(0, led->Color(OFF[0],OFF[1],OFF[2]));
+            led->setPixelColor(0, led->Color(LED::OFF[0],LED::OFF[1],LED::OFF[2]));
             led->show();
             delay(250);
             tempError = true;
@@ -64,10 +71,10 @@ void taskLED(void *PvParameters) {
         }
 
         if(*donnees->humidite == -1) {
-            led->setPixelColor(0, led->Color(ORANGE[0],ORANGE[1],ORANGE[2]));
+            led->setPixelColor(0, led->Color(LED::ORANGE[0],LED::ORANGE[1],LED::ORANGE[2]));
             led->show();
             delay(250); 
-            led->setPixelColor(0, led->Color(OFF[0],OFF[1],OFF[2]));
+            led->setPixelColor(0, led->Color(LED::OFF[0],LED::OFF[1],LED::OFF[2]));
             led->show();
             delay(250);
             humError = true;
@@ -77,10 +84,10 @@ void taskLED(void *PvParameters) {
         }
 
         if(*donnees->co2 == -1) {
-            led->setPixelColor(0, led->Color(YELLOW[0],YELLOW[1],YELLOW[2]));
+            led->setPixelColor(0, led->Color(LED::YELLOW[0],LED::YELLOW[1],LED::YELLOW[2]));
             led->show();
             delay(250); 
-            led->setPixelColor(0, led->Color(OFF[0],OFF[1],OFF[2]));
+            led->setPixelColor(0, led->Color(LED::OFF[0],LED::OFF[1],LED::OFF[2]));
             led->show();
             delay(250);
             co2Error = true;
@@ -90,10 +97,10 @@ void taskLED(void *PvParameters) {
         }
 
         if(!envoieState) {
-            led->setPixelColor(0, led->Color(PINK[0],PINK[1],PINK[2]));
+            led->setPixelColor(0, led->Color(LED::PINK[0],LED::PINK[1],LED::PINK[2]));
             led->show();
             delay(250);
-            led->setPixelColor(0, led->Color(OFF[0],OFF[1],OFF[2]));
+            led->setPixelColor(0, led->Color(LED::OFF[0],LED::OFF[1],LED::OFF[2]));
             led->show();
             delay(250);
             envoieError = true;
@@ -104,11 +111,13 @@ void taskLED(void *PvParameters) {
 
         if(!tempError and !humError and !co2Error and !envoieError)
         {
-            led->setPixelColor(0, led->Color(GREEN[0],GREEN[1],GREEN[2]));
+            led->setPixelColor(0, led->Color(LED::GREEN[0],LED::GREEN[1],LED::GREEN[2]));
             led->show();
             delay(500);
         }
     }
+    etatLed = false;
+    vTaskDelete(nullptr);
 }
 
 void setEnvoieState(bool envoie)
@@ -121,3 +130,7 @@ void setLEDColor(int r, int g, int b) {
     led->show();
 }
 
+bool tacheLedEnCours()
+{
+    return etatLed;
+}

@@ -1,5 +1,7 @@
 #include "affichage.h"
 
+#include <Boutons/boutons.h>
+
 #include "typeDef.h"
 #include "Capteurs/qualAir.h"
 #include "Capteurs/tempEtHum.h"
@@ -10,6 +12,7 @@ SSD1306Wire * display;
 
 int carrouselDelay = 3000;
 int flicker = 6;
+bool etatAffichage = false;
 
 bool initAffichage()
 {
@@ -68,7 +71,11 @@ void afficher(PAGE &page, const Donnees *releves){
         Serial.println("Erreur lors de la récupération de la date pour l'affichage");
     }
     else {
-        dateTime = String(getJour()) + "/" + String(getMois()) + "/" + String(getAnnee()) + " " + String(getHeure()) + ":" + String(getMinute());
+        dateTime = (getJour()>9 ? String(getJour()) : "0" + String(getJour())) + "/" +
+            (getMois()>9 ? String(getMois()) : "0" + String(getMois()))+ "/" +
+            String(getAnnee()) + " " +
+            (getHeure()>9 ? String(getHeure()) : "0" + String(getHeure())) + ":" +
+            (getMinute()>9 ? String(getMinute()) : "0" + String(getMinute()));
     }
 
     for(int carrousel=0; carrousel<3; carrousel++)
@@ -126,11 +133,14 @@ void afficher(PAGE &page, const Donnees *releves){
     }
 }
 
-[[noreturn]] void taskAffichage(void *pvParameters) {
+void taskAffichage(void *pvParameters) {
+    etatAffichage = true;
     PAGE page = TEMPERATURE;
-    while(true){
+    while(getMode() == MESURE) {
         afficher(page, static_cast<struct Donnees *>(pvParameters));
     }
+    etatAffichage = false;
+    vTaskDelete(nullptr);
 }
 
 void displayText(const String& text, int x, int y, int fontSize, bool centered){
@@ -160,12 +170,17 @@ void displayText(const String& text, int x, int y, int fontSize, bool centered){
 }
 
 void displayResetInfos(const String& dateTime, const String& ip) {
-    // reset de l'écran
     display->clear();
-
-    // affichage de la date et de l'heure
     display->drawString(0, 0, dateTime);
+    display->display();
+}
 
-    // affichage de l'adresse IP
-    display->drawString(0,48,"IP : " + ip);
+void clearDisplay() {
+    display->clear();
+    display->display();
+}
+
+bool tacheAffichageEnCours()
+{
+    return  etatAffichage;
 }

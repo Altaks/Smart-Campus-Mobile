@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include <SPIFFS.h>
 
 #include "typeDef.h"
 
@@ -26,10 +27,12 @@
 
 Donnees * donnees;
 
-void connexionWifi() {
+bool connexionWifi() {
     String nomReseau;
 
     Serial.println("Connexion au reseau wifi");
+
+    unsigned short attempt = 0;
 
     // Tant que le SA n'est pas connecté à internet
     do
@@ -63,14 +66,20 @@ void connexionWifi() {
             }
         }
         delay(10000);
+        attempt ++;
+        Serial.println("Tentative de connexion n°"+String(attempt));
     }
-    while(!estConnecte(nomReseau));
+    while(!estConnecte(nomReseau) && attempt < 1);
+
+    Serial.printf("Connexion au réseau %s : %s\n", nomReseau.c_str(), estConnecte(nomReseau) ? "OK" : "KO");
+
+    return WiFiClass::status() == WL_CONNECTED;
 }
 
 void setup() {
+
     Serial.begin(9600);
     while(!Serial);
-    //Boutons
 
     // LED
     initLED();
@@ -85,11 +94,24 @@ void setup() {
 
     delay(100);
 
-    String nomReseauWifi = recupererValeur("/inforeseau.txt","nom_reseau");
+    donnees = new Donnees();
+    donnees->humidite = new float(-1);
+    donnees->temperature = new float(-1);
+    donnees->co2 = new unsigned int(0);
 
-    if (nomReseauWifi == "")
+
+    setDonnees(donnees);
+
+    String nomReseauWifi = recupererValeur("/inforeseau.txt","nom_reseau");
+    Serial.println("Nom du réseau wifi : "+nomReseauWifi);
+
+    // Si le nom du réseau wifi n'est pas configuré ou que le SA n'est pas connecté à internet
+    if (nomReseauWifi.isEmpty() || !connexionWifi())
     {
+        Serial.println("Mode configuration");
         initBoutons(CONFIGURATION);
+
+        delay(100);
 
         String nomAP = recupererValeur("/infoap.txt","nom_ap");
         String motDePasseAP = recupererValeur("/infoap.txt","mot_de_passe");
@@ -97,9 +119,6 @@ void setup() {
         // Initialisation reseau en mode STATION et POINT D'ACCES
         initReseauStationEtPointAcces();
 
-        //Initialise le serveur web et le serveur DNS
-        setupServeurWeb();
-        setupServeurDNS();
         xTaskHandle serveurTaskHandle = activerServeurDNS();
         setServeurTaskHandle(serveurTaskHandle);
 
@@ -110,10 +129,17 @@ void setup() {
     }
     else
     {
+        Serial.println("Mode mesure");
         initBoutons(MESURE);
     }
 
-    connexionWifi();
+    // attend d'être connecté à internet
+    while((WiFiClass::status() != WL_CONNECTED)){
+
+        Serial.print(".");
+        delay(1000);
+    }
+    Serial.println("Connecté à internet");
     
     // Initialise l'heure (peut prendre quelques secondes avant de se connecter au serveur ntp)
     initHeure();
@@ -126,6 +152,7 @@ void setup() {
         delay(250);
     }
     Serial.println();
+    setInitialisationDate(false);
     
     // Désactive le point d'accès wifi (le serveur reste disponible en se connectant au même routeur)
     initReseauStation();
@@ -139,12 +166,7 @@ void setup() {
     // Active l'enregistrement périodique des réseaux wifi détectés par l'ESP dans le fichier /listereseaux.txt
     // activerEnregistrerListeReseau();
 
-    donnees = new Donnees();
-    donnees->humidite = new float(-1);
-    donnees->temperature = new float(-1);
-    donnees->co2 = new unsigned int(0);
 
-    setDonnees(donnees);
     
     // Initialise les capteurs
     xTaskHandle tempEtHumTaskHandle = initTaskTempEtHum(donnees);
@@ -168,7 +190,8 @@ void setup() {
 
 }
 
-void loop() 
-{    
-    delay(60 * 1000);
+void loop() {
+    delay(30 * 1000);
+    Serial.printf("Mémoire disponible : %i | %i\n", esp_get_free_internal_heap_size(), esp_get_free_heap_size());
+    Serial.println("Mémoire totale : " + String(ESP.getHeapSize()));
 }

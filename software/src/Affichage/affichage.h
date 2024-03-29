@@ -46,4 +46,8 @@ void displayText(const String& text, int x = 0, int y = 0, int fontSize = 16, bo
 
 void displayResetInfos(const String& dateTime, const String& ip);
 
+void clearDisplay();
+
+bool tacheAffichageEnCours();
+
 #endif

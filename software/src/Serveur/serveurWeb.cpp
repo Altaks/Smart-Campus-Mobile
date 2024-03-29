@@ -6,24 +6,27 @@
 #include "modifierPageWeb.h"
 #include "serveurWeb.h"
 
+#include <Boutons/boutons.h>
+
 #include "Fichiers/fichierSPIFFS.h"
 
 #include "Reseaux/station.h"
 
-DNSServer dnsServer;
-AsyncWebServer server(80);
+DNSServer * dnsServer;
+AsyncWebServer * server;
+bool etatServeur = false;
 
 void setupServeurWeb()
 {
     // Permet de récupérer le fichier main
-    server.on("/main.css", HTTP_GET, [](AsyncWebServerRequest *request)
+    server->on("/main.css", HTTP_GET, [](AsyncWebServerRequest *request)
     {
         request->send(SPIFFS, "/main.css", "text/css");
         Serial.println("Page envoyée");
     });
 
     // Permet d'accéder à la page d'accueil
-    server.on("/", HTTP_GET, [](AsyncWebServerRequest *request)
+    server->on("/", HTTP_GET, [](AsyncWebServerRequest *request)
     {
         Serial.println("Requête recue sur /");
         request->send(SPIFFS, "/index.html","text/html");
@@ -31,7 +34,7 @@ void setupServeurWeb()
     });
 
     // Permet d'accéder à la page de configuration de la base de données
-    server.on("/config-base-de-donnees", HTTP_GET, [](AsyncWebServerRequest *request)
+    server->on("/config-base-de-donnees", HTTP_GET, [](AsyncWebServerRequest *request)
     {
         Serial.println("Requête recue sur /config-base-de-donnees");
         modifierFormPageConfigbd();
@@ -41,7 +44,7 @@ void setupServeurWeb()
     });
 
     // Permet de récupérer les informations de la base de données et de les enregistrer dans le fichier /infobd.txt
-    server.on("/config-base-de-donnees", HTTP_POST, [] (AsyncWebServerRequest *request) 
+    server->on("/config-base-de-donnees", HTTP_POST, [] (AsyncWebServerRequest *request) 
     {
         Serial.println("Requête recue sur /config-base-de-donnees");
         modifierFormPageReseau();
@@ -91,7 +94,7 @@ void setupServeurWeb()
     });
 
     // Permet d'accéder à la page de configuration du réseau
-    server.on("/config-reseau", HTTP_GET, [](AsyncWebServerRequest *request)
+    server->on("/config-reseau", HTTP_GET, [](AsyncWebServerRequest *request)
     {
         Serial.println("Requête recue sur /config-reseau");
         modifierFormPageReseau();
@@ -102,7 +105,7 @@ void setupServeurWeb()
     });
 
     // Permet de récupérer les informations du wifi auquel connecter le SA et de les enregistrer dans le fichier /inforeseau.txt
-    server.on("/config-reseau", HTTP_POST, [] (AsyncWebServerRequest *request) 
+    server->on("/config-reseau", HTTP_POST, [] (AsyncWebServerRequest *request) 
     {
         Serial.println("Requête recue sur /config-reseau");
 
@@ -146,7 +149,7 @@ void setupServeurWeb()
     });
 
     // Permet de récupérer les informations du point d'accès wifi et de les enregistrer dans le fichier /infoap.txt
-    server.on("/config-acces-point", HTTP_POST, [] (AsyncWebServerRequest *request) 
+    server->on("/config-acces-point", HTTP_POST, [] (AsyncWebServerRequest *request) 
     {
         Serial.println("Requête recue sur /config-acces-point");
 
@@ -187,7 +190,7 @@ void setupServeurWeb()
     });
 
     // Permet de renvoyer les requêtes ou la route n'a pas été initialisée vers la page d'accueil
-    server.onNotFound ( [](AsyncWebServerRequest *request)
+    server->onNotFound ( [](AsyncWebServerRequest *request)
     {
         request->redirect("http://"+getIP()+"/");
     });
@@ -195,27 +198,36 @@ void setupServeurWeb()
 
 void setupServeurDNS()
 {  
-    dnsServer.start(53, "smart-campus.fr", WiFi.softAPIP());
+    dnsServer->start(53, "smart-campus.fr", WiFi.softAPIP());
 }
 
 void loopServeurDNS()
 {
-    dnsServer.processNextRequest();
+    dnsServer->processNextRequest();
 }
 
-[[noreturn]] void taskServeurDNS(__attribute__((unused)) void * parameter){
-    while(true){
+void taskServeurDNS(void * parameter){
+    etatServeur = true;
+    while(getMode() == CONFIGURATION){
         loopServeurDNS();
         vTaskDelay(100);
     }
+    server->end();
+    dnsServer->stop();
+    delete server;
+    delete dnsServer;
+    etatServeur = false;
+    vTaskDelete(nullptr);
 }
 
 xTaskHandle activerServeurDNS()
 {
+    server = new AsyncWebServer(80);
+    dnsServer = new DNSServer();
+    
     setupServeurWeb();
     setupServeurDNS();
-    server.begin();
-
+    server->begin();
 
     delay(100);
 
@@ -233,20 +245,7 @@ xTaskHandle activerServeurDNS()
     return serveurTaskHandle;
 }
 
-void stopServeurDNS(xTaskHandle serveurTaskHandle)
+bool serveurEnCours()
 {
-
-    if (serveurTaskHandle == nullptr)
-    {
-        return;
-    }
-    // suspend the task
-    vTaskSuspend(serveurTaskHandle);
-
-    // free the memory used by the task
-    dnsServer.stop();
-    server.end();
-
-    // delete the task
-    vTaskDelete(serveurTaskHandle);
+    return etatServeur;
 }

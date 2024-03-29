@@ -28,4 +28,6 @@ void taskTempEtHum(void *pvParameters);
 
 xTaskHandle initTaskTempEtHum(Donnees* donnees);
 
+bool tacheTempEtHumEnCours();
+
 #endif

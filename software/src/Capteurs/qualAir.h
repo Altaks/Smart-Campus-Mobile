@@ -36,4 +36,6 @@ void taskQualAir(void * pvParameters);
 
 xTaskHandle initTaskQualAir(Donnees* donnees);
 
+bool tacheQualAirEnCours();
+
 #endif //SOFTWARE_QUALAIR_H

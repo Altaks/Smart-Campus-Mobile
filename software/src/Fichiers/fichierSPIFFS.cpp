@@ -4,7 +4,10 @@
 
 void initSystemeFichier()
 {
-    SPIFFS.begin();
+    if(!SPIFFS.begin(true))
+    {
+        Serial.println("Erreur lors de l'initialisation du système de fichier");
+    }
 }
 
 void afficherContenuFichier(const String& nomFichier)
