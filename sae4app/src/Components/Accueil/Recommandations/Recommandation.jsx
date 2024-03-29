@@ -73,10 +73,12 @@ const Recommandation = ({recommandationId, type, texte, min, max, unite, salleId
             <span className={`text-[${color()}]`}>{max}{unite}</span>
     }
 
+    let creerAction
+
     const postAction = () => {
+        creerAction = true
 
         document.getElementById("post" + recommandationId).classList.remove("translate-y-[12px]")
-
         document.getElementById("timer" + recommandationId).classList.replace("opacity-0", "opacity-100")
         document.getElementById("cross" + recommandationId).classList.replace("opacity-0", "opacity-100")
         document.getElementById("cross" + recommandationId).classList.add("-translate-y-12")
@@ -85,14 +87,34 @@ const Recommandation = ({recommandationId, type, texte, min, max, unite, salleId
 
         setTimeout(() => {
             document.getElementById("timer" + recommandationId).textContent = "4"
+            if(creerAction==false) {
+                reverseActionAnimation()
+                return
+            }
             setTimeout(() => {
                 document.getElementById("timer" + recommandationId).textContent = "3"
+                if(creerAction==false) {
+                    reverseActionAnimation()
+                    return
+                }
                 setTimeout(() => {
                     document.getElementById("timer" + recommandationId).textContent = "2"
+                    if(creerAction==false) {
+                        reverseActionAnimation()
+                        return
+                    }
                     setTimeout(() => {
                         document.getElementById("timer" + recommandationId).textContent = "1"
+                        if(creerAction==false) {
+                            reverseActionAnimation()
+                            return
+                        }
                         setTimeout(() => {
                             document.getElementById("timer" + recommandationId).textContent = "0"
+                            if(creerAction==false) {
+                                reverseActionAnimation()
+                                return
+                            }
                             PostActions(salleId, recommandationId).then(r => {
                                     if(r.status === undefined) {
                                         document.getElementById(recommandationId).classList.add("-translate-x-[100vw]")
@@ -108,16 +130,22 @@ const Recommandation = ({recommandationId, type, texte, min, max, unite, salleId
                 }, 1000)
             }, 1000)
         }, 1000)
-
-
-
-
-
-
     }
 
     const cancelPost = () => {
+        creerAction = false
+    }
 
+    const reverseActionAnimation = () => {
+        document.getElementById("post" + recommandationId).classList.add("translate-y-[12px]")
+        document.getElementById("timer" + recommandationId).classList.replace("opacity-100", "opacity-0")
+        document.getElementById("cross" + recommandationId).classList.replace("opacity-100", "opacity-0")
+        document.getElementById("cross" + recommandationId).classList.remove("-translate-y-12")
+        document.getElementById("check" + recommandationId).classList.replace("opacity-0", "opacity-100")
+        document.getElementById("check" + recommandationId).classList.remove("-translate-y-12")
+        setTimeout(() => {
+            document.getElementById("timer" + recommandationId).textContent = "5"
+        },1000)
     }
 
     const render = () => {
