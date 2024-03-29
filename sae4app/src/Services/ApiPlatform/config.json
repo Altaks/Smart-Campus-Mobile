@@ -3,5 +3,6 @@
   "apiPath": "/api",
   "sallesPath": "/salles",
   "recommandationsPath": "/recommandations",
-  "conseilsPath": "/conseils"
+  "conseilsPath": "/conseils",
+  "actionsPath": "/actions"
 }

@@ -62,14 +62,15 @@ const getDernieresDonnees = (donnees) => {
 }
 
 const Accueil = () => {
-    const [baseDeDonnees, setBaseDeDonnees] = useState(undefined)
+    const [salle, setSalle] = useState({})
     const [donnes, setDonnees] = useState(undefined)
     const [curDerniereDonnees, setDerniereDonnees] = useState([null, null, null]) // pour l'affichage des recommandations
 
     changerTitre("Accueil")
 
-    const handleChoixSalle = (baseDeDonnees) => {
-        setBaseDeDonnees(baseDeDonnees)
+    const handleChoixSalle = (salle) => {
+        const baseDeDonnees = salle.systemesAcquisitions[0].baseDeDonnees
+        setSalle(salle)
         const dateHier = new Date()
         dateHier.setDate(dateHier.getDate() - 1)
         const dateDemain = new Date()
@@ -88,11 +89,11 @@ const Accueil = () => {
             <h1 id={"titre"} className={"text-[#126CB5] text-3xl font-bold text-center h-full"}>Quelle salle voulez vous
                 consulter ?</h1>
             <div id={"ChangeSalle"} className={"flex transition-all duration-500 mt-10"}>
-                <SelectionSalle handleChoixSalle={handleChoixSalle} baseDeDonnees={baseDeDonnees}/>
+                <SelectionSalle handleChoixSalle={handleChoixSalle} salle={salle} setSalle={setSalle}/>
             </div>
             <div id={"listeGraphique"} className={"translate-x-[100vw] m-auto"}>
-                <BandeauDerniereDonnees derniereDonnees={getDernieresDonnees(salle)} isDisplaied={id}/>
-                <ListeRecommandations derniereDonnees={curDerniereDonnees}/>
+                <BandeauDerniereDonnees derniereDonnees={curDerniereDonnees} isDisplaied={salle.id}/>
+                <ListeRecommandations derniereDonnees={curDerniereDonnees} salleId={salle.id}/>
                 <ListeGraphiques donnes={donnes}/>
             </div>
         </>

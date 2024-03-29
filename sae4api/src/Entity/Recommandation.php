@@ -7,11 +7,13 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Tests\Fixtures\Metadata\Get;
 use App\Repository\RecommandationRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints\Collection;
 
 #[ORM\Entity(repositoryClass: RecommandationRepository::class)]
 #[ApiResource(
     operations: [
+        new Get(),
         new GetCollection()
     ]
 )]
@@ -20,6 +22,7 @@ class Recommandation
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['action:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 300)]
