@@ -1,5 +1,7 @@
 #include "envois.h"
 
+#include <Boutons/boutons.h>
+
 #include "WiFi.h"
 
 #include "Fichiers/fichierSPIFFS.h"
@@ -8,18 +10,30 @@
 #include "Capteurs/qualAir.h"
 #include "LED/led.h"
 
+bool etatEnvois = false;
+bool tacheEnCours = false;
+
+
 // Décommenter/Commenter les Serial.println pour voir/ne pas voir les informations de debug en usb
 
-[[noreturn]] void taskEnvois(void *pvParameters){
+void taskEnvois(void *pvParameters){
+    tacheEnCours = true;
 
-    Donnees * donnees = (struct Donnees*) pvParameters;
-
-    while(true){
+    while(getMode() == MESURE){
+        unsigned short i = 0; // wait 30 secondes
+        while(getMode() == MESURE && i < 30){
+            vTaskDelay(pdMS_TO_TICKS(1000));
+            i++;
+        }
+        if (getMode() != MESURE){
+            Serial.println("Sortie de la tâche d'envoi avant envoi des données");
+            break;
+        }
         vTaskDelay(pdMS_TO_TICKS(30 * 1000));
         Serial.println("______________________________________");
         Serial.println("Debut de l'envoi des données :");
         Serial.println("______________________________________");
-        int codeRetour = envoyer(donnees);
+        int codeRetour = envoyer(static_cast<Donnees *>(pvParameters));
         if (codeRetour == 0){
             Serial.println("Donnees envoyees");
             setEnvoieState(true);
@@ -30,9 +44,15 @@
             setEnvoieState(false);
         }
         Serial.println("______________________________________");
-        // 5 minutes - 2 secondes pour laisser le temps à la tâche de récupérer la date (d'après mes tests, la récupération de la date prend 2 secondes de plus que le délai de 5 minutes)
-        vTaskDelay(pdMS_TO_TICKS(4 * 60 * 1000 + 28 * 1000));
+
+        i = 0; // left 4min and 28s
+        while(getMode() == MESURE && i < 4 * 60 + 28){
+            vTaskDelay(pdMS_TO_TICKS(2000));
+            i+=2;
+        }
     }
+    tacheEnCours = false;
+    vTaskDelete(nullptr);
 }
 
 xTaskHandle initEnvois(Donnees * donnees){
@@ -42,9 +62,9 @@ xTaskHandle initEnvois(Donnees * donnees){
     xTaskCreate( //création de la tâche
       taskEnvois,
       "Envois des donnees sur l'api",
-      8000,
+      10000,
       donnees,
-      1,
+      2,
       &envoisTaskHandle
     );
 
@@ -82,8 +102,12 @@ int envoyer(Donnees *donnees){
 
     Serial.println("Création du client");
 
+    Serial.printf("Mémoire disponible avant création client HTTP : %i | %i\n", esp_get_free_internal_heap_size(), esp_get_free_heap_size());
+
     // création du client http pour envoyer les données
     HTTPClient http;
+
+    Serial.printf("Mémoire disponible après création client : %i | %i\n", esp_get_free_internal_heap_size(), esp_get_free_heap_size());
 
 
     // requete POST basée sur l'exemple de l'api suivant :
@@ -114,20 +138,27 @@ int envoyer(Donnees *donnees){
     Serial.println("Connexion au serveur d'API");
 
     // configure la connexion au serveur d'api (changer l'url si besoin)
-    http.begin("https://sae34.k8s.iut-larochelle.fr/api/captures");
-    
+    String urlAPI = recupererValeur("/infobd.txt", "url_api");
+    Serial.printf("URL de l'API : %s [%i]\n", urlAPI.c_str(), strlen(urlAPI.c_str()));
+
+    etatEnvois = true;
+    http.begin(urlAPI);
+
     Serial.println("Création du header de la requête");
 
-    String nomSA = recupererValeur("/infobd.txt","nom_sa").c_str();
-    String nomBd = recupererValeur("/infobd.txt","nom_bd").c_str();
-    String nomUtilisateur = recupererValeur("/infobd.txt","nom_utilisateur").c_str();
-    String motDePasse = recupererValeur("/infobd.txt","mot_de_passe").c_str();
-    
+    String nomSA          = recupererValeur("/infobd.txt","nom_sa");
+    String nomBd          = recupererValeur("/infobd.txt","nom_bd");
+    String nomUtilisateur = recupererValeur("/infobd.txt","nom_utilisateur");
+    String motDePasse     = recupererValeur("/infobd.txt","mot_de_passe");
 
-    if(nomBd.isEmpty() || nomUtilisateur.isEmpty() || motDePasse.isEmpty() || nomSA.isEmpty()){
+    if(nomSA.isEmpty() || nomUtilisateur.isEmpty() || motDePasse.isEmpty() || nomSA.isEmpty()){
         return -2;
     }
-    
+
+    Serial.printf("Nom SA : '%s'\n", nomSA.c_str());
+    Serial.printf("Nom BD : '%s'\n", nomBd.c_str());
+    Serial.printf("Nom Utilisateur : '%s'\n", nomUtilisateur.c_str());
+    Serial.printf("Nom Mot de passe : '%s'\n", motDePasse.c_str());
 
     // configure le header de la requete
     http.addHeader("accept", "application/ld+json");
@@ -144,18 +175,24 @@ int envoyer(Donnees *donnees){
 
         Serial.printf("Récupération des données de %s\n", nomsValeurs[i].c_str());
 
-        while(strlen(s_donnees[i]) == 1 && i < 4){
+        while(strlen(s_donnees[i]) == 1 && i < 3){
             i++;
             Serial.printf("Erreur lors de la récupération des données.\nRécupération des données de %s\n", nomsValeurs[i].c_str());
         }
 
+        String description = recupererValeur("/infobd.txt", "description");
+        if(description == "-1") description = "";
+
         // Création de la chaine de caractère à envoyer
-        String donneesAEnvoyerStr = R"({"nom":")"+ nomsValeurs[i] +
+        const String donneesAEnvoyerStr = R"({"nom":")"+ nomsValeurs[i] +
                                     R"(","valeur":")"+ s_donnees[i] +
                                     R"(","dateCapture":")"+ date +
                                     R"(","localisation":")"+ recupererValeur("/infobd.txt", "localisation").c_str() +
-                                    R"(","description":"","nomsa":")"+ recupererValeur("/infobd.txt", "nom_sa").c_str() +
+                                    R"(","description":")"+ description.c_str() +
+                                    R"(","nomsa":")"+ recupererValeur("/infobd.txt", "nom_sa").c_str() +
                                     "\"}";
+
+        Serial.printf("%s\n", donneesAEnvoyerStr.c_str());
 
         Serial.printf("Envoi des données de %s\n", nomsValeurs[i].c_str());
 
@@ -163,14 +200,16 @@ int envoyer(Donnees *donnees){
         // Serial.println(donneesAEnvoyerStr);
 
         // Décommenter pour voir la mémoire libre sur l'esp
-        Serial.println("Mémoire RAM restante : " + String(ESP.getFreeHeap()) + "o");
+        Serial.printf("Mémoire disponible avant envoi : %i | %i\n", esp_get_free_internal_heap_size(), esp_get_free_heap_size());
 
         // Envoie des données
         int codeReponse = http.POST(donneesAEnvoyerStr);
+        Serial.printf("Mémoire disponible après envoi : %i | %i\n", esp_get_free_internal_heap_size(), esp_get_free_heap_size());
+
 
         // affiche le code de reponse
-        if (http.errorToString(codeReponse) != ""){
-            Serial.println("Code de réponse : " + String(codeReponse) + " : " + http.errorToString(codeReponse));
+        if (HTTPClient::errorToString(codeReponse) != ""){
+            Serial.println("Code de réponse : " + String(codeReponse) + " : " + HTTPClient::errorToString(codeReponse));
         }
         else{
             Serial.println("Code de réponse : " + String(codeReponse));
@@ -179,11 +218,13 @@ int envoyer(Donnees *donnees){
         if (codeReponse != 201){
             codeErreur = -4;
         }
-
     }
+
+    // howjoc-dyjhId-hiwre0
     
     // libère les ressources
     http.end();
+    etatEnvois = false;
 
     return codeErreur;
 }
@@ -203,4 +244,12 @@ String erreurToString(int code){
     default:
         return "Erreur inconnue";
     }
+}
+
+bool envoieEnCours(){
+    return etatEnvois;
+}
+
+bool tacheEnvoisEnCours(){
+    return tacheEnCours;
 }

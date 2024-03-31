@@ -29,7 +29,7 @@ xTaskHandle initTacheAffichage(Donnees *);
  * Affiche les données sur l'écran
  * @param PAGE Page a afficher
 */
-void afficher(PAGE &, Donnees *);
+void afficher(PAGE &, const Donnees *);
 
 /**
  * \brief Affiche un texte sur l'écran
@@ -45,5 +45,9 @@ void afficher(PAGE &, Donnees *);
 void displayText(const String& text, int x = 0, int y = 0, int fontSize = 16, bool centered = false);
 
 void displayResetInfos(const String& dateTime, const String& ip);
+
+void clearDisplay();
+
+bool tacheAffichageEnCours();
 
 #endif

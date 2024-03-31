@@ -1,62 +1,43 @@
 #include "qualAir.h"
 
-
-Adafruit_SGP30 sgp;
-
-/*
-void initQualAir() {
-  while (!Serial) { delay(10); } // Wait for serial console to open!
-
-  Serial.println("Initialisation capteur CO2");
-
-  if (! sgp.begin()){
-    Serial.println("Capteur CO2 non trouvé");
-    while (true);
-  }
-  Serial.println("Capteur CO2 connecté");
-}
+#include <Boutons/boutons.h>
 
 
-int getCO2() {
-  if (! sgp.IAQmeasure()) {
-    Serial.println("Mesure échouée");
-    return -1;
-  } else
-        return sgp.eCO2;
-}
-
-int getCO2WithoutMeasure() {
-  return sgp.eCO2;
-}
-*/
+Adafruit_SGP30 * sgp;
+bool etatAir = false;
 
 void taskQualAir(void *pvParameters) {
-
-  Donnees *donnees = (Donnees *) pvParameters;
-
-  for (;;) {
+  etatAir = true;
+  while (getMode() == MESURE) {
     delay(2000);
-    if (sgp.IAQmeasure()) {
-      *donnees->co2 = sgp.eCO2;
+    if (sgp->IAQmeasure()) {
+      *static_cast<Donnees *>(pvParameters)->co2 = sgp->eCO2;
     }
     else {
-      *donnees->co2 = 0;
+      *static_cast<Donnees *>(pvParameters)->co2 = 0;
     }
-
   }
+  delete sgp;
+  etatAir = false;
+  vTaskDelete(nullptr);
 }
 
 xTaskHandle initTaskQualAir(Donnees *donnees) {
   xTaskHandle qualAirTaskHandle;
-  if( sgp.begin()) {
+  sgp = new Adafruit_SGP30();
+  if( sgp->begin()) {
     xTaskCreate(
       taskQualAir,
       "taskQualAir",
-      10000,
+      1000,
       donnees,
       9,
       &qualAirTaskHandle
     );
   }
   return qualAirTaskHandle;
+}
+
+bool tacheQualAirEnCours() {
+    return etatAir;
 }

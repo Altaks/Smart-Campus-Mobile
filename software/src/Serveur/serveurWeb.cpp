@@ -6,24 +6,27 @@
 #include "modifierPageWeb.h"
 #include "serveurWeb.h"
 
+#include <Boutons/boutons.h>
+
 #include "Fichiers/fichierSPIFFS.h"
 
 #include "Reseaux/station.h"
 
-DNSServer dnsServer;
-AsyncWebServer server(80);
+DNSServer * dnsServer;
+AsyncWebServer * server;
+bool etatServeur = false;
 
 void setupServeurWeb()
 {
     // Permet de récupérer le fichier main
-    server.on("/main.css", HTTP_GET, [](AsyncWebServerRequest *request)
+    server->on("/main.css", HTTP_GET, [](AsyncWebServerRequest *request)
     {
         request->send(SPIFFS, "/main.css", "text/css");
         Serial.println("Page envoyée");
     });
 
     // Permet d'accéder à la page d'accueil
-    server.on("/", HTTP_GET, [](AsyncWebServerRequest *request)
+    server->on("/", HTTP_GET, [](AsyncWebServerRequest *request)
     {
         Serial.println("Requête recue sur /");
         request->send(SPIFFS, "/index.html","text/html");
@@ -31,7 +34,7 @@ void setupServeurWeb()
     });
 
     // Permet d'accéder à la page de configuration de la base de données
-    server.on("/config-base-de-donnees", HTTP_GET, [](AsyncWebServerRequest *request)
+    server->on("/config-base-de-donnees", HTTP_GET, [](AsyncWebServerRequest *request)
     {
         Serial.println("Requête recue sur /config-base-de-donnees");
         modifierFormPageConfigbd();
@@ -41,7 +44,7 @@ void setupServeurWeb()
     });
 
     // Permet de récupérer les informations de la base de données et de les enregistrer dans le fichier /infobd.txt
-    server.on("/config-base-de-donnees", HTTP_POST, [] (AsyncWebServerRequest *request) 
+    server->on("/config-base-de-donnees", HTTP_POST, [] (AsyncWebServerRequest *request) 
     {
         Serial.println("Requête recue sur /config-base-de-donnees");
         modifierFormPageReseau();
@@ -51,14 +54,21 @@ void setupServeurWeb()
         String nom_bd = "";
         String nom_utilisateur = "";
         String mot_de_passe = "";
+        String description = "";
+        String urlAPI = "";
         for(int i=0;i<request->params() ;i++){
             AsyncWebParameter* p = request->getParam(i);
             if(p->name() == "nom_sa"){
                 nom_sa = p->value();
             }
+            else if(p->name() == "url_api"){
+                urlAPI = p->value();
+            }
             else if(p->name() == "localisation"){
                 localisation = p->value();
-            } 
+            } else if(p->name() == "description"){
+                description = p->value();
+            }
             else if(p->name() == "nom_bd"){
                 nom_bd = p->value();
             } 
@@ -71,22 +81,26 @@ void setupServeurWeb()
         }
         Serial.println("nom_sa: " + nom_sa);
         Serial.println("localisation: " + localisation);
+        Serial.println("description: " + description);
         Serial.println("nom_bd: " + nom_bd);
         Serial.println("nom_utilisateur: " + nom_utilisateur);
         Serial.println("mot_de_passe: " + mot_de_passe);
+        Serial.println("url_api: " + urlAPI);
 
         ecrireFichier("/infobd.txt",
             "nom_sa:"+nom_sa+
             "\nlocalisation:"+localisation+
+            "\ndescription:"+description+
             "\nnom_bd:"+nom_bd+
             "\nnom_utilisateur:"+nom_utilisateur+
-            "\nmot_de_passe:"+mot_de_passe);
+            "\nmot_de_passe:"+mot_de_passe+
+            "\nurl_api:"+urlAPI);
 
         request->redirect("http://"+getIP()+"/");  
     });
 
     // Permet d'accéder à la page de configuration du réseau
-    server.on("/config-reseau", HTTP_GET, [](AsyncWebServerRequest *request)
+    server->on("/config-reseau", HTTP_GET, [](AsyncWebServerRequest *request)
     {
         Serial.println("Requête recue sur /config-reseau");
         modifierFormPageReseau();
@@ -97,7 +111,7 @@ void setupServeurWeb()
     });
 
     // Permet de récupérer les informations du wifi auquel connecter le SA et de les enregistrer dans le fichier /inforeseau.txt
-    server.on("/config-reseau", HTTP_POST, [] (AsyncWebServerRequest *request) 
+    server->on("/config-reseau", HTTP_POST, [] (AsyncWebServerRequest *request) 
     {
         Serial.println("Requête recue sur /config-reseau");
 
@@ -110,7 +124,7 @@ void setupServeurWeb()
             AsyncWebParameter* p = request->getParam(i);
             if(p->name() == "nom_reseau"){
                 nom_reseau = p->value();
-            } 
+            }
             else if(p->name() == "type_eap"){
                 type_eap = p->value();
             } 
@@ -128,7 +142,6 @@ void setupServeurWeb()
         Serial.println("type_eap: " + type_eap);
         Serial.println("nom_utilisateur: " + nom_utilisateur);
         Serial.println("identifiant: " + identifiant);
-        Serial.println("mot_de_passe: " + mot_de_passe);
 
         ecrireFichier("/inforeseau.txt",
             "nom_reseau:"+nom_reseau+
@@ -142,7 +155,7 @@ void setupServeurWeb()
     });
 
     // Permet de récupérer les informations du point d'accès wifi et de les enregistrer dans le fichier /infoap.txt
-    server.on("/config-acces-point", HTTP_POST, [] (AsyncWebServerRequest *request) 
+    server->on("/config-acces-point", HTTP_POST, [] (AsyncWebServerRequest *request) 
     {
         Serial.println("Requête recue sur /config-acces-point");
 
@@ -183,7 +196,7 @@ void setupServeurWeb()
     });
 
     // Permet de renvoyer les requêtes ou la route n'a pas été initialisée vers la page d'accueil
-    server.onNotFound ( [](AsyncWebServerRequest *request)
+    server->onNotFound ( [](AsyncWebServerRequest *request)
     {
         request->redirect("http://"+getIP()+"/");
     });
@@ -191,24 +204,36 @@ void setupServeurWeb()
 
 void setupServeurDNS()
 {  
-    dnsServer.start(53, "smart-campus.fr", WiFi.softAPIP());
+    dnsServer->start(53, "smart-campus.fr", WiFi.softAPIP());
 }
 
 void loopServeurDNS()
 {
-    dnsServer.processNextRequest();
+    dnsServer->processNextRequest();
 }
 
-[[noreturn]] void taskServeurDNS(__attribute__((unused)) void * parameter){
-    while(true){
+void taskServeurDNS(void * parameter){
+    etatServeur = true;
+    while(getMode() == CONFIGURATION){
         loopServeurDNS();
         vTaskDelay(100);
     }
+    server->end();
+    dnsServer->stop();
+    delete server;
+    delete dnsServer;
+    etatServeur = false;
+    vTaskDelete(nullptr);
 }
 
 xTaskHandle activerServeurDNS()
 {
-    server.begin();
+    server = new AsyncWebServer(80);
+    dnsServer = new DNSServer();
+    
+    setupServeurWeb();
+    setupServeurDNS();
+    server->begin();
 
     delay(100);
 
@@ -217,11 +242,16 @@ xTaskHandle activerServeurDNS()
     xTaskCreate(
         taskServeurDNS,
         "loopServeurWeb",
-        10000,
+        1000,
         nullptr,
         5,
         &serveurTaskHandle
     );
 
     return serveurTaskHandle;
+}
+
+bool serveurEnCours()
+{
+    return etatServeur;
 }

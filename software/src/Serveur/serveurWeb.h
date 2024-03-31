@@ -16,4 +16,6 @@ void setupServeurDNS();
  */
 xTaskHandle activerServeurDNS();
 
+bool serveurEnCours();
+
 #endif

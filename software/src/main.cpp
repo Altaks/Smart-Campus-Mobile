@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include <SPIFFS.h>
 
 #include "typeDef.h"
 
@@ -26,46 +27,12 @@
 
 Donnees * donnees;
 
-void setup() {
-
-    Serial.begin(9600);
-    while(!Serial);
-
-    //Boutons
-    initBoutons();
-
-    // LED
-    initLED();
-
-    delay(1000);
-    // Initilaisation système de fichier
-    initSystemeFichier();
-    
-    delay(100);
-    // Récupère les informations du point d'accès 
-    String nomAP = recupererValeur("/infoap.txt","nom_ap");
-    String motDePasseAP = recupererValeur("/infoap.txt","mot_de_passe");
-
-    // Initialisation reseau en mode STATION et POINT D'ACCES
-    initReseauStationEtPointAcces();
-
-    //Initialise le serveur web et le serveur DNS
-    setupServeurWeb();
-    setupServeurDNS();
-    xTaskHandle serveurTaskHandle = activerServeurDNS();
-    setServeurTaskHandle(serveurTaskHandle);
-
-    delay(100);
-
-    //Initialise l'affichage
-    bool affiche = initAffichage(); 
-    
-    //Affichage du nom de l'AP et de l'adresse IP a utilisé
-    displayText("Nom du Wifi : \n" + nomAP+"\nIP : "+getIP(),0,10);
-
+bool connexionWifi() {
     String nomReseau;
 
     Serial.println("Connexion au reseau wifi");
+
+    unsigned short attempt = 0;
 
     // Tant que le SA n'est pas connecté à internet
     do
@@ -77,15 +44,15 @@ void setup() {
 
         // si le nom du réseau auquel se connecter est configuré
         // et que le réseau auquel se connecter est capté par le SA (enregistrer dans le fichier listereseaux.txt)
-        if (!nomReseau.isEmpty() 
-            && estDansFichier("/listereseaux.txt",nomReseau)) 
+        if (!nomReseau.isEmpty()
+            && estDansFichier("/listereseaux.txt",nomReseau))
         {
             // Récupère les valeurs dans le fichier inforeseau.txt
             int type_eap          = recupererValeur("/inforeseau.txt","type_eap").toInt();
             String password       = recupererValeur("/inforeseau.txt","mot_de_passe");
             String identifiant    = recupererValeur("/inforeseau.txt","identifiant");
             String nomUtilisateur = recupererValeur("/inforeseau.txt","nom_utilisateur");
-            
+
             // Essaie de se connecter au réseau
             if(connexionWifi(nomReseau, wpa2_auth_method_t(type_eap), password ,identifiant, nomUtilisateur))
             {
@@ -99,10 +66,81 @@ void setup() {
             }
         }
         delay(10000);
+        attempt ++;
+        Serial.println("Tentative de connexion n°"+String(attempt));
     }
-    while(!estConnecte(nomReseau));
+    while(!estConnecte(nomReseau) && attempt < 1);
+
+    Serial.printf("Connexion au réseau %s : %s\n", nomReseau.c_str(), estConnecte(nomReseau) ? "OK" : "KO");
+
+    return WiFiClass::status() == WL_CONNECTED;
+}
+
+void setup() {
+
+    Serial.begin(9600);
+    while(!Serial);
+
+    // LED
+    initLED();
+
+    delay(1000);
+    // Initilaisation système de fichier
+    initSystemeFichier();
+    
+    delay(100);
+    //Initialise l'affichage
+    initAffichage();
+
+    delay(100);
+
+    donnees = new Donnees();
+    donnees->humidite = new float(-1);
+    donnees->temperature = new float(-1);
+    donnees->co2 = new unsigned int(0);
 
 
+    setDonnees(donnees);
+
+    String nomReseauWifi = recupererValeur("/inforeseau.txt","nom_reseau");
+    Serial.println("Nom du réseau wifi : "+nomReseauWifi);
+
+    // Si le nom du réseau wifi n'est pas configuré ou que le SA n'est pas connecté à internet
+    if (nomReseauWifi.isEmpty() || !connexionWifi())
+    {
+        Serial.println("Mode configuration");
+        enregistrerListeReseaux();
+        initBoutons(CONFIGURATION);
+
+        delay(100);
+
+        String nomAP = recupererValeur("/infoap.txt","nom_ap");
+        String motDePasseAP = recupererValeur("/infoap.txt","mot_de_passe");
+
+        // Initialisation reseau en mode STATION et POINT D'ACCES
+        initReseauStationEtPointAcces();
+
+        xTaskHandle serveurTaskHandle = activerServeurDNS();
+        setServeurTaskHandle(serveurTaskHandle);
+
+        delay(100);
+
+        //Affichage du nom de l'AP et de l'adresse IP a utilisé
+        displayText("Nom du Wifi : \n" + nomAP+"\nIP : "+getIP(),0,10);
+    }
+    else
+    {
+        Serial.println("Mode mesure");
+        initBoutons(MESURE);
+    }
+
+    // attend d'être connecté à internet
+    while((WiFiClass::status() != WL_CONNECTED)){
+
+        Serial.print(".");
+        delay(1000);
+    }
+    Serial.println("Connecté à internet");
     
     // Initialise l'heure (peut prendre quelques secondes avant de se connecter au serveur ntp)
     initHeure();
@@ -115,6 +153,7 @@ void setup() {
         delay(250);
     }
     Serial.println();
+    setInitialisationDate(false);
     
     // Désactive le point d'accès wifi (le serveur reste disponible en se connectant au même routeur)
     initReseauStation();
@@ -123,15 +162,12 @@ void setup() {
     afficherContenuFichier("/infoap.txt");
     afficherContenuFichier("/infobd.txt");
     afficherContenuFichier("/inforeseau.txt");
-    afficherContenuFichier("/listereseau.txt");
+    afficherContenuFichier("/listereseaux.txt");
 
     // Active l'enregistrement périodique des réseaux wifi détectés par l'ESP dans le fichier /listereseaux.txt
     // activerEnregistrerListeReseau();
 
-    donnees = new Donnees();
-    donnees->humidite = new float(-1);
-    donnees->temperature = new float(-1);
-    donnees->co2 = new unsigned int(0);
+
     
     // Initialise les capteurs
     xTaskHandle tempEtHumTaskHandle = initTaskTempEtHum(donnees);
@@ -155,7 +191,8 @@ void setup() {
 
 }
 
-void loop() 
-{    
-    delay(60 * 1000);
+void loop() {
+    delay(30 * 1000);
+    Serial.printf("Mémoire disponible : %i | %i\n", esp_get_free_internal_heap_size(), esp_get_free_heap_size());
+    Serial.println("Mémoire totale : " + String(ESP.getHeapSize()));
 }

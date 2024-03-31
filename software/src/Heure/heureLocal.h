@@ -56,4 +56,9 @@ short getHeure();
 */
 short getMinute();
 
+
+void setInitialisationDate(bool);
+
+bool dateEnInitialisation();
+
 #endif //SOFTWARE_HEURELOCAL_H

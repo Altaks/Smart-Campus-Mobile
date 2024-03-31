@@ -3,8 +3,11 @@
 
 #include "heureLocal.h"
 
+bool initialisationDate = false;
+
 void initHeure()
 {
+    initialisationDate = true;
     configTzTime("CET-1CEST-2,M3.5.0/02:00:00,M10.5.0/03:00:00","0.europe.pool.ntp.org");
     //configTime(0,3600, "pool.ntp.org");
     struct tm timeinfo{};
@@ -91,4 +94,12 @@ short getMinute()
     char minute[3];
     strftime(minute,3,"%M",&timeinfo);
     return atoi(minute);
+}
+
+void setInitialisationDate(bool etat) {
+    initialisationDate = etat;
+}
+
+bool dateEnInitialisation() {
+    return initialisationDate;
 }

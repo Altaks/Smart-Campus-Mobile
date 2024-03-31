@@ -36,5 +36,9 @@ String erreurToString(int);
 
 const String nomsValeurs[] = {"temp", "hum", "co2", "pres"};
 
+bool envoieEnCours();
+
+bool tacheEnvoisEnCours();
+
 
 #endif
