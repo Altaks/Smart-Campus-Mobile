@@ -5,6 +5,7 @@ variables:
 stages:
   - SecurityChecker
   - CodingStandards
+  - UnitTesting
 
 workflow:
   rules:
@@ -45,6 +46,29 @@ linter:
     name: "$CI_JOB_NAME"
     paths:
       - sae4app/eslint-report.html
+  cache:
+    key: "$CACHE_KEY"
+    paths:
+      - sae4app/node_modules/
+
+app-testing:
+  image: node:20.11.1
+  stage: UnitTesting
+  tags:
+    - docker
+  script:
+    - cd sae4app
+    - pwd
+    - apt update -y
+    - npm install -g npm@latest
+    - npm install
+    - npm run lint
+    - npx vitest --run --coverage
+  allow_failure: true
+  artifacts:
+    name: "$CI_JOB_NAME"
+    paths:
+      - sae4app/coverage
   cache:
     key: "$CACHE_KEY"
     paths:
