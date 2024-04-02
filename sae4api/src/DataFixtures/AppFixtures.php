@@ -12,8 +12,8 @@ use App\Entity\Recommandation;
 
 class AppFixtures extends Fixture
 {
-    // @codingStandardsIgnoreStart
 
+    // @codingStandardsIgnoreStart
     public function load(ObjectManager $manager): void
     {
         $salleD205 = new Salle();
