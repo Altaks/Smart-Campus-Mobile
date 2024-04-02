@@ -1,5 +1,5 @@
-import {cleanup, render, renderHook, screen, waitFor} from '@testing-library/react';
-import {describe, it, expect, beforeEach, afterEach, vi} from 'vitest';
+import {render} from '@testing-library/react';
+import {describe, it, expect} from 'vitest';
 import formalisationDonnees from "../../../src/Utilitaires/FormalisationDonnees.js";
 import ListeGraphiques from "../../../src/Components/Accueil/Graphiques/ListeGraphiques.jsx";
 

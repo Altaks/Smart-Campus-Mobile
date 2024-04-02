@@ -1,5 +1,5 @@
-import {cleanup, render, renderHook, screen, waitFor} from '@testing-library/react';
-import {describe, it, expect, beforeEach, afterEach, vi} from 'vitest';
+import {render, screen, waitFor} from '@testing-library/react';
+import {describe, expect, it, vi} from 'vitest';
 import {getConseils} from "../../src/Services/ApiPlatform/GetConseils.js";
 import ListeConseils from "../../src/Routes/ListeConseils.jsx";
 
@@ -52,7 +52,7 @@ describe("Test du composant ListeConseils", () => {
     it("Doit afficher les textes mockés", async () => {
         render(<ListeConseils/>);
         await waitFor(() => {
-            for(let i = 0; i < data.length; i++) {
+            for (let i = 0; i < data.length; i++) {
                 expect(screen.getByText(data[i]['texte'])).toBeInTheDocument();
             }
         })
