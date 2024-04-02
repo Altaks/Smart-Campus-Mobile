@@ -57,6 +57,9 @@ void enregistrerListeReseaux()
 {
     // scan les réseaux alentours
     int n = WiFi.scanNetworks();
+
+    String * reseaux = new String[n];
+    int nb = 0;
     
     /*
      * Enregistre la liste des réseaux dans la variable listeReseauxDisponiblesStr au format :
@@ -64,16 +67,33 @@ void enregistrerListeReseaux()
      *  1:reseau1
      *  2:reseau2
     */
-    String listeReseauxDisponiblesStr = "nb_reseaux:"+String(n)+"\n";
+    String liste = "";
     if(n > 0)
     {
         for (int i = 0 ; i < n ; i++)
         {
-            listeReseauxDisponiblesStr += String(i+1)+ ":" + WiFi.SSID(i) + "\n";
-            delay(10);
+            String nom = WiFi.SSID(i);
+            bool found = false;
+            for (int j = 0 ; j < nb ; j++)
+            {
+                if (nom == reseaux[j])
+                {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found)
+            {
+                liste += String(nb+1)+ ":" + nom + "\n";
+                reseaux[nb] = nom;
+                nb++;
+                delay(10);
+            }
         }
     }
 
+    String nbReseauxDisponiblesStr = "nb_reseaux:"+String(nb)+"\n";
+    String listeReseauxDisponiblesStr = nbReseauxDisponiblesStr + liste;
     ecrireFichier("/listereseaux.txt", listeReseauxDisponiblesStr);
 }
 
