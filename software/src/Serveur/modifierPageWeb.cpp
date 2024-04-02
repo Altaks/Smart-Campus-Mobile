@@ -15,28 +15,57 @@ void modifierFormPageConfigbd()
     modifierFichier("/configbd.html","<!--DebutMotDePasse-->", "<!--FinMotDePasse-->",R"(<input type="password" name="mot_de_passe" id="mot_de_passe" value=")"+recupererValeur("/infobd.txt","mot_de_passe")+"\">");
     modifierFichier("/configbd.html","<!--DebutDescription-->", "<!--FinDescription-->",R"(<input type="text" name="description" id="description" value=")"+recupererValeur("/infobd.txt","description")+"\">");
     modifierFichier("/configbd.html","<!--DebutURL-->", "<!--FinURL-->",R"(<input type="text" name="url_api" id="url_api" value=")"+recupererValeur("/infobd.txt","url_api")+"\">");
+
+    String erreur = recupererValeur("/erreurWeb.txt","erreur");
+    bool visite = recupererValeur("/erreurWeb.txt","visite").toInt();
+    Serial.println("erreur: " + erreur);
+    Serial.println("visite: " + String(visite));
+    if (erreur == "bd" && visite != 0){
+        Serial.println("erreur bd");
+        modifierFichier("/configbd.html", "<!--Erreur-->", "<!--FinErreur-->", R"(<div class="erreur" role="alert"><p>La connexion à la base de données doit être paramétrée avant d'activer l'envois des données</p></div>)");
+    }
+    else{
+        Serial.println("pas d'erreur bd");
+        modifierFichier("/configbd.html", "<!--Erreur-->", "<!--FinErreur-->", "\n");
+    }
+    ecrireFichier("/erreurWeb.txt","erreur:" + erreur + "\nvisite:0");
 }
 
 void modifierFormPageReseau()
 {
-    String ip = getIP() ;
-    modifierFichier("/reseau.html", "<!--DebutFormHeadReseau-->", "<!--FinFormHeadReseau-->", R"(<form action="/config-reseau" method="POST">)");
-    modifierFichier("/reseau.html", "<!--DebutFormHeadAp-->", "<!--FinFormHeadAp-->", R"(<form action="/config-acces-point" method="POST">)");
+    String erreur = recupererValeur("/erreurWeb.txt","erreur");
+    bool visite = recupererValeur("/erreurWeb.txt","visite").toInt();
+    Serial.println("erreur: " + erreur);
+    Serial.println("visite: " + String(visite));
+    if (erreur == "wifi" && visite){
+        Serial.println("erreur wifi");
+        modifierFichier("/configwifi.html", "<!--Erreur-->", "<!--FinErreur-->", R"(<div class="erreur" role="alert"><p>La connexion au réseau wifi doit être paramétrée avant d'activer l'envois des données</p></div>)");
+    }
+    else{
+        Serial.println("pas d'erreur wifi");
+        modifierFichier("/configwifi.html", "<!--Erreur-->", "<!--FinErreur-->", "\n");
+    }
+
+    modifierFichier("/configwifi.html", "<!--DebutFormHeadReseau-->", "<!--FinFormHeadReseau-->", R"(<form action="/config-wifi" method="POST">)");
+
+    ecrireFichier("/erreurWeb.txt","erreur:" + erreur + "\nvisite:0");
 }
+
+void modifierFormPageConfigAP(){
+    modifierFichier("/configap.html", "<!--DebutFormHeadAp-->", "<!--FinFormHeadAp-->", R"(<form action="/config-access-point" method="POST">)");
+}
+
 
 void modifierListeReseauxPageReseau()
 {
     int n = recupererValeur("/listereseaux.txt","nb_reseaux").toInt();
     String contenu = "";
-    if(n > 0)
+    String ssid;
+    for(int i = 1 ; i <= n ; i++)
     {
-        String ssid;
-        for(int i = 1 ; i <= n ; i++)
-        {
-            ssid = recupererValeur("/listereseaux.txt",String(i));
-            contenu += "<option value=\"" + ssid + "\">" + ssid + "</option>";
-        }
+        ssid = recupererValeur("/listereseaux.txt",String(i));
+        contenu += "<option value=\"" + ssid + "\">" + ssid + "</option>";
     }
-    modifierFichier("/reseau.html", "<!--ListeReseaux-->", "<!--FinListeReseaux-->", contenu);
-    Serial.println("reseau.html liste des reseaux diponibles modifiée");
+    modifierFichier("/configwifi.html", "<!--ListeReseaux-->", "<!--FinListeReseaux-->", contenu);
+    Serial.println("configwifi.html liste des reseaux diponibles modifiée");
 }
