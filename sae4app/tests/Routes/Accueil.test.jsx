@@ -1,25 +1,71 @@
-import {render, screen} from '@testing-library/react';
-import {describe, it, expect, beforeEach} from 'vitest';
-import Recommandation  from "../../src/Components/Accueil/Recommandations/Recommandation.jsx";
+import {expect, describe, it, vi} from "vitest"
+import Accueil from "../../src/Routes/Accueil.jsx"
+import {render} from "@testing-library/react"
 
-describe("Test du composant Recommandation", () => {
+const salles = [
+    {
+        "id": 1,
+        "nom": "Salle 1",
+        "systemesAcquisitions": [
+            {
+                "baseDeDonnees": "sae34bdm1eq1"
+            }
+        ]
+    },
+    {
+        "id": 2,
+        "nom": "Salle 2",
+        "systemesAcquisitions": [
+            {
+                "baseDeDonnees": "sae34bdm1eq2"
+            }
+        ]
+    },
+    {
+        "id": 3,
+        "nom": "Salle 3",
+        "systemesAcquisitions": [
+            {
+                "baseDeDonnees": "sae34bdm1eq3"
+            }
+        ]
+    }
+]
 
-    const id = 1;
-    const type = "temp";
-    const texte = "Température trop basse";
-    const min = 18;
-    const max = null;
-    const unite = "°C";
+const data = [
+    {
+        "dateCapture": "2021-10-01T00:00:00+02:00",
+        "id": 1,
+        "value": 20,
+        "nom": "temp"
+    }
+]
 
-    beforeEach(() => {
-        render(<Recommandation id={id} type={type} texte={texte} min={min} max={max} unite={unite}/>);
+const mockedFetcSalle = () => Promise.resolve({
+    json() {
+        return salles
+    }
+})
+
+const mockedFetchCapturesInterval = () => Promise.resolve({
+    json() {
+        return data
+    }
+})
+
+describe("Test du composant Accueil", () => {
+
+    it('Doit afficher un logo', () => {
+        window.fetch = vi.fn(mockedFetcSalle)
+        render(<Accueil />)
+        expect(document.documentElement).toContainHTML('img')
     })
 
-    it ("Doit afficher la recommandation Température trop basse", () => {
-        expect(screen.getByText("Température trop basse")).toBeInTheDocument();
+    it('Doit afficher un titre', () => {
+        window.fetch = vi.fn(mockedFetcSalle)
+        render(<Accueil />)
+        expect(document.documentElement).toContainHTML('h1')
+        expect(document.querySelector('h1').textContent).toEqual("Quelle salle voulez vous consulter ?")
     })
 
-    it ("Doit afficher 18°C", () => {
-        expect(screen.getByText("18°C")).toBeInTheDocument();
-    })
-});
+})
