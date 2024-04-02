@@ -30,9 +30,9 @@ describe("Test du composant ListeConseils", () => {
     global.fetch = vi.fn(mockedFetchImplementation)
 
     it("Doit récupérer des données mockées", async () => {
-        const data = await getConseils();
-        expect(data.length).toEqual(data.length)
-        expect(data).toEqual(data)
+        const temp_data = await getConseils();
+        expect(temp_data.length).toEqual(data.length)
+        expect(temp_data).toEqual(data)
     });
 
     it("Doit afficher le texte par défaut", async () => {
