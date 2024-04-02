@@ -163,22 +163,19 @@ class AppFixtures extends Fixture
         // recommendations pour les salles
 
         $recommandation = new Recommandation();
-        $recommandation->setTexte("Il est recommandé de fermer les fenêtres si elle sont ouvertes
-        et d'allumer le chauffage si ils sont éteints");
+        $recommandation->setTexte("Il est recommandé de fermer les fenêtres si elle sont ouvertes et d'allumer le chauffage si ils sont éteints");
         $recommandation->setType('temp');
         $recommandation->setMin(17);
         $manager->persist($recommandation);
 
         $recommandation2 = new Recommandation();
-        $recommandation2->setTexte("Il est recommandé d'ouvrir les fenêtres si elle sont fermées
-        et d'éteindre le chauffage s'il est allumé");
+        $recommandation2->setTexte("Il est recommandé d'ouvrir les fenêtres si elle sont fermées et d'éteindre le chauffage s'il est allumé");
         $recommandation2->setType('temp');
         $recommandation2->setMax(21);
         $manager->persist($recommandation2);
 
         $recommandation3 = new Recommandation();
-        $recommandation3->setTexte("Ouvrir les fenêtres et les portes pour faire circuler l'air dans la salle si 
-        possible");
+        $recommandation3->setTexte("Ouvrir les fenêtres et les portes pour faire circuler l'air dans la salle si possible");
         $recommandation3->setType('co2');
         $recommandation3->setMax(1000);
         $manager->persist($recommandation3);
@@ -196,15 +193,13 @@ class AppFixtures extends Fixture
         $manager->persist($recommandation7);
 
         $recommandation4 = new Recommandation();
-        $recommandation4->setTexte("Ouvrir les fenêtres s'il ne pleut pas dehors sinon fermer les fenêtres  
-        et ouvrir les portes");
+        $recommandation4->setTexte("Ouvrir les fenêtres s'il ne pleut pas dehors sinon fermer les fenêtres et ouvrir les portes");
         $recommandation4->setType('hum');
         $recommandation4->setMax(50);
         $manager->persist($recommandation4);
 
         $recommandation5 = new Recommandation();
-        $recommandation5->setTexte("S'il pleut dehors, ouvrir les fenêtres légèrement
-        sinon ouvrir complètement les fenetres et ouvrir les portes");
+        $recommandation5->setTexte("S'il pleut dehors, ouvrir les fenêtres légèrement sinon ouvrir complètement les fenetres et ouvrir les portes");
         $recommandation5->setType('hum');
         $recommandation5->setMin(30);
         $manager->persist($recommandation5);
@@ -214,42 +209,31 @@ class AppFixtures extends Fixture
         // Température
 
         $conseil1 = new Conseil();
-        $conseil1->setTexte("En période normale, il est recommandé de maintenir une température de 19°C 
-        dans les salles de cours. Éteignez les chauffages s'ils sont allumés et ouvrez les fenêtres si besoin. 
-        Laissez les portes ouvertes si possible pour faire circuler l'air.");
+        $conseil1->setTexte("En période normale, il est recommandé de maintenir une température de 19°C dans les salles de cours. Éteignez les chauffages s'ils sont allumés et ouvrez les fenêtres si besoin. Laissez les portes ouvertes si possible pour faire circuler l'air.");
         $conseil1->setType("temp");
         $conseil1->setMax(19.0);
         $manager->persist($conseil1);
 
         $conseil2 = new Conseil();
-        $conseil2->setTexte("En période de fortes chaleurs, il est recommandé de maintenir une température 
-        inférieure à 26°C dans les salles de cours. Éteignez le chauffage s'ils sont allumés et ouvrez les fenêtres en 
-        conséquence. Laissez les portes ouvertes si possible pour faire circuler l'air. Évitez d'utiliser la 
-        climatisation le plus possible");
+        $conseil2->setTexte("En période de fortes chaleurs, il est recommandé de maintenir une température inférieure à 26°C dans les salles de cours. Éteignez le chauffage s'ils sont allumés et ouvrez les fenêtres en conséquence. Laissez les portes ouvertes si possible pour faire circuler l'air. Évitez d'utiliser la climatisation le plus possible");
         $conseil2->setType("temp");
         $conseil2->setMax(26.0);
         $manager->persist($conseil2);
 
         $conseil2 = new Conseil();
-        $conseil2->setTexte("En période d'inoccupation faible (entre 24 et 48h) , il est recommandé de maintenir 
-        une température maximale de 16°C dans les salles de cours. Éteignez le chauffage s'ils sont allumés, 
-        laissez les portes ouvertes si possible pour faire circuler l'air dans le bâtiment.");
+        $conseil2->setTexte("En période d'inoccupation faible (entre 24 et 48h) , il est recommandé de maintenir une température maximale de 16°C dans les salles de cours. Éteignez le chauffage s'ils sont allumés, laissez les portes ouvertes si possible pour faire circuler l'air dans le bâtiment.");
         $conseil2->setType("temp");
         $conseil2->setMax(16.0);
         $manager->persist($conseil2);
 
         $conseil3 = new Conseil();
-        $conseil3->setTexte("En période d'inoccupation forte (supérieure à 48h), il est recommandé de maintenir 
-        une température maximale de 8°C dans les salles de cours. Éteignez le chauffage s'ils sont allumés, 
-        laissez les portes ouvertes si possible pour faire circuler l'air dans le bâtiment.");
+        $conseil3->setTexte("En période d'inoccupation forte (supérieure à 48h), il est recommandé de maintenir une température maximale de 8°C dans les salles de cours. Éteignez le chauffage s'ils sont allumés, laissez les portes ouvertes si possible pour faire circuler l'air dans le bâtiment.");
         $conseil3->setType("temp");
         $conseil3->setMax(8.0);
         $manager->persist($conseil3);
 
         $conseil4 = new Conseil();
-        $conseil4->setTexte("En période normale, il est recommandé de maintenir une température supérieure à 17°C 
-        dans les salles de cours. Éteignez les chauffages s'ils sont allumés et ouvrez les fenêtres si besoin. 
-        Allumez les chauffages si besoin, fermez les fenêtres et les portes pour conserver la chaleur.");
+        $conseil4->setTexte("En période normale, il est recommandé de maintenir une température supérieure à 17°C dans les salles de cours. Éteignez les chauffages s'ils sont allumés et ouvrez les fenêtres si besoin. Allumez les chauffages si besoin, fermez les fenêtres et les portes pour conserver la chaleur.");
         $conseil4->setType("temp");
         $conseil4->setMin(17.0);
         $manager->persist($conseil4);
@@ -257,23 +241,19 @@ class AppFixtures extends Fixture
         // CO2
 
         $conseil5 = new Conseil();
-        $conseil5->setTexte("Au dessus d'un taux de CO2 de 1000 ppm, il est recommandé d'aérer les salles de 
-        cours. Ouvrez les fenêtres et les portes si possible pour faire circuler l'air.");
+        $conseil5->setTexte("Au dessus d'un taux de CO2 de 1000 ppm, il est recommandé d'aérer les salles de cours. Ouvrez les fenêtres et les portes si possible pour faire circuler l'air.");
         $conseil5->setType("co2");
         $conseil5->setMax(1000.0);
         $manager->persist($conseil5);
 
         $conseil6 = new Conseil();
-        $conseil6->setTexte("Au dessus d'un taux de CO2 de 2000 ppm, il est recommandé d'évacuer les salles de 
-        cours. Ouvrez les fenêtres ainsi que les portes pour faire circuler l'air dans l'intégralité du bâtiment.");
+        $conseil6->setTexte("Au dessus d'un taux de CO2 de 2000 ppm, il est recommandé d'évacuer les salles de cours. Ouvrez les fenêtres ainsi que les portes pour faire circuler l'air dans l'intégralité du bâtiment.");
         $conseil6->setType("co2");
         $conseil6->setMax(2000.0);
         $manager->persist($conseil6);
 
         $conseil6 = new Conseil();
-        $conseil6->setTexte("Au dessus d'un taux de CO2 de 1500 ppm, il est recommandé d'aérer les 
-        salles de cours et de ne pas rester trop longtemps dans les salles concernées. 
-        Ouvrez les fenêtres et les portes si possible pour faire circuler l'air.");
+        $conseil6->setTexte("Au dessus d'un taux de CO2 de 1500 ppm, il est recommandé d'aérer les salles de cours et de ne pas rester trop longtemps dans les salles concernées. Ouvrez les fenêtres et les portes si possible pour faire circuler l'air.");
         $conseil6->setType("co2");
         $conseil6->setMax(1500.0);
         $manager->persist($conseil6);
@@ -281,17 +261,13 @@ class AppFixtures extends Fixture
         // Humidité
 
         $conseil7 = new Conseil();
-        $conseil7->setTexte("En période normale, il est recommandé de maintenir une humidité relative supérieure 
-        à 40% dans les salles de cours. Ouvrez légèrement les fenêtres si possible pour faire 
-        circuler l'air s'il pleut faiblement à l'extérieur dehors");
+        $conseil7->setTexte("En période normale, il est recommandé de maintenir une humidité relative supérieure à 40% dans les salles de cours. Ouvrez légèrement les fenêtres si possible pour faire circuler l'air s'il pleut faiblement à l'extérieur dehors");
         $conseil7->setType("hum");
         $conseil7->setMin(40.0);
         $manager->persist($conseil7);
 
         $conseil7 = new Conseil();
-        $conseil7->setTexte("En période normale, il est recommandé de maintenir une humidité relative inférieure 
-        à 70% dans les salles de cours. Ouvrez les fenêtres si possible pour faire circuler l'air s'il ne pleut pas 
-        dehors, dans le cas contraire, fermez les fenêtres et changez de salle temporairement si possible.");
+        $conseil7->setTexte("En période normale, il est recommandé de maintenir une humidité relative inférieure à 70% dans les salles de cours. Ouvrez les fenêtres si possible pour faire circuler l'air s'il ne pleut pas dehors, dans le cas contraire, fermez les fenêtres et changez de salle temporairement si possible.");
         $conseil7->setType("hum");
         $conseil7->setMax(70.0);
         $manager->persist($conseil7);
