@@ -9,8 +9,10 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use App\Entity\Recommandation;
 
+
 class AppFixtures extends Fixture
 {
+    // @codingStandardsIgnoreStart
     public function load(ObjectManager $manager): void
     {
         $salleD205 = new Salle();
@@ -274,4 +276,5 @@ class AppFixtures extends Fixture
 
         $manager->flush();
     }
+    // @codingStandardsIgnoreEnd
 }
