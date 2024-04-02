@@ -181,15 +181,20 @@ int envoyer(Donnees *donnees){
         }
 
         String description = recupererValeur("/infobd.txt", "description");
+        String localisation = recupererValeur("/infobd.txt", "localisation");
+        String nomsa = recupererValeur("/infobd.txt", "nom_sa");
+
         if(description == "-1") description = "";
+        if(localisation == "-1") localisation = "";
+        if(nomsa == "-1") nomsa = "";
 
         // Création de la chaine de caractère à envoyer
         const String donneesAEnvoyerStr = R"({"nom":")"+ nomsValeurs[i] +
                                     R"(","valeur":")"+ s_donnees[i] +
                                     R"(","dateCapture":")"+ date +
-                                    R"(","localisation":")"+ recupererValeur("/infobd.txt", "localisation").c_str() +
+                                    R"(","localisation":")"+ localisation.c_str() +
                                     R"(","description":")"+ description.c_str() +
-                                    R"(","nomsa":")"+ recupererValeur("/infobd.txt", "nom_sa").c_str() +
+                                    R"(","nomsa":")"+ nomsa.c_str() +
                                     "\"}";
 
         Serial.printf("%s\n", donneesAEnvoyerStr.c_str());
