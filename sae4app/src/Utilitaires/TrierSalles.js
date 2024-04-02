@@ -3,7 +3,7 @@ const trierSalles = (salles) => {
         if (salle1.nom < salle2.nom) {
             return -1
         }
-        if (salle2.nom > salle2.nom) {
+        if (salle1.nom > salle2.nom) {
             return 1
         }
         return 0
