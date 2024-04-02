@@ -21,20 +21,20 @@ class SalleRepository extends ServiceEntityRepository
         parent::__construct($registry, Salle::class);
     }
 
-    public function getIdProchaineSalle(string $nom) : ?int
+    public function getIdProchaineSalle(string $nom): ?int
     {
         $entityManager = $this->getEntityManager();
         $query = $entityManager->createQuery(
-        'SELECT s.id
-             FROM App\Entity\Salle s
-             WHERE s.nom > :nom
-             ORDER BY s.nom ASC'
+        'SELECT s.id 
+            FROM App\Entity\Salle s 
+            WHERE s.nom > :nom 
+            ORDER BY s.nom ASC'
         )->setParameter('nom', $nom);
         $id = $query->setMaxResults(1)->getOneOrNullResult();
         return $id === null ? null : $id['id'];
     }
 
-    public function getIdSallePrecedente(string $nom) : ?int
+    public function getIdSallePrecedente(string $nom): ?int
     {
         $entityManager = $this->getEntityManager();
         $query = $entityManager->createQuery(

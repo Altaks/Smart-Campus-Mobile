@@ -14,6 +14,6 @@ class IndexController extends AbstractController
     {
         $disponible = ['message' => 'L\'API est disponible.'];
         $disponibleJson = json_encode($disponible);
-        return new JsonResponse($disponibleJson,200,[],true);
+        return new JsonResponse($disponibleJson, 200, [], true);
     }
 }
