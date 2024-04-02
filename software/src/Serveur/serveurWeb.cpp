@@ -100,20 +100,20 @@ void setupServeurWeb()
     });
 
     // Permet d'accéder à la page de configuration du réseau
-    server->on("/config-reseau", HTTP_GET, [](AsyncWebServerRequest *request)
+    server->on("/config-wifi", HTTP_GET, [](AsyncWebServerRequest *request)
     {
-        Serial.println("Requête recue sur /config-reseau");
+        Serial.println("Requête recue sur /config-wifi");
         modifierFormPageReseau();
         modifierListeReseauxPageReseau();
         Serial.println("Page modifiée");
-        request->send(SPIFFS, "/reseau.html","text/html");
+        request->send(SPIFFS, "/configwifi.html","text/html");
         Serial.println("Page envoyée");
     });
 
     // Permet de récupérer les informations du wifi auquel connecter le SA et de les enregistrer dans le fichier /inforeseau.txt
-    server->on("/config-reseau", HTTP_POST, [] (AsyncWebServerRequest *request) 
+    server->on("/config-wifi", HTTP_POST, [] (AsyncWebServerRequest *request)
     {
-        Serial.println("Requête recue sur /config-reseau");
+        Serial.println("Requête recue sur /config-wifi");
 
         String nom_reseau = "";
         String type_eap = "";
@@ -155,9 +155,9 @@ void setupServeurWeb()
     });
 
     // Permet de récupérer les informations du point d'accès wifi et de les enregistrer dans le fichier /infoap.txt
-    server->on("/config-acces-point", HTTP_POST, [] (AsyncWebServerRequest *request) 
+    server->on("/config-access-point", HTTP_POST, [] (AsyncWebServerRequest *request)
     {
-        Serial.println("Requête recue sur /config-acces-point");
+        Serial.println("Requête recue sur /config-access-point");
 
         String ssid = "";
         String mot_de_passe = "";
@@ -175,8 +175,6 @@ void setupServeurWeb()
             } 
         }
         Serial.println("SSID: " + ssid);
-        Serial.println("mot_de_passe: " + mot_de_passe);
-        Serial.println("mot_de_passe_confirm: " + mot_de_passe_confirm);
 
         if(mot_de_passe == mot_de_passe_confirm)
         {
@@ -193,6 +191,60 @@ void setupServeurWeb()
             request->redirect("http://"+getIP()+"/config-reseau");
         }
         
+    });
+
+    server->on("/config-access-point", HTTP_GET, [](AsyncWebServerRequest *request)
+    {
+        Serial.println("Requête recue sur /config-acces-point");
+        modifierFormPageConfigAP();
+        request->send(SPIFFS, "/configap.html","text/html");
+        Serial.println("Page envoyée");
+    });
+
+    server->on("/", HTTP_POST, [](AsyncWebServerRequest *request)
+    {
+        // recupere les infos donnees
+        String ssid = recupererValeur("/inforeseau.txt","nom_reseau");
+        String type_eap = recupererValeur("/inforeseau.txt","type_eap");
+        String nom_utilisateur = recupererValeur("/inforeseau.txt","nom_utilisateur");
+        String identifiant = recupererValeur("/inforeseau.txt","identifiant");
+        String mot_de_passe = recupererValeur("/inforeseau.txt","mot_de_passe");
+        if (ssid == "" || type_eap == "" || mot_de_passe == ""){
+
+            // redirect with error message on the page
+            ecrireFichier("/erreurWeb.txt","erreur:wifi\nvisite:1");
+            request->redirect("http://"+getIP()+"/config-wifi");
+            Serial.println("Tentative de passage en mode d'envoi de données sans configuration du réseau");
+            Serial.println("Redirection vers la page de configuration du réseau");
+            return;
+        }
+        if ((type_eap == "ttls" || type_eap == "peap") && (identifiant == "" || nom_utilisateur == "")){
+            ecrireFichier("/erreurWeb.txt","erreur:wifi");
+            request->redirect("http://"+getIP()+"/config-wifi");
+            Serial.println("Tentative de passage en mode d'envoi de données sans configuration du réseau");
+            Serial.println("Redirection vers la page de configuration du réseau");
+            return;
+        }
+
+        // recupere les infos de la base de donneesù
+        String nom_sa = recupererValeur("/infobd.txt","nom_sa");
+        String localisation = recupererValeur("/infobd.txt","localisation");
+        String nom_bd = recupererValeur("/infobd.txt","nom_bd");
+        String nom_utilisateur_bd = recupererValeur("/infobd.txt","nom_utilisateur");
+        String mot_de_passe_bd = recupererValeur("/infobd.txt","mot_de_passe");
+
+        if (nom_sa == "" || localisation == "" || nom_bd == "" || nom_utilisateur_bd == "" || mot_de_passe_bd == ""){
+            ecrireFichier("/erreurWeb.txt","erreur:bd\nvisite:1");
+            request->redirect("http://"+getIP()+"/config-base-de-donnees");
+            Serial.println("Tentative de passage en mode d'envoi de données sans configuration de la base de données");
+            Serial.println("Redirection vers la page de configuration de la base de données");
+            return;
+        }
+
+        ecrireFichier("/erreurWeb.txt","erreur:aucune");
+
+        setMode(Mode::MESURE);
+
     });
 
     // Permet de renvoyer les requêtes ou la route n'a pas été initialisée vers la page d'accueil

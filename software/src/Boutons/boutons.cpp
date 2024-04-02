@@ -233,3 +233,13 @@ void setDonnees(Donnees *donnees) {
 Mode getMode() {
   return mode;
 }
+
+void setMode(Mode modeNouveau) {
+  if (modeNouveau == MESURE) {
+    mode = MESURE_VERS_CONFIGURATION;
+  } else if (modeNouveau == CONFIGURATION) {
+    mode = CONFIGURATION_VERS_MESURE;
+  }
+
+  vTaskResume(changementModeTaskHandle);
+}

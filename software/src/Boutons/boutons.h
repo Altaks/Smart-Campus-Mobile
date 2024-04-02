@@ -54,4 +54,6 @@ void setDonnees(Donnees *donnees);
 
 Mode getMode();
 
+void setMode(Mode modeNouveau);
+
 #endif
