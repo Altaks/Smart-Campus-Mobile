@@ -1,7 +1,7 @@
 import {render} from '@testing-library/react';
 import {describe, it, expect} from 'vitest';
-import formalisationDonnees from "../../../src/Utilitaires/FormalisationDonnees.js";
-import ListeGraphiques from "../../../src/Components/Accueil/Graphiques/ListeGraphiques.jsx";
+import formalisationDonnees from "../../../../src/Utilitaires/FormalisationDonnees.js";
+import ListeGraphiques from "../../../../src/Components/Accueil/Graphiques/ListeGraphiques.jsx";
 
 const dateCapture = new Date()
 
@@ -712,4 +712,9 @@ describe("Test du composant ListeGraphique ", () => {
         expect(document.documentElement).toContainHTML('Humidité');
         expect(document.documentElement).toContainHTML('Qualité de l\'air');
     });
+
+    it('Doit retourner un fragment vide si les données sont vides', async () => {
+      render(<ListeGraphiques donnes={undefined}/>)
+        expect(document.documentElement).toContainHTML('<div/>')
+    })
 });

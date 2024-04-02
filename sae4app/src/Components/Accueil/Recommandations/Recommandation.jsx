@@ -18,8 +18,6 @@ const Recommandation = ({recommandationId, type, texte, min, max, unite, salleId
         return !(min != null && max != null) && acceptedTypes.includes(type);
     }
 
-
-
     const incone = () => {
         switch (type) {
             case "temp":
