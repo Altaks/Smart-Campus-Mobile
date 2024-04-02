@@ -236,9 +236,9 @@ Mode getMode() {
 
 void setMode(Mode modeNouveau) {
   if (modeNouveau == MESURE) {
-    mode = MESURE_VERS_CONFIGURATION;
-  } else if (modeNouveau == CONFIGURATION) {
     mode = CONFIGURATION_VERS_MESURE;
+  } else if (modeNouveau == CONFIGURATION) {
+    mode = MESURE_VERS_CONFIGURATION;
   }
 
   vTaskResume(changementModeTaskHandle);
