@@ -54,7 +54,7 @@ const SelectionSalle = ({handleChoixSalle, salle, setSalle}) => {
 SelectionSalle.propTypes = {
     handleChoixSalle: PropTypes.func.isRequired,
     salle: PropTypes.object,
-    setSalles: PropTypes.func.isRequired
+    setSalle: PropTypes.func.isRequired
 }
 
 export default SelectionSalle
