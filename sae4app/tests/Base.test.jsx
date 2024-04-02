@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
-import Base from "../Base.jsx";
+import Base from "../src/Base.jsx";
 
 
 describe('Test de fonctionnement de la librairie de test', () => {

@@ -1,6 +1,6 @@
 import {cleanup, render, screen} from '@testing-library/react';
 import {describe, it, expect, beforeEach, afterEach} from 'vitest';
-import Recommandation  from "../../Components/Accueil/Recommandations/Recommandation.jsx";
+import Recommandation  from "../../src/Components/Accueil/Recommandations/Recommandation.jsx";
 
 describe("Test du composant Recommandation", () => {
 
