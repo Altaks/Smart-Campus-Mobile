@@ -1,20 +1,23 @@
-import {useEffect, useState} from "react";
-import {getConseils} from "../Services/ApiPlatform/GetConseils.js";
-import Conseil from "../Components/ListeConseils/Conseil.jsx";
+import {useEffect, useState} from "react"
+import {getConseils} from "../Services/ApiPlatform/GetConseils.js"
+import Conseil from "../Components/ListeConseils/Conseil.jsx"
+import {changerTitre} from "../main.jsx";
 
 const ListeConseils = () => {
 
-    let [conseils, setConseils] = useState([]);
+    let [conseils, setConseils] = useState([])
+
+    changerTitre("Conseils")
 
     useEffect(() => {
-        getConseils().then((data) => setConseils(data));
-    }, []);
+        getConseils().then((data) => setConseils(data))
+    }, [])
 
-    if(conseils.length === 0) return (<div>Chargement des conseils ...</div>);
+    if(conseils.length === 0) return (<div>Chargement des conseils ...</div>)
 
-    let conseilsTemp = conseils.filter((conseil) => conseil.type === "temp");
-    let conseilsCO2 = conseils.filter((conseil) => conseil.type === "co2");
-    let conseilsHum = conseils.filter((conseil) => conseil.type === "hum");
+    let conseilsTemp = conseils.filter((conseil) => conseil.type === "temp")
+    let conseilsCO2 = conseils.filter((conseil) => conseil.type === "co2")
+    let conseilsHum = conseils.filter((conseil) => conseil.type === "hum")
 
     return (
         <>
