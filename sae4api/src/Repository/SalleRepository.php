@@ -25,9 +25,9 @@ class SalleRepository extends ServiceEntityRepository
     {
         $entityManager = $this->getEntityManager();
         $query = $entityManager->createQuery(
-        'SELECT s.id 
-            FROM App\Entity\Salle s 
-            WHERE s.nom > :nom 
+            'SELECT s.id 
+            FROM App\Entity\Salle s
+            WHERE s.nom > :nom
             ORDER BY s.nom ASC'
         )->setParameter('nom', $nom);
         $id = $query->setMaxResults(1)->getOneOrNullResult();
