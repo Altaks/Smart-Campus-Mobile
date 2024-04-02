@@ -1,6 +1,6 @@
-import {cleanup, render, renderHook, screen, waitFor} from '@testing-library/react';
-import {describe, it, expect, beforeEach, afterEach, vi} from 'vitest';
-import Conseil from "../../../src/Components/ListeConseils/Conseil.jsx";
+import {render, screen} from '@testing-library/react'
+import {describe, it, expect} from 'vitest'
+import Conseil from "../../../src/Components/ListeConseils/Conseil.jsx"
 
 const data = [
     {
@@ -69,8 +69,8 @@ describe("Test du composant Conseil", () => {
 
     for(let i = 0; i < data.length; i++) {
         it(`Doit afficher le texte du conseil n°${i}`, async () => {
-            render(<Conseil recommandation={data[i]} index={0}/>);
-            expect(screen.getByText(data[i]['texte'])).toBeInTheDocument();
+            render(<Conseil recommandation={data[i]} index={0}/>)
+            expect(screen.getByText(data[i]['texte'])).toBeInTheDocument()
         });
     }
 });
