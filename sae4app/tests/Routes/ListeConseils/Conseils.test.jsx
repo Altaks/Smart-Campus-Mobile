@@ -71,8 +71,6 @@ describe("Test du composant Conseil", () => {
         it(`Doit afficher le texte du conseil n°${i}`, async () => {
             render(<Conseil recommandation={data[i]} index={0}/>);
             expect(screen.getByText(data[i]['texte'])).toBeInTheDocument();
-            // Test for min or max values presence in the document
         });
     }
-
 });
