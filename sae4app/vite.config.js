@@ -10,7 +10,13 @@ export default defineConfig({
     globals: true,
     setupFiles: './tests/setup.js',
     coverage: {
-      exclude: ['*.config.*','.eslintrc.cjs'],
+      exclude: [
+        '*.config.*',
+        '.eslintrc.cjs',
+        'src/Services/*',
+        'src/Utilitaires/animationLogoEtTitreEtGraphique.js',
+        'src/Utilitaires/animationAffichageFleches.js',
+      ],
     }
   }
 })
