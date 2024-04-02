@@ -6,7 +6,6 @@
 const recupererDerniereDonnees = (donnees) => {
     if (donnees === undefined) return [null, null, null]
     const curDonnees = donnees
-    if (curDonnees === undefined) return [null, null, null]
 
     let curTemp = null
     let curHum = null
