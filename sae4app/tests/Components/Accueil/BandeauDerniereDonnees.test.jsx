@@ -1,5 +1,5 @@
-import {render, screen, waitFor} from '@testing-library/react';
-import {describe, expect, it, vi} from 'vitest';
+import {render, screen} from '@testing-library/react';
+import {describe, expect, it} from 'vitest';
 import BandeauDerniereDonnees from "../../../src/Components/Accueil/BandeauDerniereDonnees.jsx";
 
 const emptyData = [null, null, null];
@@ -31,7 +31,7 @@ describe('Test du composant BandeauDerniereDonnees', () => {
         });
     }
 
-    it('Doit ne pas afficher le bandeau si isDisplaied est faux', async () => {
+    it('Doit ne pas afficher le bandeau si isDisplayed est faux', async () => {
         render(<BandeauDerniereDonnees derniereDonnees={testData[0]} isDisplayed={null}/>);
         expect(screen.queryByText('Température : Pas de données')).toBeNull();
         expect(screen.queryByText('Humidité : Pas de données')).toBeNull();

@@ -1,5 +1,5 @@
 import Recommandation from "../../../src/Components/Accueil/Recommandations/Recommandation.jsx";
-import {expect, it} from "vitest";
+import {describe, expect, it} from "vitest";
 import {render, screen} from "@testing-library/react";
 
 const recommandation_data = [

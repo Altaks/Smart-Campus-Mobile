@@ -27,7 +27,7 @@ const ListeRecommandations = ({derniereDonnees, salleId}) => { // donnees = [tem
                         })
                     })
                 })
-    }, [derniereDonnees]);
+    }, [derniereDonnees, salleId]);
 
     const afficherRecommandation = (recommandation) => {
         if (recommandation.type === undefined) return <></>
