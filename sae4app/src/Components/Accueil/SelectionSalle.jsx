@@ -4,24 +4,7 @@ import PropTypes from "prop-types"
 import leftArrow from "../../assets/bx-left-arrow.png"
 import rightArrow from "../../assets/bx-right-arrow.png"
 import trierSalles from "../../Utilitaires/TrierSalles.js"
-
-const animationAffichageFleches = (salle) => {
-    if (salle.idProchaineSalle !== undefined) {
-        const SallePrecedenteRender = document.getElementById("SallePrecedente")
-        if (salle.idSallePrecedente) {
-            SallePrecedenteRender.classList.remove("-translate-x-[100vw]")
-        } else {
-            SallePrecedenteRender.classList.add("-translate-x-[100vw]")
-        }
-
-        const ProchaineSalleRender = document.getElementById("ProchaineSalle")
-        if (salle.idProchaineSalle) {
-            ProchaineSalleRender.classList.remove("translate-x-[100vw]")
-        } else {
-           ProchaineSalleRender.classList.add("translate-x-[100vw]")
-        }
-    }
-}
+import animationAffichageFleches from "../../Utilitaires/animationAffichageFleches.js"
 
 const SelectionSalle = ({handleChoixSalle, salle, setSalle}) => {
     const [salles, setSalles] = useState([])
@@ -70,7 +53,8 @@ const SelectionSalle = ({handleChoixSalle, salle, setSalle}) => {
 }
 SelectionSalle.propTypes = {
     handleChoixSalle: PropTypes.func.isRequired,
-    id: PropTypes.number
+    salle: PropTypes.object,
+    setSalle: PropTypes.func.isRequired
 }
 
 export default SelectionSalle

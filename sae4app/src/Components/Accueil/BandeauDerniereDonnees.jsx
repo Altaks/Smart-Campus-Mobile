@@ -9,8 +9,8 @@ import "swiper/css/navigation";
 // import required Swiper modules
 import { Autoplay } from "swiper/modules";
 
-const BandeauDerniereDonnees = ({derniereDonnees, isDisplaied}) => { // donnees = [temp, hum, co2]
-    if (isDisplaied === undefined || isDisplaied === null) return <></>
+const BandeauDerniereDonnees = ({derniereDonnees, isDisplayed}) => { // donnees = [temp, hum, co2]
+    if (isDisplayed === undefined || isDisplayed === null) return <></>
 
     let renderTemp = () => {
         if (derniereDonnees[0] === null) return <p>Température : Pas de données</p>
@@ -59,7 +59,7 @@ const BandeauDerniereDonnees = ({derniereDonnees, isDisplaied}) => { // donnees 
 
 BandeauDerniereDonnees.propTypes = {
     derniereDonnees: PropTypes.array.isRequired,
-    isDisplaied: PropTypes.number
+    isDisplayed: PropTypes.bool
 }
 
 export default BandeauDerniereDonnees

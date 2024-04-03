@@ -42,7 +42,7 @@ const Accueil = () => {
                 <SelectionSalle handleChoixSalle={handleChoixSalle} salle={salle} setSalle={setSalle}/>
             </div>
             <div id={"listeGraphique"} className={"translate-x-[100vw] m-auto"}>
-                <BandeauDerniereDonnees derniereDonnees={curDerniereDonnees} isDisplaied={salle.id}/>
+                <BandeauDerniereDonnees derniereDonnees={curDerniereDonnees} isDisplayed={salle.id}/>
                 <ListeRecommandations derniereDonnees={curDerniereDonnees} salleId={salle.id}/>
                 <ListeGraphiques donnes={donnes}/>
             </div>
