@@ -14,8 +14,6 @@ workflow:
 
 security-checker:
   image: jakzal/phpqa
-  tags:
-    - docker
   stage: SecurityChecker
   script:
     - cd sae4api
@@ -30,8 +28,6 @@ security-checker:
 eslint:
   image: node:20.11.1
   stage: CodingStandards
-  tags:
-    - docker
   script:
     - cd sae4app
     - pwd
@@ -54,8 +50,6 @@ eslint:
 
 phpcs:
   image: jakzal/phpqa
-  tags:
-    - docker
   stage: CodingStandards
   script:
     - cd sae4api
@@ -85,8 +79,6 @@ phpstan:
 vitest:
   image: node:20.11.1
   stage: UnitTesting
-  tags:
-    - docker
   script:
     - cd sae4app
     - pwd
@@ -108,8 +100,6 @@ vitest:
 jsdoc:
   image: node:20.11.1
   stage: Documentation
-  tags:
-    - docker
   script:
     - cd sae4app
     - pwd
