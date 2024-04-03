@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "jest-mock": "^29.7.0",
+    "jsdoc": "^4.0.2",
     "lucide-react": "^0.363.0",
     "moment": "^2.30.1",
     "react": "^18.2.0",
