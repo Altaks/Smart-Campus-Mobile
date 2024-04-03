@@ -17,13 +17,13 @@ const animationLogoEtTitreEtGraphique = () => {
         logoRender.classList.remove("w-80", "my-16")
         logoRender.classList.add("w-0", "my-0")
 
-        // Retrait de l'epacement au dessus du titre
+        // Retrait de l'espacement au-dessus du titre
         changeSalle.classList.remove("mt-10")
 
-        // Si le titre est sur 2 lignes,  ajout d'un epacement relatif négatif au dessus du titre
+        // Si le titre est sur 2 lignes, ajout d'un espacement relatif négatif au-dessus du titre
         if (titreRender.offsetHeight > 36) changeSalle.classList.add("-mt-10")
 
-        // Déplacement du composant listegraphique vers la gauche
+        // Déplacement du composant liste graphique vers la gauche
         listeGraphique.classList.remove("translate-x-[100vw]")
         listeGraphique.classList.add("transition-all", "duration-1000")
     }, 650)

@@ -1,8 +1,19 @@
 import PropTypes from "prop-types";
 import {AirVent, ChevronLeft, ChevronRight, Droplets, ThermometerSnowflake, ThermometerSun} from "lucide-react";
 
+/**
+ * Composant représentant un conseil.
+ * @param recommandation objet représentant le conseil.
+ * @param index int index du conseil dans la liste.
+ * @returns {JSX.Element} le conseil.
+ * @constructor
+ */
 const Conseil = ({ recommandation, index}) => {
 
+    /**
+     * En fonction du type de recommandation, on affiche un design différent (icones), et en fonction du type de conseil, on change les couleurs du composant
+     * Les alignements des composants sont également différents en fonction de l'index du conseil dans la liste, ils alternent entre gauche et droite.
+     */
     switch (recommandation.type) {
         case "temp": {
             return (

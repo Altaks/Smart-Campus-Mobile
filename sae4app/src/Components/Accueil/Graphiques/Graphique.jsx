@@ -1,8 +1,17 @@
 import PropTypes from "prop-types"
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts'
 
+/**
+ * Composant représentant un graphique.
+ * @param donnees tableau contenant les données à afficher.
+ * @param nom nom du graphique.
+ * @param unite unité des données.
+ * @returns {JSX.Element} le graphique.
+ * @constructor
+ */
 const Graphique = ({donnees, nom, unite}) => {
 
+    // Si les données ne sont pas définies, on ne retourne un message indiquant qu'il n'y a pas de données
     if (donnees.length === 0)
         return (
             <div id={"div"} className={"border-2 w-max-5/6 rounded mt-5 p-2"}>
@@ -11,11 +20,14 @@ const Graphique = ({donnees, nom, unite}) => {
             </div>
         )
 
+    // Sinon, on prépare le graphique
     const height = window.innerHeight * 0.2;
     const width = window.innerWidth * 0.8;
 
     const dateDerniereCapture = new Date(Date.parse(donnees[donnees.length - 1]['date']))
     const valeurDerniereCapture = donnees[donnees.length - 1]['valeur']
+
+    // On retourne le rendu du composant
     return (
         <div id={"div"} className={"border-2 rounded mt-5 p-2"}>
             <h1>{nom} : ({unite})</h1>
@@ -40,6 +52,7 @@ const Graphique = ({donnees, nom, unite}) => {
         </div>
     )
 }
+
 Graphique.propTypes = {
     donnees: PropTypes.array.isRequired,
     nom: PropTypes.string.isRequired,

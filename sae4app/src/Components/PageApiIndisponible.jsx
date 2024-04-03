@@ -1,9 +1,25 @@
 import logo from "../assets/logo_univ_lr.png"
 import {useEffect, useState} from "react"
 import {apiDisponible} from "../Services/ApiPlatform/ApiDisponible.js"
+
+/**
+ * Composant représentant la page d'indisponibilité / le message d'erreur lorsque l'API n'est pas disponible.
+ * @returns {JSX.Element}
+ * @constructor
+ */
 const PageApiIndisponible = () => {
+
+    /**
+     * Etat représentant la disponibilité de l'API.
+     */
     const [APIIndisponible, setAPIIndisponible] = useState(false)
 
+
+    /**
+     * Fonction permettant de lancer la vérification chronique (5s) la disponibilité de l'API.
+     * Modifie l'état APIIndisponible en fonction de la réponse de l'API.
+     * @returns {Promise<void>}
+     */
     async function verifierAPIIndisponible(){
         await apiDisponible().then((data) => {
             if(data.message === 'L\'API est disponible.')
@@ -18,10 +34,16 @@ const PageApiIndisponible = () => {
         }, 5000)
     }
 
+    /**
+     * Vérification de la disponibilité de l'API à chaque rendu du composant.
+     */
     useEffect(() => {
         verifierAPIIndisponible()
     })
 
+    /**
+     * Effet permettant de gérer l'affichage de la page d'indisponibilité.
+     */
     useEffect(() => {
         if(APIIndisponible)
         {
