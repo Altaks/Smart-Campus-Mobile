@@ -6,6 +6,7 @@ stages:
   - SecurityChecker
   - CodingStandards
   - UnitTesting
+  - Documentation
 
 workflow:
   rules:
@@ -26,7 +27,7 @@ security-checker:
     paths:
       - sae4api/vendor/
 
-linter:
+eslint:
   image: node:20.11.1
   stage: CodingStandards
   tags:
@@ -46,29 +47,6 @@ linter:
     name: "$CI_JOB_NAME"
     paths:
       - sae4app/eslint-report.html
-  cache:
-    key: "$CACHE_KEY"
-    paths:
-      - sae4app/node_modules/
-
-app-testing:
-  image: node:20.11.1
-  stage: UnitTesting
-  tags:
-    - docker
-  script:
-    - cd sae4app
-    - pwd
-    - apt update -y
-    - npm install -g npm@latest
-    - npm install
-    - npm run lint
-    - npx vitest --run --coverage
-  allow_failure: true
-  artifacts:
-    name: "$CI_JOB_NAME"
-    paths:
-      - sae4app/coverage
   cache:
     key: "$CACHE_KEY"
     paths:
@@ -103,3 +81,49 @@ phpstan:
     key: "$CACHE_KEY"
     paths:
       - sae4api/vendor/
+
+vitest:
+  image: node:20.11.1
+  stage: UnitTesting
+  tags:
+    - docker
+  script:
+    - cd sae4app
+    - pwd
+    - apt update -y
+    - npm install -g npm@latest
+    - npm install
+    - npm run lint
+    - npx vitest --run --coverage
+  allow_failure: true
+  artifacts:
+    name: "$CI_JOB_NAME"
+    paths:
+      - sae4app/coverage
+  cache:
+    key: "$CACHE_KEY"
+    paths:
+      - sae4app/node_modules/
+
+jsdoc:
+  image: node:20.11.1
+  stage: Documentation
+  tags:
+    - docker
+  script:
+    - cd sae4app
+    - pwd
+    - apt update -y
+    - npm install -g npm@latest
+    - npm install 
+    - npm install jsdoc
+    - npx jsdoc src -r -d docs || true
+  allow_failure: true
+  artifacts:
+    name: "$CI_JOB_NAME"
+    paths:
+      - sae4app/docs
+  cache:
+    key: "$CACHE_KEY"
+    paths:
+      - sae4app/node_modules/
