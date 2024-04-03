@@ -52,7 +52,7 @@ const BandeauDerniereDonnees = ({derniereDonnees, isDisplayed}) => { // donnees 
     // On retourne le rendu du composant.
     return (
         <>
-            <Swiper
+            <Swiper style={{zIndex: -4}}
                 modules={[Autoplay]}
                 slidesPerView={1}
                 loop={true}
