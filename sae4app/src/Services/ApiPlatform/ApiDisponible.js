@@ -1,5 +1,9 @@
 import apiConfig from './config.json'
 
+/**
+ * Vérifie si l'API est disponible
+ * @returns {Promise<unknown>}
+ */
 const apiDisponible = () => {
     return new Promise((resolve, reject) => {
             fetch( apiConfig.uriBase,{

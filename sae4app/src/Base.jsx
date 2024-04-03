@@ -2,11 +2,18 @@ import {Outlet} from "react-router-dom";
 import {HandHelping, Home} from "lucide-react";
 import PageApiIndisponible from "./Components/PageApiIndisponible.jsx";
 
+/**
+ * Composant de base de l'application
+ * @returns {JSX.Element} composant de base
+ * @constructor
+ */
 const Base = () => {
 
+    // Détermine le style des liens en fonction de la page courante
     const accueilStyle = window.location.pathname === '/' ? "text-[#126CB5]" : "";
     const conseilStyle = window.location.pathname === '/conseils' ? "text-[#126CB5]" : "";
 
+    // Retourne le composant
     return (
         <>
             <header className={"flex flex-row justify-evenly w-full my-3"}>

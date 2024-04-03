@@ -11,13 +11,22 @@ import recupererDerniereDonnees from "../Utilitaires/RecupererDerniereDonnees.js
 import animationLogoEtTitreEtGraphique from "../Utilitaires/animationLogoEtTitreEtGraphique.js"
 import moment from "moment"
 
+/**
+ * Composant représentant la page d'accueil de l'application.
+ * @returns {JSX.Element}
+ * @constructor
+ */
 const Accueil = () => {
+
+    // Préparation des états de la salle, des données de la salle et des dernières données pour les recommandations
     const [salle, setSalle] = useState({})
     const [donnes, setDonnees] = useState(undefined)
     const [curDerniereDonnees, setDerniereDonnees] = useState([null, null, null]) // pour l'affichage des recommandations
 
+    // Changement du titre de la page
     changerTitre("Accueil")
 
+    // Fonction permettant de gérer le choix de la salle
     const handleChoixSalle = (salle) => {
         const baseDeDonnees = salle.systemesAcquisitions[0].baseDeDonnees
         setSalle(salle)
@@ -25,6 +34,8 @@ const Accueil = () => {
         dateHier.setDate(dateHier.getDate() - 1)
         const dateDemain = new Date()
         dateDemain.setDate(dateDemain.getDate() + 1)
+
+        // Récupération des données de la salle et remise à jour des données et des dernières données pour les recommandations
         getCapturesIntervalle(baseDeDonnees, moment(dateHier).format("YYYY-MM-DD"), moment(dateDemain).format("YYYY-MM-DD")).then((data) => {
             const donnees = formalisationDonnees(data)
             setDonnees(donnees)
@@ -33,6 +44,9 @@ const Accueil = () => {
         animationLogoEtTitreEtGraphique()
     }
 
+    /**
+     * Affichage du composant.
+     */
     return (
         <>
             <img id={"logo"} className={"w-80 my-16"} src={logo} alt={"Smart Campus"}/>

@@ -1,7 +1,7 @@
-/*
-    Récupère les dernières données de la salle
-    Recupère les données de température, d'humidité et de CO2 de la salle si ces données ont été capturées il y a moins de 10 minutes
-    @param salle : salle dont on veut récupérer les données
+/**
+ * Récupère les dernières données de température, humidité et CO2
+ * @param donnees données reçues du serveur
+ * @returns {[null,null,null]}
  */
 const recupererDerniereDonnees = (donnees) => {
     if (donnees === undefined) return [null, null, null]
@@ -12,7 +12,7 @@ const recupererDerniereDonnees = (donnees) => {
     let curCO2 = null
 
     // const curTimestamp = new Date().getTime() // possible de filtrer les recommandations en fonction du temps depuis la dernière capture
-    // const maxTime = 10  * 60 * 1000 // 10 minutes
+    // const maxTime = 10 * 60 * 1000 // 10 minutes
 
     if (curDonnees.temp !== undefined && curDonnees.temp.donnees.length > 0) {
         // if (! curTimestamp - new Date(donnees.temp.donnees[donnees.temp.donnees.length - 1].date).getTime() > maxTime) {

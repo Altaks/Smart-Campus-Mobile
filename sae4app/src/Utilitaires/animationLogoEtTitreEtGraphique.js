@@ -1,3 +1,6 @@
+/**
+ * Animation de déplacement du logo, du titre et du composant liste graphique
+ */
 const animationLogoEtTitreEtGraphique = () => {
     const logoRender = document.getElementById("logo")
     const titreRender = document.getElementById("titre")

@@ -1,4 +1,12 @@
 import apiConfig from './config.json'
+
+/**
+ * Envoie une action à l'API Platform
+ * @param salleId identifiant de la salle.
+ * @param recommandationId identifiant de la recommandation.
+ * @returns {Promise<unknown>}
+ * @constructor
+ */
 const PostActions = (salleId, recommandationId) => {
     return new Promise((resolve, reject) => {
             fetch(apiConfig.uriBase + apiConfig.apiPath + apiConfig.actionsPath, {

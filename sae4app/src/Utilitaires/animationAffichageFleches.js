@@ -1,3 +1,7 @@
+/**
+ * Fonction qui permet d'animer l'affichage des flèches de navigation entre les salles
+ * @param salle salle actuelle
+ */
 const animationAffichageFleches = (salle) => {
     if (salle.idProchaineSalle !== undefined) {
         const SallePrecedenteRender = document.getElementById("SallePrecedente")
