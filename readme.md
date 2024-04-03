@@ -110,6 +110,10 @@ Exemple pour l'US 4.1 :
 dev-US4.1-Choisir-une-salle-et-consulter-les-informations-de-celle-ci
 ```
 
+---
+
+Pour ce qui est des **commits**, vous devrez suivre la syntaxe "commit lint" qui est disponible ici : https://github.com/conventional-changelog/commitlint
+
 ### Une fois vos changements prêts
 
 Vous pouvez émettre une merge request avec un reviewer parmis Adrien, Arnaud, Luc ou Kevin et vos changements seront revus
