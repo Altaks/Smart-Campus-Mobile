@@ -2,9 +2,9 @@ import PropTypes from "prop-types"
 import {useEffect, useState} from "react";
 import Recommandation from "./Recommandation.jsx";
 import {getRecommandations} from "../../../Services/ApiPlatform/GetRecommandations.js"
-import trierRecommandationsPourAffichage from "../../../Utilitaires/TriRecommandations.js";
 import {getActions} from "../../../Services/ApiPlatform/GetActions.js";
 import trierActions from "../../../Utilitaires/FiltrerActionsSalle.js";
+import trierRecommandationsPourAffichagev2 from "../../../Utilitaires/TrierRecommandations.js";
 
 const ListeRecommandations = ({derniereDonnees, salleId}) => { // donnees = [temp, hum, co2]
 
@@ -18,10 +18,10 @@ const ListeRecommandations = ({derniereDonnees, salleId}) => { // donnees = [tem
             getActions().then(
                 actions => {
                     const actionsTriees = trierActions(actions, salleId)
-                    getRecommandations(trierRecommandationsPourAffichage, derniereDonnees[0], derniereDonnees[1], derniereDonnees[2], actionsTriees).then(recommandations => {
-                        setTempRecommendation(recommandations[0])
-                        setHumRecommendation(recommandations[1])
-                        setCo2Recommendation(recommandations[2])
+                    getRecommandations(trierRecommandationsPourAffichagev2, {"temp" : derniereDonnees[0], "hum" : derniereDonnees[1], "co2" : derniereDonnees[2]}, actionsTriees).then(recommandations => {
+                        setTempRecommendation(recommandations["temp"])
+                        setHumRecommendation(recommandations["hum"])
+                        setCo2Recommendation(recommandations["co2"])
                         setTimeout(()=>{
 
                         })
