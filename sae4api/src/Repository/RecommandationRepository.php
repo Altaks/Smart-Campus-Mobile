@@ -51,13 +51,13 @@ class RecommandationRepository extends ServiceEntityRepository
         $co2s = null;
         $hums = null;
 
-        if ($temp != null){
+        if ($temp != null) {
             $temps = $this->getBySituationType('temp', $temp);
         }
-        if ($co2 != null){
+        if ($co2 != null) {
             $co2s = $this->getBySituationType('co2', $co2);
         }
-        if ($hum != null){
+        if ($hum != null) {
             $hums = $this->getBySituationType('hum', $hum);
         }
 

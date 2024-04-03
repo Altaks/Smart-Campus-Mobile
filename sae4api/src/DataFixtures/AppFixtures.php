@@ -11,6 +11,7 @@ use App\Entity\Recommandation;
 
 class AppFixtures extends Fixture
 {
+    // @codingStandardsIgnoreStart
     public function load(ObjectManager $manager): void
     {
         $salleD205 = new Salle();
@@ -163,22 +164,19 @@ class AppFixtures extends Fixture
         // recommendations pour les salles
 
         $recommandation = new Recommandation();
-        $recommandation->setTexte("Il est recommandé de fermer les fenêtres si elle sont ouvertes
-        et d'allumer le chauffage si ils sont éteints");
+        $recommandation->setTexte("Il est recommandé de fermer les fenêtres si elle sont ouvertes et d'allumer le chauffage si ils sont éteints");
         $recommandation->setType('temp');
         $recommandation->setMin(17);
         $manager->persist($recommandation);
 
         $recommandation2 = new Recommandation();
-        $recommandation2->setTexte("Il est recommandé d'ouvrir les fenêtres si elle sont fermées
-        et d'éteindre le chauffage s'il est allumé");
+        $recommandation2->setTexte("Il est recommandé d'ouvrir les fenêtres si elle sont fermées et d'éteindre le chauffage s'il est allumé");
         $recommandation2->setType('temp');
         $recommandation2->setMax(21);
         $manager->persist($recommandation2);
 
         $recommandation3 = new Recommandation();
-        $recommandation3->setTexte("Ouvrir les fenêtres et les portes pour faire circuler l'air dans la salle si 
-        possible");
+        $recommandation3->setTexte("Ouvrir les fenêtres et les portes pour faire circuler l'air dans la salle si possible");
         $recommandation3->setType('co2');
         $recommandation3->setMax(1000);
         $manager->persist($recommandation3);
@@ -196,15 +194,13 @@ class AppFixtures extends Fixture
         $manager->persist($recommandation7);
 
         $recommandation4 = new Recommandation();
-        $recommandation4->setTexte("Ouvrir les fenêtres s'il ne pleut pas dehors sinon fermer les fenêtres  
-        et ouvrir les portes");
+        $recommandation4->setTexte("Ouvrir les fenêtres s'il ne pleut pas dehors sinon fermer les fenêtres et ouvrir les portes");
         $recommandation4->setType('hum');
         $recommandation4->setMax(50);
         $manager->persist($recommandation4);
 
         $recommandation5 = new Recommandation();
-        $recommandation5->setTexte("S'il pleut dehors, ouvrir les fenêtres légèrement
-        sinon ouvrir complètement les fenetres et ouvrir les portes");
+        $recommandation5->setTexte("S'il pleut dehors, ouvrir les fenêtres légèrement sinon ouvrir complètement les fenetres et ouvrir les portes");
         $recommandation5->setType('hum');
         $recommandation5->setMin(30);
         $manager->persist($recommandation5);
@@ -279,4 +275,5 @@ class AppFixtures extends Fixture
 
         $manager->flush();
     }
+    // @codingStandardsIgnoreEnd
 }

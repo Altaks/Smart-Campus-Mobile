@@ -10,16 +10,15 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-
 #[ORM\Entity(repositoryClass: ActionRepository::class)]
 #[ApiResource(
-    paginationEnabled: false,
     operations: [
         new GetCollection(),
         new Post()
     ],
     normalizationContext: ['groups' => 'action:read'],
-    denormalizationContext: ['groups' => 'action:write']
+    denormalizationContext: ['groups' => 'action:write'],
+    paginationEnabled: false
 )]
 class Action
 {
