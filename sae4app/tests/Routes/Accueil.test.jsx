@@ -32,24 +32,9 @@ const salles = [
     }
 ]
 
-const data = [
-    {
-        "dateCapture": "2021-10-01T00:00:00+02:00",
-        "id": 1,
-        "value": 20,
-        "nom": "temp"
-    }
-]
-
 const mockedFetcSalle = () => Promise.resolve({
     json() {
         return salles
-    }
-})
-
-const mockedFetchCapturesInterval = () => Promise.resolve({
-    json() {
-        return data
     }
 })
 
