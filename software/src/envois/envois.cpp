@@ -45,17 +45,6 @@ void taskEnvois(void *pvParameters){
         }
         Serial.println("______________________________________");
 
-        struct tm timeinfo{};
-        if(getLocalTime(&timeinfo, 0))
-        {
-            if(timeinfo.tm_hour >= 20) {
-                esp_sleep_pd_config(ESP_PD_DOMAIN_VDDSDIO, ESP_PD_OPTION_ON);
-                esp_sleep_enable_timer_wakeup((uint64_t)11ull * 3600ull * 1000ull * 1000ull);
-                esp_deep_sleep_start();
-            }
-
-        } else Serial.println("Impossible de récupérer la date");
-
         i = 0; // left 4min and 28s
         while(getMode() == MESURE && i < 4 * 60 + 28){
             vTaskDelay(pdMS_TO_TICKS(2000));

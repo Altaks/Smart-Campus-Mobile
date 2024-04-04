@@ -14,6 +14,7 @@
 #include "Serveur/modifierPageWeb.h"
 #include "LED/led.h"
 #include "Boutons/boutons.h"
+#include "Veille/veille.h"
 
 /**
  * @brief Variable contenant les données à envoyer
@@ -173,8 +174,6 @@ void setup() {
 
     // Active l'enregistrement périodique des réseaux wifi détectés par l'ESP dans le fichier /listereseaux.txt
     // activerEnregistrerListeReseau();
-
-
     
     // Initialise les capteurs
     xTaskHandle tempEtHumTaskHandle = initTaskTempEtHum(donnees);
@@ -196,6 +195,16 @@ void setup() {
     xTaskHandle envoisTaskhandle = initEnvois(donnees);
     setEnvoisTaskHandle(envoisTaskhandle);
 
+    // Initialise la veille de nuit.
+    time_t maintenant = time(nullptr);
+    struct tm timeinfo {};
+    localtime_r(&maintenant, &timeinfo);
+
+    timeinfo.tm_hour = 20;
+    timeinfo.tm_min = 0;
+    timeinfo.tm_sec = 0;
+
+    miseEnVeilleNuit(timeinfo, 11ull * 3600ull * 1000ull * 1000ull);
 }
 
 /**
