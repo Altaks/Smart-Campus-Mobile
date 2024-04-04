@@ -5,29 +5,23 @@
 #include "typeDef.h"
 #include <cmath>
 
-
 /**
- * Initialise le capteur et la tâche, et teste si l'initialisation s'est bien déroulée
-*/
-// void  initTempEtHum();
-
-/**
- * Fonction permettant de récupérer la valeur du capteur de température
- * @return La température mesurée par le capteur de température
-*/
-// double getTemperature();
-
-/**
- * Fonction permettant de récupérer la valeur du capteur d'humidité
- * @return L'humidité dans l'air en pourcentage mesurée par le capteur d'humidité
-*/
-// double getHumidite();
-
-
+ * @brief Fonction de la tâche de récupération de la température et de l'humidité
+ * @param pvParameters paramètre de la tâche, (ici les données à modifier)
+ */
 void taskTempEtHum(void *pvParameters);
 
+/**
+ * @brief Fonction permettant d'initialiser la tâche de récupération de la température et de l'humidité
+ * @param donnees les données à modifier
+ * @return true si la récupération s'est bien passée, false sinon
+ */
 xTaskHandle initTaskTempEtHum(Donnees* donnees);
 
+/**
+ * @brief Fonction permettant de savoir si la tâche de récupération de la température et de l'humidité est en cours
+ * @return true si la tâche de récupération de la température et de l'humidité est en cours, false sinon
+ */
 bool tacheTempEtHumEnCours();
 
 #endif

@@ -8,10 +8,24 @@
 #include "Heure/heureLocal.h"
 #include "Reseaux/station.h"
 
+/**
+ * @brief pointeur vers la variable de l'écran
+ */
 SSD1306Wire * display;
 
+/**
+ * @brief délai entre chaque changement de donnée
+ */
 int carrouselDelay = 3000;
+
+/**
+ * @brief nombre de clignotement en cas d'erreur (en un changement de donnée)
+ */
 int flicker = 6;
+
+/**
+ * @brief état de la tâche d'affichage
+ */
 bool etatAffichage = false;
 
 bool initAffichage()
@@ -62,7 +76,7 @@ void afficher(PAGE &page, const Donnees *releves){
     // selectionne la police d'écriture
     display->setFont(ArialMT_Plain_16);
 
-    // affichage de la date et de l'heure
+    // recupération de la date et de l'heure
     String dateTime;
     String ip = getIP();
   
@@ -112,7 +126,7 @@ void afficher(PAGE &page, const Donnees *releves){
         if (donnees != -1) {
             char temp[20];
             sprintf(temp, format, donneesString.c_str(), donnees);
-            displayResetInfos(dateTime, ip);
+            displayResetInfos(dateTime);
             display->drawString(0, 25, temp);
             display->display();
             delay(carrouselDelay);
@@ -121,10 +135,10 @@ void afficher(PAGE &page, const Donnees *releves){
             char err_buf[20];
             sprintf(err_buf, "%s Err", donneesString.c_str());
             for(int flick=0; flick<flicker; flick++) {
-                displayResetInfos(dateTime, ip);
+                displayResetInfos(dateTime);
                 display->display();
                 delay(carrouselDelay/flicker);
-                displayResetInfos(dateTime, ip);
+                displayResetInfos(dateTime);
                 display->drawString(0, 25, err_buf);
                 display->display();
                 delay(carrouselDelay/flicker);
@@ -145,6 +159,7 @@ void taskAffichage(void *pvParameters) {
 
 void displayText(const String& text, int x, int y, int fontSize, bool centered){
     display->clear();
+    // selectionne la police d'écriture
     switch (fontSize)
     {
     case 10:
@@ -157,19 +172,22 @@ void displayText(const String& text, int x, int y, int fontSize, bool centered){
         display->setFont(ArialMT_Plain_16);
         break;
     }
+    // alignement du texte
     display->setTextAlignment(TEXT_ALIGN_LEFT);
 
+    // positionnement du texte
     if (centered){        
         int w = ((int)text.length()) * fontSize / 2;
         x = (display->getWidth() - w) / 2;
         y = (display->getHeight() - fontSize) / 2;
     }
 
+    // affichage du texte
     display->drawString((short) x, (short) y, text);
     display->display();
 }
 
-void displayResetInfos(const String& dateTime, const String& ip) {
+void displayResetInfos(const String& dateTime) {
     display->clear();
     display->drawString(0, 0, dateTime);
     display->display();

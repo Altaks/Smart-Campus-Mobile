@@ -44,10 +44,21 @@ void afficher(PAGE &, const Donnees *);
  */
 void displayText(const String& text, int x = 0, int y = 0, int fontSize = 16, bool centered = false);
 
-void displayResetInfos(const String& dateTime, const String& ip);
+/**
+ * \brief Efface le contenu de l'écran et affiche la date et l'heure
+ * \param dateTime la date et l'heure à afficher
+ */
+void displayResetInfos(const String& dateTime);
 
+/**
+ * \brief Efface le contenu de l'écran
+ */
 void clearDisplay();
 
+/**
+ * \brief Permet de savoir si la tâche d'affichage est en cours
+ * \return true si la tâche d'affichage est en cours, false sinon
+ */
 bool tacheAffichageEnCours();
 
 #endif

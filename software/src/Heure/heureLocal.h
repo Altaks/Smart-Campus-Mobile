@@ -56,9 +56,15 @@ short getHeure();
 */
 short getMinute();
 
-
+/**
+ * Permet de mettre à jour le status d'initialisation de la date
+ */
 void setInitialisationDate(bool);
 
+/**
+ * Permet de savoir si la date est en cours d'initialisation
+ * @return true si la date est en cours d'initialisation | false sinon
+*/
 bool dateEnInitialisation();
 
 #endif //SOFTWARE_HEURELOCAL_H

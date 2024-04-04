@@ -34,10 +34,21 @@ int envoyer(Donnees *donnees);
 */
 String erreurToString(int);
 
+/**
+ * Le tableau des noms des valeurs des données à envoyer
+ */
 const String nomsValeurs[] = {"temp", "hum", "co2", "pres"};
 
+/**
+ * Fonction permettant de savoir si l'envoi est en cours
+ * @return true si l'envoi est en cours, false sinon
+*/
 bool envoieEnCours();
 
+/**
+ * Fonction permettant de savoir si la tâche d'envoi est en cours
+ * @return true si la tâche d'envoi est en cours, false sinon
+ */
 bool tacheEnvoisEnCours();
 
 

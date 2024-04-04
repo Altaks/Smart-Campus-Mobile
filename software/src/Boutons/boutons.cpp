@@ -2,23 +2,58 @@
 #include "task.h"
 #include "../LED/led.h"
 
-
+/**
+ * @brief structure permettant de stocker les différentes tâches du système
+ */
 struct Handle {
+  /**
+   * @brief handle de la tâche de la led
+   */
   xTaskHandle led;
+  /**
+   * @brief handle de la tâche de récupération de la température et de l'humidité
+   */
   xTaskHandle tempEtHum;
+  /**
+   * @brief handle de la tâche de récupération de la qualité de l'air
+   */
   xTaskHandle qualAir;
+  /**
+   * @brief handle de la tâche d'envoi des données
+   */
   xTaskHandle envois;
+  /**
+   * @brief handle de la tâche d'affichage
+   */
   xTaskHandle affichage;
+  /**
+   * @brief handle de la tâche de gestion des fichiers SPIFFS
+   */
   xTaskHandle listeReseau;
+  /**
+   * @brief handle de la tâche du serveur web
+   */
   xTaskHandle serveur;
 };
 
+/**
+ * @brief variable stockant les handles des différentes tâches
+ */
 Handle handle;
 
+/**
+ * @brief variable stockant le mode actuel du système
+ */
 Mode mode;
 
+/**
+ * @brief pointeur vers les données
+ */
 Donnees * donneesBoutons;
 
+/**
+ * @brief handle de la tâche de changement de mode
+ */
 xTaskHandle changementModeTaskHandle;
 
 void initBoutons(Mode modeDebut) {
@@ -26,6 +61,7 @@ void initBoutons(Mode modeDebut) {
 
   Serial.println("Initialisation des données");
 
+  // initialisation des handle
   handle.led = nullptr;
   handle.tempEtHum = nullptr;
   handle.qualAir = nullptr;
@@ -38,11 +74,13 @@ void initBoutons(Mode modeDebut) {
 
   mode = modeDebut;
 
+  // initialisation des boutons
   attachInterrupt(PIN_INPUT1, ISR_bouton_1, FALLING);
   attachInterrupt(PIN_INPUT2, ISR_bouton_2, FALLING);
 
   Serial.println("Initialisation de la tâche changementMode");
 
+  // initialisation de la tâche changementMode
   xTaskCreate( //création de la tâche
     changementMode,
     "changement vers le mode configuration",
@@ -76,7 +114,6 @@ void IRAM_ATTR ISR_bouton_2() {
 }
 
 void changementMode(void *pvParameters) {
-
   while(true) {
     if(mode == MESURE_VERS_CONFIGURATION) {
       modeConfiguration();
@@ -92,7 +129,7 @@ void modeConfiguration()
 {
   while(envoieEnCours() || dateEnInitialisation()){delay(1000);} // attend que l'envoi en cours soit terminé pour éviter les données incohérentes ou corrompues en base de données
   Serial.println("Mode configuration: suspension des tâches");
-  mode = CONFIGURATION;
+  mode = CONFIGURATION; // les tâches se suspendent automatiquement
 
   delay(3000); // attente de 3 secondes pour laisser le temps aux tâches de s'arrêter
 
@@ -106,6 +143,7 @@ void modeConfiguration()
   Serial.printf("Tache temp et hum en cours : %s\n", tacheTempEtHumEnCours() ? "oui" : "non");
   Serial.printf("Tache qual air en cours : %s\n", tacheQualAirEnCours() ? "oui" : "non");
 
+
   handle.affichage = nullptr;
   handle.envois = nullptr;
   handle.led = nullptr;
@@ -114,7 +152,7 @@ void modeConfiguration()
 
   Serial.println("Reseau");
   if(handle.listeReseau != nullptr) {
-    vTaskResume(handle.listeReseau);
+    vTaskResume(handle.listeReseau); // en cas de bug pendant le changement de mode le handle n'est pas réinitialisé
   }
 
   setLEDColor(60,0,255);
@@ -129,13 +167,13 @@ void modeConfiguration()
 
   Serial.println("Serveur");
   if(handle.serveur != nullptr){
-    vTaskResume(handle.serveur);
+    vTaskResume(handle.serveur); // en cas de bug pendant le changement de mode le handle n'est pas réinitialisé
   } else {
-    setServeurTaskHandle(activerServeurDNS());
+    setServeurTaskHandle(activerServeurDNS()); // si le serveur n'est pas initialisé on le fait
   }
 
   clearDisplay();
-  displayText("Nom du Wifi : \n" + nomAP+"\nIP : "+getIP(),0,10);
+  displayText("Nom du Wifi : \n" + nomAP+"\nIP : "+getIP(),0,10); // affichage de l'ip du serveur et du nom du wifi
 
 
 }
@@ -144,9 +182,9 @@ void modeMesure()
 {
   clearDisplay();
   Serial.println("Mode mesure: reprise des tâches");
-  mode = MESURE;
+  mode = MESURE; // les tâches se reprennent automatiquement
 
-  delay(3000);
+  delay(3000); // attente de 3 secondes pour laisser le temps aux tâches de se reprendre
 
   while (tacheListeReseauEnCours() || serveurEnCours()) {
     delay(1000);
@@ -156,41 +194,41 @@ void modeMesure()
   Serial.printf("Tache serveur en cours : %s\n", serveurEnCours() ? "oui" : "non");
 
   Serial.println("Reseau");
-  initReseauStation();
+  initReseauStation(); // on réinitialise le wifi en mode station
 
   Serial.println("Led");
   if(handle.led != nullptr) {
-    vTaskResume(handle.led);
+    vTaskResume(handle.led); // en cas de bug pendant le changement de mode le handle n'est pas réinitialisé
   }else{
-    handle.led = initTaskLED(donneesBoutons);
+    handle.led = initTaskLED(donneesBoutons); // on réinitialise la tâche de la led
   }
 
   Serial.println("temp et hum");
   if(handle.tempEtHum != nullptr) {
-    vTaskResume(handle.tempEtHum);
+    vTaskResume(handle.tempEtHum); // en cas de bug pendant le changement de mode le handle n'est pas réinitialisé
   } else {
-    handle.tempEtHum = initTaskTempEtHum(donneesBoutons);
+    handle.tempEtHum = initTaskTempEtHum(donneesBoutons); // on réinitialise la tâche de température et d'humidité
   }
 
   Serial.println("air");
   if(handle.qualAir != nullptr) {
-    vTaskResume(handle.qualAir);
+    vTaskResume(handle.qualAir); // en cas de bug pendant le changement de mode le handle n'est pas réinitialisé
   } else {
-    handle.qualAir = initTaskQualAir(donneesBoutons);
+    handle.qualAir = initTaskQualAir(donneesBoutons); // on réinitialise la tâche de qualité de l'air
   }
 
   Serial.println("envois");
   if(handle.envois != nullptr) {
-    vTaskResume(handle.envois);
+    vTaskResume(handle.envois); // en cas de bug pendant le changement de mode le handle n'est pas réinitialisé
   } else {
-    handle.envois = initEnvois(donneesBoutons);
+    handle.envois = initEnvois(donneesBoutons); // on réinitialise la tâche d'envoi
   }
 
   Serial.println("Affichage");
   if(handle.affichage != nullptr) {
-    vTaskResume(handle.affichage);
+    vTaskResume(handle.affichage); // en cas de bug pendant le changement de mode le handle n'est pas réinitialisé
   } else {
-    handle.affichage = initTacheAffichage(donneesBoutons);
+    handle.affichage = initTacheAffichage(donneesBoutons); // on réinitialise la tâche d'affichage
   }
   Serial.println("Mode mesure: tâches reprises");
 }
@@ -235,6 +273,7 @@ Mode getMode() {
 }
 
 void setMode(Mode modeNouveau) {
+  // fonctionne comme les interruptions
   if (modeNouveau == MESURE) {
     mode = CONFIGURATION_VERS_MESURE;
   } else if (modeNouveau == CONFIGURATION) {

@@ -9,12 +9,13 @@
 #include <WString.h>
 
 /**
- * Initialise les paramètres wifi en mode point d'accès et station
+ * @brief Fonction permettant d'initialiser le réseau wifi
+ * @details Cette fonction permet d'initialiser le réseau wifi en créant un point d'accès wifi
  */
 void initReseauStationEtPointAcces();
 
 /**
- * Crée un point d'accès wifi
+ * @brief Crée un point d'accès wifi
  * @param nom_ap nom du point d'accès
  * @param mot_de_passe mot de passe du point d'accès. Il doit faire au moins 8 caractères et au plus 63 caractères
  */

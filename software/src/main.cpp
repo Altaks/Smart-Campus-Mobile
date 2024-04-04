@@ -1,32 +1,31 @@
 #include <Arduino.h>
 #include <SPIFFS.h>
-
 #include "typeDef.h"
-
 #include "Affichage/affichage.h"
-
 #include "Capteurs/tempEtHum.h"
 #include "Capteurs/qualAir.h"
 #include "Capteurs/presence.h"
-
 #include "envois/envois.h"
-
 #include "Fichiers/fichierSPIFFS.h"
-
 #include "Heure/heureLocal.h"
-
 #include "Reseaux/pointAcces.h"
 #include "Reseaux/station.h"
-
 #include "Serveur/serveurWeb.h"
 #include "Serveur/modifierPageWeb.h"
-
 #include "LED/led.h"
-
 #include "Boutons/boutons.h"
 
+/**
+ * @brief Variable contenant les données à envoyer
+ * @details Cette variable est utilisée pour stocker les données à envoyer et à afficher
+ */
 Donnees * donnees;
 
+/**
+ * @brief Fonction permettant de se connecter à un réseau wifi
+ * @details Cette fonction permet de se connecter à un réseau wifi choisi lors du mode configuration avec un nom de réseau, un type de sécurité, un mot de passe, un identifiant et un nom d'utilisateur
+ * @return true si la connexion est réussie | false sinon
+ */
 bool connexionWifi() {
     String nomReseau;
 
@@ -76,31 +75,38 @@ bool connexionWifi() {
     return WiFiClass::status() == WL_CONNECTED;
 }
 
+/**
+ * @brief Fonction setup
+ * @details Cette fonction est appelée une seule fois au démarrage du programme
+ */
 void setup() {
 
+    // Initialisation de la communication série avec le moniteur série
     Serial.begin(9600);
     while(!Serial);
 
-    // LED
+    // Initialisation de la led
     initLED();
 
     delay(1000);
-    // Initilaisation système de fichier
+    // Initialisation du système de fichier afin de pouvoir lire et écrire dans la mémoire flash
     initSystemeFichier();
     
     delay(100);
-    //Initialise l'affichage
+    //Initialise l'affichage afin de pouvoir afficher des informations
     initAffichage();
 
     delay(100);
 
+    // Initialisation de la structure de données contenant les informations à envoyer et à afficher
     donnees = new Donnees();
     donnees->humidite = new float(-1);
     donnees->temperature = new float(-1);
     donnees->co2 = new unsigned int(0);
 
-
+    // Initialise la structure de données pour le changement de mode
     setDonnees(donnees);
+
 
     String nomReseauWifi = recupererValeur("/inforeseau.txt","nom_reseau");
     Serial.println("Nom du réseau wifi : "+nomReseauWifi);
@@ -135,8 +141,9 @@ void setup() {
     }
 
     // attend d'être connecté à internet
+    // si on est en mode de configuration, on attend que le SA soit connecté à internet
+    // sinon la connexion est déjà établie
     while((WiFiClass::status() != WL_CONNECTED)){
-
         Serial.print(".");
         delay(1000);
     }
@@ -191,6 +198,10 @@ void setup() {
 
 }
 
+/**
+ * @brief Fonction loop
+ * @details Cette fonction est appelée en boucle après la fonction setup
+ */
 void loop() {
     delay(30 * 1000);
     Serial.printf("Mémoire disponible : %i | %i\n", esp_get_free_internal_heap_size(), esp_get_free_heap_size());
