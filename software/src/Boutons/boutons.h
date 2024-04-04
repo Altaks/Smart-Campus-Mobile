@@ -45,6 +45,8 @@ void IRAM_ATTR ISR_bouton_1();
  */
 void IRAM_ATTR ISR_bouton_2();
 
+void IRAM_ATTR ISR_veille();
+
 /**
  * @brief Fonction permettant d'initialiser les boutons
  * Initialise les boutons et les interruptions associées

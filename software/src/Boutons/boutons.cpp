@@ -56,6 +56,20 @@ Donnees * donneesBoutons;
  */
 xTaskHandle changementModeTaskHandle;
 
+unsigned long lastClickTimestamp = 0;
+
+const int pinWakeUp = 6;
+const int pinWakeUp2 = 7;
+const unsigned long long bitmask = 1ull << pinWakeUp | 1ull << pinWakeUp2;
+
+void IRAM_ATTR ISR_veille() {
+    if(lastClickTimestamp + 2000 > millis()) {
+        esp_sleep_pd_config(ESP_PD_DOMAIN_VDDSDIO, ESP_PD_OPTION_ON);
+        esp_sleep_enable_timer_wakeup((uint64_t)(14ull + 2ull) * 24ull * 3600ull * 1000ull * 1000ull);
+        esp_deep_sleep_start();
+    } else lastClickTimestamp = millis();
+}
+
 void initBoutons(Mode modeDebut) {
   Serial.println("Starting TwoButtons...");
 
@@ -77,6 +91,7 @@ void initBoutons(Mode modeDebut) {
   // initialisation des boutons
   attachInterrupt(PIN_INPUT1, ISR_bouton_1, FALLING);
   attachInterrupt(PIN_INPUT2, ISR_bouton_2, FALLING);
+  attachInterrupt(PIN_INPUT2, ISR_veille, FALLING);
 
   Serial.println("Initialisation de la tâche changementMode");
 
@@ -94,7 +109,10 @@ void initBoutons(Mode modeDebut) {
   Serial.println("TwoButtons started.");
 }
 
-
+/**
+ * Correspond au bouton rouge sur le SA.
+ * Cette fonction est appelée lorsqu'on appuie sur le premier bouton et met le système en mode configuration
+ */
 void IRAM_ATTR ISR_bouton_1() {
   // surtout pas de Serial.println() ici car cela cause une erreur si une interruption se produit pendant l'envoi de données
   // ou qu'une tâche est en cours d'exécution
@@ -104,6 +122,10 @@ void IRAM_ATTR ISR_bouton_1() {
   }
 }
 
+/**
+ * Correspond au bouton vert sur le SA.
+ * Cette fonction est appelée lorsqu'on appuie sur le deuxième bouton et met le système en mode mesure
+ */
 void IRAM_ATTR ISR_bouton_2() {
   // surtout pas de Serial.println() ici car cela cause une erreur si une interruption se produit pendant l'envoi de données
   // ou qu'une tâche est en cours d'exécution
