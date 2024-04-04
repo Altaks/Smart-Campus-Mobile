@@ -139,7 +139,8 @@ doxygen:
     - apt update -y
     - apt install -y graphviz doxygen 
     - doxygen
-    - ln -s doc/html/index.html doc/index.html
+    - touch ./doc/index.html
+    - echo "<meta http-equiv=\"refresh\" content=\"0; url=html/index.html\" />" > ./doc/index.html
   allow_failure: true
   artifacts:
     when: on_success
