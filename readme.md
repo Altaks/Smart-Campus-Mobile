@@ -1,209 +1,119 @@
-<h1>Stack de développement Api-Platform-React-Mariadb de la SAE4</h1>
+# SAE 4.1 - Développement d'une application mobile
 
-**Contenu :**
+### Récupération de la stack
 
-- [Prérequis](#prérequis)
-- [Démarrage](#démarrage)
-  - [1. Forker le modèle de stack](#1-forker-le-modèle-de-stack)
-  - [2. Cloner la stack du projet](#2-cloner-la-stack-du-projet)
-  - [3. Démarrer la stack du projet](#3-démarrer-la-stack-du-projet)
-- [Initialiser le service Api-Platform `sae4api`](#initialiser-le-service-api-platform-sae4api)
-- [Initialiser le service React `sae4app`](#initialiser-le-service-react-sae4app)
-- [Partager le projet](#partager-le-projet)
-- [Contenu de la docker stack](#contenu-de-la-docker-stack)
-  - [fichier .env](#fichier-env)
-  - [Fichier .gitignore](#fichier-gitignore)
-  - [dossier build](#dossier-build)
-    - [database](#database)
-    - [nginx](#nginx)
-    - [sae4api](#sae4api)
-    - [sae4appp](#sae4appp)
+Pour lancer la stack, vous aurez besoin de :
 
+- Git
+- Docker engine
+- Docker compose
+- Avoir les ports 5173 (Serveur web), 8000 (API)
+- Un compte ayant accès au repository
 
-## Prérequis
+Une fois que vous vous êtes assurés d'avoir ce qu'il faut, vous pouvez lancer la commande suivante dans un répertoire :
 
-Sur votre machine Mac, Windows ou Linux :
-
-- Docker 20.20 au moins
-- (Docker) Compose  
-  (Installer Docker Desktop satisfait ces deux pré-requis)
-- Un éditeur de texte ou un IDE
-- L'accès à un terminal
-
-De manière optionnelle, mais fortement recommandée :
-
-- Une [clé SSH](https://forge.iut-larochelle.fr/help/ssh/index#generate-an-ssh-key-pair) active sur votre machine
-  (perso) et [ajoutée dans votre compte gitlab](https://forge.iut-larochelle.fr/help/ssh/index#add-an-ssh-key-to-your-gitlab-account) :  
-  elle vous permettra de ne pas taper votre mot de passe en permanence.
-- PHPStorm  
-  _Votre email étudiant vous permet de bénéficier d'une licence complète de 12 mois pour tous les produits JetBrains_  
-  ...Mais vous pouvez bien sûr utiliser l'IDE de votre choix.
-
-## Démarrage
-
-### 1. Forker le modèle de stack
-
-**UN.E SEUL.E** des développeuses/développeurs de votre équipe va **fork** le présent dépôt, pour en créer un nouveau, 
-dans le groupe correspondant à votre équipe :  
-_Par exemple pour l'équipe 3 du groupe de TP X1, le groupe est :_ `2023-2024-BUT-INFO2-A-SAE34/K1/K11`
-
-<div align="center" ><img src="stack_sae4_img_fork.png" width=500/></div>
-
-**Remarque** : 
->Il n'est pas nécessaire de conserver le lien avec le modèle de stack, vous pouvez donc aller dans  
-> Settings > General > Advanced (dans Gitlab) pour supprimer le "Fork relationship" de votre projet
-
-
-### 2. Cloner la stack du projet 
-
-Le membre de l'équipe qui a réalisé le fork, doit cloner ce nouveau dépôt sur son poste de travail 
-
-⚠️ **Si vous êtes sous Linux**  
-> Avant de démarrer la stack, il faut renseigner les variables qui se trouvent dans le fichier `.env` à la racine du dépôt     
-> Vous pouvez obtenir l'id de votre user (et de son groupe) en lançant la commande `id -u ${USER}` dans un terminal
-
-### 3. Démarrer la stack du projet 
-
-Dans un terminal positionné dans le dossier de la stack du projet : 
-
-- démarrer la stack    
+```bash
+git clone https://forge.iut-larochelle.fr/2023-2024-but-info2-a-sae34/but-info2-a-sae-4-docker-stack.git
 ```
+
+Pour pouvoir modifier/ajouter/supprimer des fichiers du dossier `sae4app` et `sae4api` une fois la stack lancée, vous devez configurer la stack : vous pouvez changer de compte en indiquant votre compte utilisateur Linux dans le fichier `.env` :
+
+> Ce changement n'est nécessaire que sur Linux !
+
+```env
+# Uniquement sous linux
+# Décommenter ces valeurs
+
+USER_NAME=<username>
+USER_ID=<userid>
+GROUP_NAME=<groupname>
+GROUP_ID=<groupid>
+```
+
+Exemple avec un compte `altaks` et le groupe par défaut :
+
+```env
+# Uniquement sous linux
+# Décommenter ces valeurs
+
+USER_NAME=altaks
+USER_ID=1000
+GROUP_NAME=altaks
+GROUP_ID=1000
+```
+
+### Lancement de la stack
+
+Une fois le repository cloné et configuré, vous pouvez lancer la stack en utilisant la commande suivante :
+
+```bash
 docker compose up --build
 ```
 
-- inspecter l'état des services 
-```
-docker compose ps
-```
+> Si vous souhaitez lancer la stack sans vous bloquer votre terminal, vous pouvez lancer la commande suivante :
+> ```bash
+> docker compose up --build -d
+> ```
+> Vous aurez alors la stack lancée en arrière-plan (le terminal est détaché)
 
-## Initialiser le service Api-Platform `sae4api`
+### Lancer un bash interactif avec un conteneur
 
-Un projet Api-Platform, créé via la commande : 
-```bash 
-composer create-project symfony/skeleton:"6.3.*" sfapi
-```
-est déjà disponible dans le dossier sae4api du dépôt.
-
-Si vous souhaitez ajouter des dépendances : 
-
-- on se connecte au conteneur associé su service `sae4api` 
+Afin de vous rendre dans un conteneur et effectuer des changements, vous pouvez utiliser la commande suivante dans le même dossier que la stack :
 
 ```bash
-docker compose exec sae4api bash
-```
-- après connexion, on doit être dans `/app`, vérifier 
-
-- installer les dépendances 
-
-```bash
-cd /app/sae4api 
-composer install
+docker compose exec <sae4app/sae4api/database> bash
 ```
 
-- vérifier l'exécution du service `sae4api` : [http://localhost:8000](http://localhost:8000)
-
-
-## Initialiser le service React `sae4app`
-
-Un projet react, créé via Vite par défaut est déjà disponible dans le dossier `sae4app` du dépôt.
-
-Si vous souhaitez ajouter des dépendances : 
-
-- on se connecte au conteneur associé su service `sae4app` 
+Exemple, pour accéder au conteneur où se situe ReactJS + Vite, on utilise :
 
 ```bash
 docker compose exec sae4app bash
 ```
-- après connexion, on doit être dans `/app`, vérifier 
 
-- installer les dépendances 
+### Réinstallation des packages Symfony (dans le conteneur `sae4api`)
 
-```bash
-yarn add <nom-de-la-dépendance> # pour une dépendance de développement
+Lorsque vous utilisez la stack pour la première fois dans un répertoire, si vous ne disposez pas du dossier `sae4api/vendor`, vous pouvez faire télécharger son contenu à la stack avec la commande suivante :
+
+```shell
+cd /app/sae4api && composer install
 ```
 
-- vérifier l'exécution du service `sae4app` : [http://localhost:5173](http://localhost:5173)
+### Réinstallation des modules NodeJS (dans le conteneur `sae4api`)
 
-**Remarque**       
-Si le projet React `sae4app` ne démarre pas, dans ce cas contacter votre Tonton DEV. 
+Lorsque vous utilisez la stack pour la première fois dans un répertoire, si vous ne disposez pas du dossier `sae4app/node_modules`, vous pouvez faire télécharger son contenu à la stack avec la commande suivante :
 
-## Partager le projet
-
-À ce stade, les services `sae4api` et `sae4app` sont créés et démarrés, autrement dit fonctionnels, alors : 
-- on fait `commit` et `push` pour partager avec les autres membres de l'équipe
-- on déclare tout les membres de l'équipe dans le dépôt du projet avec le rôle `Developer` (si ce n'est pas déjà fait :-))
-- chaque membre de l'équipe peut alors 
-  - cloner ce nouveau dépôt sur son poste de travail 
-  - démarrer toute la stack docker du projet 
-
-
-## Contenu de la docker stack 
-```
-.
-├── .env
-├── .gitignore
-├── build
-│   ├── database
-│   │   ├── Dockerfile
-│   │   └── myconf.cnf
-│   ├── nginx
-│   │   ├── Dockerfile
-│   │   └── default.conf
-│   └── sae4api
-│   │   ├── Dockerfile
-│   │   └── default.ini
-│   └── sae4app
-│       └── Dockerfile
-├── sae4api
-├── sae4app       
-└── compose.yml
+```shell
+cd /app/sae4app && npm install
 ```
 
-### fichier .env 
-Ce fichier déclare des variables d'environnement.    
-Ces variables définissent l'utilisateur qui exécute la stack docker.     
-On définit les valeurs de ces variables uniquement si on est sous **LINUX**.     
-Par défaut, ces variables sont commentées. 
+### Règles de collaboration
 
-Exemple : 
+Pour collaborer sur le projet, vous devez développer en répondant à une User Story ou une tâche.
+
+Vous devrez créer une branche en suivant la syntaxe suivante :
+
 ```
-USER_NAME=jmalki
-USER_ID=1000
-GROUP_NAME=jmalki
-GROUP_ID=1000
+develop-US.<numero-US>-<DescriptionUS>
 ```
 
-### Fichier .gitignore
-Ce fichier déclare tous les artefacts du projet qui ne doivent pas être poussés dans le repository gitlab distant. 
+ou dans le cas d'une tâche : 
 
-### dossier build 
-
-#### database
-On utilise une base de données de type `mariadb-10.10.2`.     
-L'image docker se trouve dans la registry de l'IUT.    
-On ajoute un fichier de configuration.    
-
-Le Dockerfile : 
 ```
-FROM forge-registry.iut-larochelle.fr/mariadb/mariadb-10.10.2
-COPY ./build/database/myconf.cnf /etc/mysql/conf.d/.
+develop-<DescriptionTache>
 ```
 
-#### nginx 
-On utilise un serveur web de type `nginx-1.23.3`.     
-L'image docker se trouve dans la registry de l'IUT.    
-On ajoute un fichier de configuration du host qui permet l'accès à notre application.     
-Dans le conteneur, on crée le dossier `/app` qui va contenir le code source de notre application.     
+---
 
-Le Dockerfile : 
+Exemple pour l'US 4.1 :
+
 ```
-FROM forge-registry.iut-larochelle.fr/nginx/nginx-1.23.3
-COPY ./build/nginx/default.conf /etc/nginx/conf.d/default.conf
-RUN mkdir /app
+dev-US4.1-Choisir-une-salle-et-consulter-les-informations-de-celle-ci
 ```
 
-#### sae4api 
-Projet Api-Platform pour le backend 
+---
 
-#### sae4appp
-Projet react pour le fontend 
+Pour ce qui est des **commits**, vous devrez suivre la syntaxe "commit lint" qui est disponible ici : https://github.com/conventional-changelog/commitlint
+
+### Une fois vos changements prêts
+
+Vous pouvez émettre une merge request avec un reviewer parmis Adrien, Arnaud, Luc ou Kevin et vos changements seront revus

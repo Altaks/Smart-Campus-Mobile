@@ -1,0 +1,8 @@
+{
+  "uriBase": "http://localhost:8000",
+  "apiPath": "/api",
+  "sallesPath": "/salles",
+  "recommandationsPath": "/recommandations",
+  "conseilsPath": "/conseils",
+  "actionsPath": "/actions"
+}

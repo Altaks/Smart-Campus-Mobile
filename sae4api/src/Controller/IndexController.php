@@ -1,0 +1,19 @@
+<?php
+
+namespace App\Controller;
+
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+
+class IndexController extends AbstractController
+{
+    #[Route('/', name: 'api_disponible')]
+    public function disponible(): JsonResponse
+    {
+        $disponible = ['message' => 'L\'API est disponible.'];
+        $disponibleJson = json_encode($disponible);
+        return new JsonResponse($disponibleJson, 200, [], true);
+    }
+}

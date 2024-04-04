@@ -21,6 +21,9 @@
         "symfony/expression-language": "6.3.*",
         "symfony/flex": "^2",
         "symfony/framework-bundle": "6.3.*",
+        "symfony/http-client": "6.3.*",
+        "symfony/http-foundation": "6.3.*",
+        "symfony/maker-bundle": "^1.53",
         "symfony/property-access": "6.3.*",
         "symfony/property-info": "6.3.*",
         "symfony/runtime": "6.3.*",
@@ -29,9 +32,6 @@
         "symfony/twig-bundle": "6.3.*",
         "symfony/validator": "6.3.*",
         "symfony/yaml": "6.3.*"
-    },
-    "require-dev": {
-        "symfony/maker-bundle": "^1.53"
     },
     "config": {
         "allow-plugins": {
@@ -81,5 +81,12 @@
             "require": "6.3.*",
             "docker": false
         }
+    },
+    "require-dev": {
+        "doctrine/doctrine-fixtures-bundle": "^3.5",
+        "phpunit/phpunit": "^9.5",
+        "symfony/browser-kit": "6.3.*",
+        "symfony/css-selector": "6.3.*",
+        "symfony/phpunit-bridge": "^7.0"
     }
 }
