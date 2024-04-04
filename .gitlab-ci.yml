@@ -127,3 +127,21 @@ jsdoc:
     key: "$CACHE_KEY"
     paths:
       - sae4app/node_modules/
+
+doxygen:
+  image: ubuntu:focal
+  stage: Documentation
+  tags:
+    - docker
+  script:
+    - cd software
+    - pwd
+    - apt update -y
+    - apt install -y graphviz doxygen 
+    - doxygen
+  allow_failure: true
+  artifacts:
+    when: on_success
+    name: "$CI_JOB_NAME"
+    paths:
+      - "software/doc"
