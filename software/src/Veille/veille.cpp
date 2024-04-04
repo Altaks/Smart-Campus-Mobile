@@ -4,6 +4,10 @@
 
 #include <Arduino.h>
 
+/**
+ * @brief Fonction de callback pour le réveil du système
+ * @param arg nombre de microsecondes avant le réveil (unsigned long long) à passer en void*
+ */
 void alarm_callback(void* arg) {
     esp_deep_sleep((unsigned long long) arg);
 }
