@@ -139,6 +139,7 @@ doxygen:
     - apt update -y
     - apt install -y graphviz doxygen 
     - doxygen
+    - ln -sf doc/html/index.html doc/index.html
   allow_failure: true
   artifacts:
     when: on_success
